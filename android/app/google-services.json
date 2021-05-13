@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "952347196314",
+    "project_id": "himod-593b2",
+    "storage_bucket": "himod-593b2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:952347196314:android:b9b42426c8340bb9a75823",
+        "android_client_info": {
+          "package_name": "com.example.himod"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "952347196314-i4u6jq769n7lu423c96dd0rk97pgk9eq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.himod",
+            "certificate_hash": "a4a30b334be3fd717ef1c7c63f3222817353948c"
+          }
+        },
+        {
+          "client_id": "952347196314-shh06sj394fi9e9sqbokd0rfhqeio034.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxlz4iZOFFL3PWFXf6wx_qUmDniN5QArY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "952347196314-shh06sj394fi9e9sqbokd0rfhqeio034.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
