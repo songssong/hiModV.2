@@ -6,7 +6,6 @@ import 'package:himod/component/bottombar.dart';
 import 'package:himod/postdetail.dart';
 import 'package:himod/component/appbar.dart';
 
-
 class Post extends StatefulWidget {
   @override
   _PostState createState() => _PostState();
@@ -179,31 +178,33 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                 Expanded(
                   child: Container(
                     height: 120.0,
+                    child: Stack(
+                      children: [
+                        Row(
+                          children: <Widget>[
+                            Image(
+                              image: NetworkImage(
+                                  'https://www.shiseido.co.th/dw/image/v2/BCSK_PRD/on/demandware.static/-/Sites-itemmaster_shiseido/default/dwd4a76f60/images/products/16427/16427_S_1.jpg'),
+                              width: 120,
+                              height: 120,
+                            ),
+                            Column(
+                              children: <Widget>[
+                                Text(
+                                  "ลิปสติ๊กสีแดงสด",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  "ลิปสติ๊กสีแดงสด ราคา 1000 บาท ซื้อมาแล้วไม่ชอบ แชทมา",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            )
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: Row(children: <Widget>[
-                    Image(
-                      image: NetworkImage(
-                          'https://www.shiseido.co.th/dw/image/v2/BCSK_PRD/on/demandware.static/-/Sites-itemmaster_shiseido/default/dwd4a76f60/images/products/16427/16427_S_1.jpg'),
-                      width: 120,
-                      height: 120,
-                    ),
-                    Expanded(
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                            "ลิปสติ๊กสีแดงสด",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            "ลิปสติ๊กสีแดงสด ราคา 1000 บาท ซื้อมาแล้วไม่ชอบ แชทมา",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ]),
                 ),
               ],
             ),
