@@ -181,21 +181,23 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                     child: Stack(
                       children: [
                         Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             Image(
                               image: NetworkImage(
-                                  'https://www.shiseido.co.th/dw/image/v2/BCSK_PRD/on/demandware.static/-/Sites-itemmaster_shiseido/default/dwd4a76f60/images/products/16427/16427_S_1.jpg'),
+                                  'https://cf.shopee.co.th/file/bd8378a69d3c0e9b92396a23f99cba46'),
                               width: 120,
                               height: 120,
                             ),
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
                                   "ลิปสติ๊กสีแดงสด",
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                  "ลิปสติ๊กสีแดงสด ราคา 1000 บาท ซื้อมาแล้วไม่ชอบ แชทมา",
+                                  "ลิปสติ๊กสีแดงสด ราคา 1000 บาท",
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ],
