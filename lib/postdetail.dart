@@ -26,8 +26,10 @@ class _PostdetailState extends State<Postdetail> {
           )
         ],
         leading: TextButton(
-            onPressed: () => {Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Post()))},
+            onPressed: () => {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => Post()))
+                },
             child: Text(
               "Cancel",
               style: TextStyle(color: Colors.black, fontSize: 13),
@@ -44,9 +46,9 @@ class _PostdetailState extends State<Postdetail> {
                     decoration: BoxDecoration(
                         color: Colors.orange,
                         borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(36),
-                          bottomRight: Radius.circular(36),
-                        )),
+                            // bottomLeft: Radius.circular(36),
+                            // bottomRight: Radius.circular(36),
+                            )),
                   ),
                   Positioned(
                     top: 25,
@@ -79,8 +81,13 @@ class _PostdetailState extends State<Postdetail> {
                           margin: EdgeInsets.only(top: 10),
                           padding: EdgeInsets.only(left: 10),
                           child: TextField(
-                            decoration: InputDecoration(hintText: "Title",
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(3))),
+                            onChanged: (val) {
+                              //ส่งลง DB
+                            },
+                            decoration: InputDecoration(
+                                hintText: "Title",
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(3))),
                           ),
                         ),
                         Container(
@@ -92,9 +99,14 @@ class _PostdetailState extends State<Postdetail> {
                           margin: EdgeInsets.only(top: 20),
                           padding: EdgeInsets.only(left: 10),
                           child: TextField(
-                            decoration:
-                                InputDecoration(hintText: "Description",
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(3),)),
+                            onChanged: (val) {
+                              //ส่งลง DB
+                            },
+                            decoration: InputDecoration(
+                                hintText: "Description",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(3),
+                                )),
                             maxLines: 10,
                             maxLength: 250,
                           ),

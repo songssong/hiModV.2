@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:himod/component/appbar.dart';
 import 'package:himod/component/body.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:himod/component/bottombar.dart';
 import 'package:himod/postdetail.dart';
 import 'package:himod/component/appbar.dart';
+import 'package:himod/service/auth_provider_service.dart';
+import 'package:himod/signup.dart';
 
 class Post extends StatefulWidget {
   @override
@@ -48,6 +51,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text("Post"),
         backgroundColor: Colors.orange,
         actions: [
@@ -58,7 +62,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
         ],
         leading: IconButton(
           icon: FaIcon(FontAwesomeIcons.user),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pushNamed(context, '/profile'),
         ),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(30.0),
@@ -181,7 +185,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                     child: Stack(
                       children: [
                         Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             Image(
                               image: NetworkImage(
@@ -201,7 +205,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ],
-                            )
+                            ),
                           ],
                         )
                       ],
@@ -213,6 +217,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
           ),
         ],
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
