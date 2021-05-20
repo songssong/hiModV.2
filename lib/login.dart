@@ -3,15 +3,18 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:himod/util/color.dart';
 
+
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
 }
 
+String email = '';
+String password = '';
 
 final _formKeyEmail = GlobalKey<FormState>();
 final _formKeyPassword = GlobalKey<FormState>();
-final _formKeySubmit = GlobalKey<FormState>();
+
 
 
 class _LoginState extends State<Login> {
@@ -95,7 +98,6 @@ class _LoginState extends State<Login> {
                     Container(
                       margin: EdgeInsets.only(top: 25),
                       child: Form(
-                        key: _formKeySubmit,
                           child: Column(
                         children: <Widget>[submitLogin()],
                       )),
@@ -122,6 +124,9 @@ class _LoginState extends State<Login> {
                 }
                 return null;
               },
+              onChanged: (val){
+                setState(() => email = val);
+              },
           decoration: InputDecoration(
               icon: Icon(Icons.email, color: Colors.grey), hintText: 'Email'),
         ))
@@ -142,6 +147,9 @@ class _LoginState extends State<Login> {
                 }
                 return null;
               },
+              onChanged: (val){
+                setState(() => password = val);
+              },
           decoration: InputDecoration(
               icon: Icon(Icons.vpn_key, color: Colors.grey),
               hintText: 'Password'),
@@ -159,8 +167,11 @@ class _LoginState extends State<Login> {
         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       ),
       onPressed: () {
+        print(email);
+        print(password);
         bool pass =_formKeyEmail.currentState.validate();
         bool pass1 =_formKeyPassword.currentState.validate();
+        
       },
     );
   }

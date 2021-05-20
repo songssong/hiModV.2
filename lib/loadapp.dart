@@ -13,7 +13,7 @@ class _LoginloadState extends State<Loginload> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(milliseconds: 4000), () {
+    Timer(const Duration(milliseconds: 3000), () {
         Navigator.push(context, MaterialPageRoute(builder: (context) => Signup()));
     });
   }

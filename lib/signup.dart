@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:himod/login.dart';
+import 'package:himod/post.dart';
 import 'package:himod/service/auth_provider_service.dart';
 import 'package:himod/util/color.dart';
 import 'package:sign_button/constants.dart';
@@ -19,7 +20,11 @@ class _SignupState extends State<Signup> {
         body: Container(
       decoration: BoxDecoration(
           gradient: LinearGradient(
-              colors: [orange, orangelight],
+              colors: [
+              const Color(0xffff9e23),
+              const Color(0xffff711b),
+              const Color(0xffff4814)
+            ],
               end: Alignment.bottomCenter,
               begin: Alignment.topCenter)),
       child: Column(
@@ -38,43 +43,17 @@ class _SignupState extends State<Signup> {
           ),
           Image.asset("images/logologin.png"),
           Container(
-            // child: ClipRRect(
-            //   borderRadius: BorderRadius.circular(29),
-            //             child: FlatButton(
-            //     padding: EdgeInsets.symmetric(vertical: 20,horizontal: 40),
-            //     color: orange,
-            //     onPressed: () {
-            //       Navigator.push(context, MaterialPageRoute(builder: (context)=> Login()));
-            //     },
-            //     child: Text("Sign in by KMUTT account", style: TextStyle(color: Colors.white),)),
-            // ),
-            child: AuthProviderService.instance.user == null
-                ? SignInButton(
-                    buttonType: ButtonType.google,
-                    onPressed: () async {
-                        EasyLoading.show(status: 'loading...');
-                      await AuthProviderService.instance.signIn();
-                      EasyLoading.dismiss();
-                      setState(() {
-                      });
-                    },
-                  )
-                : Column(
-                    children: [
-                      Image.network(AuthProviderService.instance.user.photoURL),
-                      Text(AuthProviderService.instance.user.displayName),
-                      Text(AuthProviderService.instance.user.email),
-                      FlatButton(
-                        onPressed: () async {
-                          EasyLoading.show(status: 'loading...');
-                          await AuthProviderService.instance.signOut();
-                          EasyLoading.dismiss();
-                          setState(() {});
-                        },
-                        child: Text("Logout"),
-                      )
-                    ],
-                  ),
+            child: SignInButton(
+                buttonType: ButtonType.google,
+                onPressed: () async {
+                  EasyLoading.show(status: 'loading...');
+                  await AuthProviderService.instance.signIn();
+                  EasyLoading.dismiss();
+                  //เมื่อ login ครั้งแรกเสร็จแล้วให้ส่งไปที่หน้า Post
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => Post()));
+                  // setState(() {
+                }),
           ),
         ],
       ),
