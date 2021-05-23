@@ -1,19 +1,18 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart'; 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:himod/Profile/profile_screen.dart';
 import 'package:himod/activity.dart';
 import 'package:himod/comment.dart';
-import 'package:himod/component/body.dart';
 import 'package:himod/loadapp.dart';
-import 'package:himod/login.dart';
 import 'package:himod/post.dart';
 import 'package:himod/postdetail.dart';
-import 'package:himod/service/service_locator.dart';
+import 'package:himod/providers/comment_provider.dart';
 import 'package:himod/signup.dart';
+import 'package:himod/test_firebase.dart';
+import 'package:provider/provider.dart';
 
-import 'Profile/component/profile_pic.dart';
 
 
 String initialRoute = '/loginload';
@@ -29,38 +28,30 @@ Future<Null> main() async {
       runApp(MyApp());
     });
   });
-  setupLocator();
 }
-
-
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-          primaryColor: Colors.white, scaffoldBackgroundColor: Colors.white),
-      // onGenerateRoute: (settings) {
-      //   switch (settings.name) {
-      //     case 'loginload':
-      //       return MaterialPageRoute(builder: (context) => Loginload());
-      //     case 'post':
-      //     default:
-      //       return MaterialPageRoute(builder: (context) => Post());
-      //   }
-      // },
-      initialRoute: initialRoute,
-      routes: {
-        '/post': (context) => Post(),
-        '/activity': (context) => Activity(),
-        '/loginload': (context) => Loginload(),
-        '/postdetail': (context) => Postdetail(),
-        '/signup': (context) => Signup(),
-        '/profile': (context) => ProfileScreen(),
-        '/profilepic': (context) => ProfilePic(),
-        '/comment': (context) => Comment(),
-      },
-      builder: EasyLoading.init(),
+    return ChangeNotifierProvider(
+            create: (context) => CommentProvider(),
+          child: MaterialApp(
+        theme: ThemeData(
+            primaryColor: Colors.white, scaffoldBackgroundColor: Colors.white),
+        initialRoute: initialRoute,
+        routes: {
+          '/loginload':(context) => Loginload(),
+          '/post':(context) => Post(),
+          '/profile':(context) => ProfileScreen(),
+          '/activity':(context) => Activity(),
+          '/comment':(context) => Comment(),
+          '/postdetail':(context) => Postdetail(),
+          '/signup':(context) => Signup(),
+          // '/testfirebase':(context) => TestFirebase(),
+
+          
+        },
+        builder: EasyLoading.init(),
+      ),
     );
   }
 }

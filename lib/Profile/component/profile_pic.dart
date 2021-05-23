@@ -17,6 +17,8 @@ class ProfilePic extends StatelessWidget {
             fit: StackFit.expand,
             overflow: Overflow.visible,
             children: [
+              AuthProviderService.instance.user == null ?
+              Container() :
               CircleAvatar(
                 backgroundImage:
                     NetworkImage(AuthProviderService.instance.user.photoURL),

@@ -30,7 +30,7 @@ class _LoginloadState extends State<Loginload> {
           ),
             child: Center(
               child: Image.asset('images/logonew.png',height: 325,)
-            ,
+              ,
           ),
     )
     );

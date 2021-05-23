@@ -1,14 +1,40 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:himod/model/student_model.dart';
 import 'package:himod/service/auth_provider_service.dart';
 
 import 'profile_pic.dart';
 
-class BodyProfile extends StatelessWidget {
-  const BodyProfile({Key key}) : super(key: key);
+class BodyProfile extends StatefulWidget {
+  BodyProfile({Key key}) : super(key: key);
 
   @override
+  _BodyProfileState createState() => _BodyProfileState();
+}
+
+class _BodyProfileState extends State<BodyProfile> {
+  @override
+  void initState() {
+    super.initState();
+    readDataStudent();
+  }
+
+  dynamic model;
+
+  Future<Null> readDataStudent() async {
+    await FirebaseFirestore.instance
+        .collection('Student')
+        .doc(AuthProviderService.instance.user.uid)
+        .get()
+        .then((value) {
+      setState(() {
+         model = value.data();
+      });
+    });
+  }
+
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -42,15 +68,14 @@ class BodyProfile extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  AuthProviderService.instance.user.uid,
-                  style: TextStyle(color: Colors.black),
-                ),
+                child: (model == null
+                    ? Container()
+                    : Text(
+                        model['studentId'].toString(),
+                        style: TextStyle(color: Colors.black),
+                      )),
               ),
             ),
-            // decoration: BoxDecoration(
-            //     borderRadius: BorderRadius.all(Radius.circular(20)),
-            //     border: Border.all(width: 1.0, color: Colors.black)),
           ),
         ),
         //Student Name
@@ -80,16 +105,14 @@ class BodyProfile extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  AuthProviderService.instance.user.displayName.toUpperCase(),
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
+                  padding: const EdgeInsets.all(8.0),
+                  child: model == null
+                      ? Container()
+                      : Text(
+                          model['name'].toString().toUpperCase(),
+                          style: TextStyle(color: Colors.black),
+                        )),
             ),
-            // decoration: BoxDecoration(
-            //     borderRadius: BorderRadius.all(Radius.circular(20)),
-            //     border: Border.all(width: 1.0, color: Colors.black)),
           ),
         ),
         //Faculty
@@ -119,16 +142,14 @@ class BodyProfile extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  '-',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
+                  padding: const EdgeInsets.all(8.0),
+                  child: model == null
+                      ? Container()
+                      : Text(
+                          model['faculty'].toString().toUpperCase(),
+                          style: TextStyle(color: Colors.black),
+                        )),
             ),
-            // decoration: BoxDecoration(
-            //     borderRadius: BorderRadius.all(Radius.circular(20)),
-            //     border: Border.all(width: 1.0, color: Colors.black)),
           ),
         ),
         //Email
@@ -160,34 +181,28 @@ class BodyProfile extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  AuthProviderService.instance.user.email,
+                  AuthProviderService.instance.user?.email ?? '',
                   style: TextStyle(color: Colors.black),
                 ),
               ),
             ),
-            // decoration: BoxDecoration(
-            //     borderRadius: BorderRadius.all(Radius.circular(20)),
-            //     border: Border.all(width: 1.0, color: Colors.black)),
           ),
         ),
         Column(
           children: <Widget>[
             FlatButton(
                 onPressed: () async {
-                  Navigator.pushNamed(context, '/signup');
                   EasyLoading.show(status: 'loading...');
                   await AuthProviderService.instance.signOut();
                   EasyLoading.dismiss();
-                  // setState() {}
+                  setState(() {
+                    Navigator.pushNamed(context, '/signup');
+                  });
                 },
                 child: Text(
                   "Logout",
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    color: Colors.red
-                    ),
-                )
-                ),
+                  style: TextStyle(fontSize: 16.0, color: Colors.red),
+                )),
           ],
         )
       ],
