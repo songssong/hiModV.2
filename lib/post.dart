@@ -57,12 +57,15 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
         actions: [
           IconButton(
             icon: FaIcon(FontAwesomeIcons.comments),
-            onPressed: () => {},
+            onPressed: () => {
+              print("Next release 2"),
+            },
           ),
         ],
         leading: IconButton(
           icon: FaIcon(FontAwesomeIcons.user),
-          onPressed: () => Navigator.pushNamed(context, '/profile'),
+          onPressed: () => 
+          Navigator.pushNamed(context, '/profile'),
         ),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(30.0),
@@ -175,7 +178,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                     ),
                     IconButton(
                       icon: const Icon(Icons.chat),
-                      onPressed: () => print('do not chat e ka toey'),
+                      onPressed: () => print('Next release 2'),
                     ),
                   ],
                 ),
@@ -220,8 +223,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Postdetail()));
+          Navigator.pushNamedAndRemoveUntil(context, '/postdetail', (route) => false);
         },
         child: Icon(
           Icons.add,

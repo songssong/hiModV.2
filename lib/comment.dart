@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:himod/post.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:himod/providers/comment_provider.dart';
+import 'package:provider/provider.dart';
+
+
 
 class Comment extends StatefulWidget {
   @override
@@ -10,6 +13,9 @@ class Comment extends StatefulWidget {
 class _CommentState extends State<Comment> {
   @override
   Widget build(BuildContext context) {
+    final commentProvider = Provider.of<CommentProvider>(context);
+
+
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -25,8 +31,7 @@ class _CommentState extends State<Comment> {
           ],
           leading: TextButton(
               onPressed: () => {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Post()))
+                    Navigator.pushNamed(context, '/post')
                   },
               child: Text(
                 "Back",
@@ -132,11 +137,18 @@ class _CommentState extends State<Comment> {
                   // controller: ,
                   decoration:
                       new InputDecoration.collapsed(hintText: "comment"),
+                      onChanged: (value)  {
+                        commentProvider.changeCommentText(value);
+                      }
                 ),
               ),
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 2.0),
-                child: new IconButton(icon: Icon(Icons.send), onPressed: () {}),
+                child: new IconButton(icon: Icon(Icons.send),
+                onPressed: (){
+                  commentProvider.saveCommentText();
+                },
+                ),
               ),
             ],
           ),
