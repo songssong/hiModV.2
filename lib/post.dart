@@ -9,6 +9,7 @@ import 'package:himod/component/appbar.dart';
 import 'package:himod/service/auth_provider_service.dart';
 import 'package:himod/signup.dart';
 
+
 class Post extends StatefulWidget {
   @override
   _PostState createState() => _PostState();
