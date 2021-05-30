@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:himod/post.dart';
+import 'package:himod/service/auth_provider_service.dart';
+import 'package:uuid/uuid.dart';
 //import 'package:form_field_validator/form_field_validator.dart';
 
 class Postdetail extends StatefulWidget {
@@ -12,8 +14,19 @@ class Postdetail extends StatefulWidget {
 class PostDes {
   String title;
   String description;
-  PostDes({this.title, this.description});
-}
+  String postId;
+  String userId;
+  
+  PostDes({this.title, this.description,this.userId});
+   //ดึงข้อมูล
+
+   //var db = await this.openDatabase();
+  loadAllData() async{
+
+  }
+
+  }
+
 
 class _PostdetailState extends State<Postdetail> {
   CollectionReference _postCollection =
@@ -21,6 +34,8 @@ class _PostdetailState extends State<Postdetail> {
 
   final _formKey = GlobalKey<FormState>();
   PostDes _postdes = PostDes();
+  var uuid = Uuid();
+  var uid = AuthProviderService.instance.user?.uid ?? '';
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +56,9 @@ class _PostdetailState extends State<Postdetail> {
                 await _postCollection.add({
                   'titleName': _postdes.title,
                   'contentText': _postdes.description,
+                   'uid' :  uid,
+                   'postid' : uuid.v4(),
+                
                 });
                 Navigator.push(
                     context, MaterialPageRoute(builder: (context) => Post()));
