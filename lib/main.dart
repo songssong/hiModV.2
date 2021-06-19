@@ -2,15 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:himod/Comment/comment_screen.dart';
 import 'package:himod/Profile/profile_screen.dart';
 import 'package:himod/activity.dart';
-import 'package:himod/comment.dart';
 import 'package:himod/loadapp.dart';
 import 'package:himod/post.dart';
 import 'package:himod/postdetail.dart';
 import 'package:himod/providers/comment_provider.dart';
 import 'package:himod/signup.dart';
-import 'package:himod/test_firebase.dart';
 import 'package:provider/provider.dart';
 
 
@@ -43,12 +42,11 @@ class MyApp extends StatelessWidget {
           '/post':(context) => Post(),
           '/profile':(context) => ProfileScreen(),
           '/activity':(context) => Activity(),
-          '/comment':(context) => Comment(),
+          // '/comment':(context) => Comment(),
+          '/comment':(context) => CommentScreen(),
           '/postdetail':(context) => Postdetail(),
           '/signup':(context) => Signup(),
-          // '/testfirebase':(context) => TestFirebase(),
 
-          
         },
         builder: EasyLoading.init(),
       ),

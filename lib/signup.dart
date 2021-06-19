@@ -50,7 +50,7 @@ class _SignupState extends State<Signup> {
                   await AuthProviderService.instance.signIn();
                   EasyLoading.dismiss();
                   //เมื่อ login ครั้งแรกเสร็จแล้วให้ส่งไปที่หน้า Post
-                  Navigator.pushNamed(context, '/post');
+                  Navigator.pop(context, '/post');
                   // setState(() {}
                 }),
           ),

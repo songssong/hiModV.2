@@ -21,7 +21,7 @@ class _BodyProfileState extends State<BodyProfile> {
     readDataStudent();
   }
 
-  dynamic model;
+  dynamic student_model;
 
   Future<Null> readDataStudent() async {
     await FirebaseFirestore.instance
@@ -30,7 +30,7 @@ class _BodyProfileState extends State<BodyProfile> {
         .get()
         .then((value) {
       setState(() {
-         model = value.data();
+         student_model = value.data();
       });
     });
   }
@@ -68,10 +68,10 @@ class _BodyProfileState extends State<BodyProfile> {
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: (model == null
+                child: (student_model == null
                     ? Container()
                     : Text(
-                        model['studentId'].toString(),
+                        student_model['studentId'].toString(),
                         style: TextStyle(color: Colors.black),
                       )),
               ),
@@ -106,10 +106,10 @@ class _BodyProfileState extends State<BodyProfile> {
               alignment: Alignment.centerLeft,
               child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: model == null
+                  child: student_model == null
                       ? Container()
                       : Text(
-                          model['name'].toString().toUpperCase(),
+                          student_model['name'].toString().toUpperCase(),
                           style: TextStyle(color: Colors.black),
                         )),
             ),
@@ -143,10 +143,10 @@ class _BodyProfileState extends State<BodyProfile> {
               alignment: Alignment.centerLeft,
               child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: model == null
+                  child: student_model == null
                       ? Container()
                       : Text(
-                          model['faculty'].toString().toUpperCase(),
+                          student_model['faculty'].toString().toUpperCase(),
                           style: TextStyle(color: Colors.black),
                         )),
             ),
@@ -196,7 +196,7 @@ class _BodyProfileState extends State<BodyProfile> {
                   await AuthProviderService.instance.signOut();
                   EasyLoading.dismiss();
                   setState(() {
-                    Navigator.pushNamed(context, '/signup');
+                    Navigator.pushReplacementNamed(context, '/signup');
                   });
                 },
                 child: Text(

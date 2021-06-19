@@ -2,6 +2,7 @@ class CommentModel {
   final String commentText;
   final String commentId;
   final String userId;
+  
 
   CommentModel({this.commentText,this.commentId,this.userId});
 
