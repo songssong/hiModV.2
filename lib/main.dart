@@ -6,6 +6,8 @@ import 'package:himod/Comment/comment_screen.dart';
 import 'package:himod/Profile/profile_screen.dart';
 import 'package:himod/activity.dart';
 import 'package:himod/loadapp.dart';
+import 'package:himod/lostnfound.dart';
+import 'package:himod/lostnfounddetail.dart';
 import 'package:himod/post.dart';
 import 'package:himod/postdetail.dart';
 import 'package:himod/providers/comment_provider.dart';
@@ -22,7 +24,7 @@ Future<Null> main() async {
   await Firebase.initializeApp().then((value) async {
     await FirebaseAuth.instance.authStateChanges().listen((event) { 
       if (event != null) {
-        initialRoute='/post';
+        initialRoute='/lostnfounddetail';
       }
       runApp(MyApp());
     });
@@ -46,7 +48,9 @@ class MyApp extends StatelessWidget {
           '/comment':(context) => CommentScreen(),
           '/postdetail':(context) => Postdetail(),
           '/signup':(context) => Signup(),
-
+          '/lostnfound':(context) => Lostnfound(),
+          '/lostnfounddetail':(context) => lostnfounddetail(),
+          
         },
         builder: EasyLoading.init(),
       ),
