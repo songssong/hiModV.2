@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:himod/LostAndFound/lostandfound_screen.dart';
 import 'package:himod/activity.dart';
-import 'package:himod/lostnfound.dart';
 import 'package:himod/notification.dart';
 import 'package:himod/post.dart';
 
@@ -15,7 +15,7 @@ class _BottomBarState extends State<BottomBar> {
   final List<Widget> screens = [
     Post(),
     Activity(),
-    Lostnfound(),
+    LostAndFoundScreen(),
     Noti(),
   ];
 
