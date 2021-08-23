@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:himod/lostnfound.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
@@ -9,11 +8,11 @@ import 'package:himod/post.dart';
 import 'package:himod/service/auth_provider_service.dart';
 import 'package:uuid/uuid.dart';
 
+import 'LostAndFound/lostandfound_screen.dart';
+
 // ignore: camel_case_types
 class lostnfounddetail extends StatefulWidget {
   lostnfounddetail({Key key}) : super(key: key);
-
-
 
   @override
   _lostnfounddetailState createState() => _lostnfounddetailState();
@@ -31,10 +30,10 @@ class LostnfoundDes {
 
 // ignore: camel_case_types
 class _lostnfounddetailState extends State<lostnfounddetail> {
-  String type ='Lost';
-  String catagory ='General';
+  String type = 'Lost';
+  String catagory = 'General';
 
-CollectionReference _lostCollection =
+  CollectionReference _lostCollection =
       FirebaseFirestore.instance.collection('LostandFound');
 
   final _formKey = GlobalKey<FormState>();
@@ -64,22 +63,22 @@ CollectionReference _lostCollection =
               onPressed: () async {
                 print('Done');
 
-              if (_formKey.currentState.validate()) {
-                _formKey.currentState.save();
-                await _lostCollection.add({
-                  'titleName': _lostdes.title,
-                  'contentText': _lostdes.description,
-                  'typeName' : _lostdes.type,
-                  'catagory' : _lostdes.catagory,
-                   'uid' :  uid,
-                   'lostandfoundid' : uuid.v4(),
-                
-                });
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Lostnfound()));
-              }
-
-
+                if (_formKey.currentState.validate()) {
+                  _formKey.currentState.save();
+                  await _lostCollection.add({
+                    'titleName': _lostdes.title,
+                    'contentText': _lostdes.description,
+                    'typeName': _lostdes.type,
+                    'catagory': _lostdes.catagory,
+                    'uid': uid,
+                    'lostandfoundid': uuid.v4(),
+                    'contact' : _lostdes.contact,
+                  });
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => LostAndFoundScreen()));
+                }
               },
               child: Text("Done",
                   style: TextStyle(
@@ -89,10 +88,10 @@ CollectionReference _lostCollection =
           ],
           leading: TextButton(
               onPressed: () => {
-                     Navigator.push(
-                         context, MaterialPageRoute(builder: (context) => Lostnfound()
-                       )
-                         )
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => LostAndFoundScreen()))
                   },
               child: Text(
                 "Cancel",
@@ -162,7 +161,7 @@ CollectionReference _lostCollection =
                                 padding: EdgeInsets.only(left: 10),
                                 child: TextFormField(
                                   onSaved: (String title) {
-                                   _lostdes.title = title;
+                                    _lostdes.title = title;
                                   },
                                   validator: RequiredValidator(
                                       errorText: 'title not complete'),
@@ -183,7 +182,7 @@ CollectionReference _lostCollection =
                                 padding: EdgeInsets.only(left: 10),
                                 child: TextFormField(
                                   onSaved: (String description) {
-                                     _lostdes.description = description;
+                                    _lostdes.description = description;
                                   },
                                   validator: RequiredValidator(
                                       errorText: 'Description not complete'),
@@ -252,7 +251,6 @@ CollectionReference _lostCollection =
                                     //  TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   SizedBox(width: 100),
-                                  
                                   DropdownButton(
                                       value: type,
                                       isDense: true,
@@ -268,9 +266,8 @@ CollectionReference _lostCollection =
                                       ],
                                       onChanged: (value) {
                                         setState(() {
-                                           
-                                          type = value;
-                                          _lostdes.type = type;
+                                          //type = value;
+                                          _lostdes.type = value;
                                         });
                                       }),
                                 ],
@@ -308,23 +305,28 @@ CollectionReference _lostCollection =
                                       onChanged: (value) {
                                         setState(() {
                                           catagory = value;
-                                           
+
                                           _lostdes.catagory = catagory;
                                         });
                                       }),
                                 ],
                               )),
                               Container(
-                                
-                                 child: Row(children: [
-                                   Text("Contact"),
-                                   SizedBox(width: 55),
-                           //        TextField(
-                          //      decoration: InputDecoration(
-                          //     hintText: 'Contact'
-                          //    ),
-                         //  )
-                                 ]),
+                                child: ConstrainedBox(
+                                  constraints:
+                                      BoxConstraints.tightFor(width: 280 ,height: 40),
+                                  child: TextField(
+                                    onChanged: (String contact) {
+                                    _lostdes.contact = contact;
+                                  },
+                                    decoration: InputDecoration(
+                                      hintText: 'Contact',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                ),
+
+                                    
                               )
                             ]),
                           ),
