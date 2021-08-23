@@ -92,30 +92,28 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
           ),
         ),
       ),
+
       body: StreamBuilder(
           stream: FirebaseFirestore.instance.collection("Post").snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             return ListView(
               children: snapshot.data.docs.map((document) {
-                return Container(
-                    child: Column(children: <Widget>[
-               
-                  //  final FirebaseFirestore firestore = FirebaseFirestore.instanceFor(app: secondaryApp);
-                  // child:
-                  ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          AuthProviderService.instance.user?.photoURL??''),
-                    ),
-                    onTap: () =>
-                            Navigator.pushNamed(context, '/comment'),
-                    title: Text(document["titleName"]),
-                    subtitle: Text(document["contentText"]),
-                  )
-                ]));
+                return 
+                Card(
+      child: ListTile(
+        leading: FlutterLogo(size: 72.0),
+        title: Text(document["student"]),
+        subtitle:  Text(document["titleName"]),
+       
+        isThreeLine: true,
+      ),
+    );
               }).toList(),
             );
           }),
+          //  title: Text(document["student"]),
+          //           subtitle: Text(document["titleName"]),
+          //           //  Text(document["contentText"]),
       // body: Column(
       //   children: <Widget>[
       //     Container(

@@ -21,9 +21,8 @@ class PostDes {
    //ดึงข้อมูล
 
    //var db = await this.openDatabase();
-  loadAllData() async{
-
-  }
+  
+  
 
   }
 
@@ -31,11 +30,29 @@ class PostDes {
 class _PostdetailState extends State<Postdetail> {
   CollectionReference _postCollection =
       FirebaseFirestore.instance.collection('Post');
+      
+void initState() {
+    super.initState();
+    readDataStudent();
+  } 
+  dynamic student_model;
+      Future<Null> readDataStudent() async {
+    await FirebaseFirestore.instance
+        .collection('Student')
+        .doc(AuthProviderService.instance.user.uid)
+        .get()
+        .then((value) {
+      setState(() {
+         student_model = value.data();
+      });
+    });
+  }
 
   final _formKey = GlobalKey<FormState>();
   PostDes _postdes = PostDes();
   var uuid = Uuid();
   var uid = AuthProviderService.instance.user?.uid ?? '';
+  
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +61,15 @@ class _PostdetailState extends State<Postdetail> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Post"),
-        backgroundColor: Colors.orange,
+        title: Text("Post",
+              style: TextStyle(
+                color: Colors.white,
+              )),
+
+          backgroundColor:
+              // const Color(0xffff9e23),
+              const Color(0xffff711b),
+          
         actions: [
           TextButton(
             onPressed: () async {
@@ -56,20 +80,18 @@ class _PostdetailState extends State<Postdetail> {
                 await _postCollection.add({
                   'titleName': _postdes.title,
                   'contentText': _postdes.description,
-                   'uid' :  uid,
+                   'uid' :  uid.toString(),
                    'postid' : uuid.v4(),
-                
+                  'student':   student_model['name'],
                 });
                 Navigator.push(
                     context, MaterialPageRoute(builder: (context) => Post()));
               }
             },
             child: Text("Done",
-                style: TextStyle(
-                  color: Colors.black,
-                )),
+                style: TextStyle(color: Colors.white, fontSize: 13),
           )
-        ],
+          )],
         leading: TextButton(
             onPressed: () => {
                   Navigator.push(
@@ -77,7 +99,7 @@ class _PostdetailState extends State<Postdetail> {
                 },
             child: Text(
               "Cancel",
-              style: TextStyle(color: Colors.black, fontSize: 13),
+              style: TextStyle(color: Colors.white, fontSize: 13),
             )),
       ),
       body: SingleChildScrollView(
@@ -90,7 +112,7 @@ class _PostdetailState extends State<Postdetail> {
                     Container(
                       height: size.height * 0.15 - 27,
                       decoration: BoxDecoration(
-                          color: Colors.orange,
+                        //  color: Colors.orange,
                           borderRadius: BorderRadius.only(
                               // bottomLeft: Radius.circular(36),
                               // bottomRight: Radius.circular(36),
@@ -125,7 +147,7 @@ class _PostdetailState extends State<Postdetail> {
                                 height: size.height * 0.05,
                                 decoration: BoxDecoration(
                                     borderRadius:
-                                        BorderRadius.all(Radius.circular(20)),
+                                        BorderRadius.all(Radius.circular(10)),
                                     color: Colors.white),
                                 margin: EdgeInsets.only(top: 10),
                                 padding: EdgeInsets.only(left: 10),
@@ -136,10 +158,10 @@ class _PostdetailState extends State<Postdetail> {
                                   validator: RequiredValidator(
                                       errorText: 'title not complete'),
                                   decoration: InputDecoration(
-                                      hintText: "Title",
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(3))),
+                                    hintText: "Title..",
+                                    hintStyle: TextStyle(
+                                        fontSize: 16.0, color: Colors.grey),
+                                  ),
                                 ),
                               ),
                               Container(
@@ -157,11 +179,11 @@ class _PostdetailState extends State<Postdetail> {
                                   validator: RequiredValidator(
                                       errorText: 'Description not complete'),
                                   decoration: InputDecoration(
-                                      hintText: "Description",
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(3),
-                                      )),
-                                  maxLines: 10,
+                                    hintText: " ' Type Description '",
+                                    hintStyle: TextStyle(
+                                        fontSize: 12.0, color: Colors.grey),
+                                  ),
+                                  maxLines: 7,
                                   maxLength: 250,
                                 ),
                               ),
