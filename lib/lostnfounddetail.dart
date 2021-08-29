@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
@@ -7,6 +9,11 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:himod/post.dart';
 import 'package:himod/service/auth_provider_service.dart';
 import 'package:uuid/uuid.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart';
+
+
 
 import 'LostAndFound/lostandfound_screen.dart';
 
@@ -35,11 +42,23 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
 
   CollectionReference _lostCollection =
       FirebaseFirestore.instance.collection('LostandFound');
-
+      
   final _formKey = GlobalKey<FormState>();
   LostnfoundDes _lostdes = LostnfoundDes();
   var uuid = Uuid();
   var uid = AuthProviderService.instance.user?.uid ?? '';
+    FirebaseStorage _storage = FirebaseStorage.instance;
+
+    final ImagePicker _picker =ImagePicker();
+    File _image;
+
+    getImage() async{
+    final image = await _picker.getImage(source: ImageSource.gallery);
+
+setState(() {
+      _image = File(image.path);
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +82,11 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
               onPressed: () async {
                 print('Done');
 
+            if (_image != null) {
+              String fileName = basename(_image.path);
+              _storage.ref().child(fileName).putFile(_image);
+              }
+
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
                   await _lostCollection.add({
@@ -79,6 +103,8 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
                       MaterialPageRoute(
                           builder: (context) => LostAndFoundScreen()));
                 }
+
+                
               },
               child: Text("Done",
                   style: TextStyle(
@@ -335,7 +361,28 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
                     ),
                   ],
                 ),
-              )
+              ),
+              Container(
+                padding: EdgeInsets.all(10),
+                height: size.height * 0.3,
+
+                
+                child: Ink(
+                  color: Colors.grey[300],
+                  child: InkWell(
+                    onTap: (){
+                      getImage();
+                    },
+
+                    child: _image != null ? Image.file(_image):
+                    Container(
+                      height: 150,
+                      child: Center(
+                        child: Text("Upload a photo")), 
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
         )));
