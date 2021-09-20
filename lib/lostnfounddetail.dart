@@ -1,3 +1,7 @@
+import 'dart:math';
+import 'dart:io';
+import 'package:path/path.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
@@ -6,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:himod/post.dart';
 import 'package:himod/service/auth_provider_service.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
 import 'LostAndFound/lostandfound_screen.dart';
@@ -26,6 +31,7 @@ class LostnfoundDes {
   String catagory;
   String contact;
   String userId;
+  String urlImage;
 }
 
 // ignore: camel_case_types
@@ -38,6 +44,38 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
   void initState() {
     super.initState();
     readDataStudent();
+  }
+
+  final ImagePicker _picker = ImagePicker();
+  File file;
+  String downloadurl;
+
+  getImage() async {
+    final _temp = await _picker.pickImage(
+        source: ImageSource.gallery, maxHeight: 800, maxWidth: 800);
+    // final image = await _picker.getImage(
+    //     source: ImageSource.gallery, maxHeight: 800, maxWidth: 800);
+
+    setState(() {
+      file = File(_temp.path);
+    });
+  }
+
+  Future<void> UploadtoStorage() async {
+    FirebaseStorage _storage = FirebaseStorage.instance;
+
+    // dynamic urlImage;
+
+    Random random = Random();
+    int i = random.nextInt(100000);
+
+    var Imageupload = await _storage
+        .ref()
+        .child('LostandFound/lostnfound$i.jpg')
+        .putFile(file);
+    var downloadurl = await (Imageupload).ref.getDownloadURL();
+
+    _lostdes.urlImage = downloadurl;
   }
 
   dynamic student_model;
@@ -69,23 +107,25 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
               style: TextStyle(
                 color: Colors.white,
               )),
-
           flexibleSpace: Container(
-              decoration: new BoxDecoration(
-                gradient: new LinearGradient(
-                  colors: [
-                    const Color(0xffff9e23),
-                    const Color(0xffff711b),
-                    const Color(0xffff4814),
-                  ],
-                ),
+            decoration: new BoxDecoration(
+              gradient: new LinearGradient(
+                colors: [
+                  const Color(0xffff9e23),
+                  const Color(0xffff711b),
+                  const Color(0xffff4814),
+                ],
               ),
             ),
+          ),
           actions: [
             TextButton(
               onPressed: () async {
                 print('Done');
 
+                if (file != null) {
+                  await UploadtoStorage();
+                }
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
                   await _lostCollection.add({
@@ -96,6 +136,7 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
                     'uid': uid,
                     'lostandfoundid': uuid.v4(),
                     'contact': _lostdes.contact,
+                    'urlImage': _lostdes.urlImage,
                     'student': student_model['name'],
                     'timestamp': DateTime.now(),
                   });
@@ -358,7 +399,28 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
                     ),
                   ],
                 ),
-              )
+              ),
+              Container(
+                padding: EdgeInsets.all(10),
+                height: size.height * 0.3,
+                child: Ink(
+                  color: Colors.grey[300],
+                  child: InkWell(
+                    onTap: () async {
+                      await getImage();
+                      print('image path: ${file}');
+
+                      print('image path: ${_lostdes.urlImage}');
+                    },
+                    child: file != null
+                        ? Image.file(file)
+                        : Container(
+                            height: 150,
+                            child: Center(child: Text("Upload a photo")),
+                          ),
+                  ),
+                ),
+              ),
             ],
           ),
         )));
