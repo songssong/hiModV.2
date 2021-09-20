@@ -15,8 +15,7 @@ import 'package:himod/signup.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
 
-
-void main() => runApp(MyApp());
+//void main() => runApp(MyApp());
 class Post extends StatefulWidget {
   @override
   _PostState createState() => _PostState();
@@ -25,41 +24,41 @@ class Post extends StatefulWidget {
 class _PostState extends State<Post> with SingleTickerProviderStateMixin {
   Future<Null> readdataPost() async {}
 
- 
-
+  final TextEditingController _controller = new TextEditingController();
   Icon customIcon = const Icon(Icons.search);
+  Icon customIcon2 = const Icon(Icons.cancel);
   Widget customSearchBar = const Text('Post');
   String name = "";
 
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: customSearchBar,
+        title: customSearchBar,
         //   TextField(
         //     onChanged: (val) => initiateSearch(val),
         //  ),
-          flexibleSpace: Container(
-            decoration: new BoxDecoration(
-              gradient: new LinearGradient(
-                colors: [
-                  const Color(0xffff9e23),
-                  const Color(0xffff711b),
-                  const Color(0xffff4814),
-                ],
-              ),
+        flexibleSpace: Container(
+          decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+              colors: [
+                const Color(0xffff9e23),
+                const Color(0xffff711b),
+                const Color(0xffff4814),
+              ],
             ),
           ),
-              automaticallyImplyLeading: false,
+        ),
+        automaticallyImplyLeading: false,
         actions: [
-            
           IconButton(
             //  icon: const Icon(Icons.search),
             onPressed: () {
-               
-              setState( () {
+              setState(() {
                 if (customIcon.icon == Icons.search) {
-                  customIcon =  Icon(Icons.cancel);
-                ///  if(customIcon.icon == Icons.cancel)
+                  customIcon = Icon(Icons.cancel);
+                  if (customIcon2.icon == Icons.cancel) {
+                    name = "";
+                  }
 
                   customSearchBar = ListTile(
                     leading: Icon(
@@ -68,8 +67,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                       size: 28,
                     ),
                     title: TextField(
-                      
-                    onChanged : (val)=> initiateSearch(val),
+                      onChanged: (val) => initiateSearch(val),
                       decoration: InputDecoration(
                         hintText: 'search',
                         hintStyle: TextStyle(
@@ -85,8 +83,8 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                     ),
                   );
                 } else {
-                  customIcon = const Icon(Icons.search);
-                  customSearchBar = const Text('Post');
+                  customIcon = Icon(Icons.search);
+                  customSearchBar = Text('Post');
                 }
               });
             },
@@ -111,20 +109,15 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
         //   ),
         // ),
       ),
-            
-
-         
       body: StreamBuilder<QuerySnapshot>(
-        
           stream: name != "" && name != null
-          
               ? FirebaseFirestore.instance
                   .collection('Post')
-                  // .doc(AuthProviderService.instance.user.uid)
-                // .collection('titleName')
-                  .where("titleName", isEqualTo :name)
+                  // .doc(uid)
+                  // .collection('titleName')
+                  .where("titleName", isEqualTo: name)
                   .snapshots()
-              : FirebaseFirestore.instance.collection("Post").snapshots(),
+              : FirebaseFirestore.instance.collection("Post").orderBy('timestamp',descending:true).snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
@@ -132,23 +125,24 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
               case ConnectionState.waiting:
                 return new Text('Loading...');
               default:
-                 return ListView(
-              children: snapshot.data.docs.map((document) {
-                return Card(
-                  child: ListTile(
-                    leading: FlutterLogo(size: 72.0),
-                    // leading: CircleAvatar(backgroundColor: ),
-                    title: Text(document["student"]),
-                    subtitle: Text(document["titleName"]),
+                return ListView(
+                  children: snapshot.data.docs.map((document) {
+                    print('log: ${document.data()}');
+                    return Card(
+                      child: ListTile(
+                        leading: FlutterLogo(size: 72.0),
+                        // leading: CircleAvatar(backgroundColor: ),
 
-                    isThreeLine: true,
-                  ),
+                        title: Text(document["student"]),
+                        subtitle: Text(document["titleName"]),
+
+                        isThreeLine: true,
+                      ),
+                    );
+                  }).toList(),
                 );
-              }).toList(),
-            );
             }
           }),
-          
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.pushNamedAndRemoveUntil(

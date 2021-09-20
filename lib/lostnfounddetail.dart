@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
@@ -9,11 +7,6 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:himod/post.dart';
 import 'package:himod/service/auth_provider_service.dart';
 import 'package:uuid/uuid.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:path/path.dart';
-
-
 
 import 'LostAndFound/lostandfound_screen.dart';
 
@@ -42,23 +35,28 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
 
   CollectionReference _lostCollection =
       FirebaseFirestore.instance.collection('LostandFound');
-      
+  void initState() {
+    super.initState();
+    readDataStudent();
+  }
+
+  dynamic student_model;
+  Future<Null> readDataStudent() async {
+    await FirebaseFirestore.instance
+        .collection('Student')
+        .doc(AuthProviderService.instance.user.uid)
+        .get()
+        .then((value) {
+      setState(() {
+        student_model = value.data();
+      });
+    });
+  }
+
   final _formKey = GlobalKey<FormState>();
   LostnfoundDes _lostdes = LostnfoundDes();
   var uuid = Uuid();
   var uid = AuthProviderService.instance.user?.uid ?? '';
-    FirebaseStorage _storage = FirebaseStorage.instance;
-
-    final ImagePicker _picker =ImagePicker();
-    File _image;
-
-    getImage() async{
-    final image = await _picker.getImage(source: ImageSource.gallery);
-
-setState(() {
-      _image = File(image.path);
-      });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,20 +70,21 @@ setState(() {
                 color: Colors.white,
               )),
 
-          backgroundColor:
-              // const Color(0xffff9e23),
-              const Color(0xffff711b),
-          //    const Color(0xffff4814),
-
+          flexibleSpace: Container(
+              decoration: new BoxDecoration(
+                gradient: new LinearGradient(
+                  colors: [
+                    const Color(0xffff9e23),
+                    const Color(0xffff711b),
+                    const Color(0xffff4814),
+                  ],
+                ),
+              ),
+            ),
           actions: [
             TextButton(
               onPressed: () async {
                 print('Done');
-
-            if (_image != null) {
-              String fileName = basename(_image.path);
-              _storage.ref().child(fileName).putFile(_image);
-              }
 
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
@@ -96,15 +95,15 @@ setState(() {
                     'catagory': _lostdes.catagory,
                     'uid': uid,
                     'lostandfoundid': uuid.v4(),
-                    'contact' : _lostdes.contact,
+                    'contact': _lostdes.contact,
+                    'student': student_model['name'],
+                    'timestamp': DateTime.now(),
                   });
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => LostAndFoundScreen()));
                 }
-
-                
               },
               child: Text("Done",
                   style: TextStyle(
@@ -271,7 +270,7 @@ setState(() {
                                   child: Row(
                                 children: [
                                   Text(
-                                    "Select type",
+                                    "Select catagory",
                                     //style:
 
                                     //  TextStyle(fontWeight: FontWeight.bold),
@@ -292,8 +291,8 @@ setState(() {
                                       ],
                                       onChanged: (value) {
                                         setState(() {
-                                          //type = value;
-                                          _lostdes.type = value;
+                                          type = value;
+                                          _lostdes.type = type;
                                         });
                                       }),
                                 ],
@@ -339,20 +338,18 @@ setState(() {
                               )),
                               Container(
                                 child: ConstrainedBox(
-                                  constraints:
-                                      BoxConstraints.tightFor(width: 280 ,height: 40),
+                                  constraints: BoxConstraints.tightFor(
+                                      width: 280, height: 40),
                                   child: TextField(
                                     onChanged: (String contact) {
-                                    _lostdes.contact = contact;
-                                  },
+                                      _lostdes.contact = contact;
+                                    },
                                     decoration: InputDecoration(
                                       hintText: 'Contact',
                                       border: OutlineInputBorder(),
                                     ),
                                   ),
                                 ),
-
-                                    
                               )
                             ]),
                           ),
@@ -361,28 +358,7 @@ setState(() {
                     ),
                   ],
                 ),
-              ),
-              Container(
-                padding: EdgeInsets.all(10),
-                height: size.height * 0.3,
-
-                
-                child: Ink(
-                  color: Colors.grey[300],
-                  child: InkWell(
-                    onTap: (){
-                      getImage();
-                    },
-
-                    child: _image != null ? Image.file(_image):
-                    Container(
-                      height: 150,
-                      child: Center(
-                        child: Text("Upload a photo")), 
-                      ),
-                    ),
-                  ),
-                ),
+              )
             ],
           ),
         )));

@@ -16,34 +16,36 @@ class PostDes {
   String description;
   String postId;
   String userId;
+  String catagory;
   
-  PostDes({this.title, this.description,this.userId});
-   //ดึงข้อมูล
+  //PostDes({this.title, this.description, this.userId});
+  PostDes({this.title, this.description});
 
-   //var db = await this.openDatabase();
-  
-  
+  static fromSnapshot(tripSnapshot) {}
+  //ดึงข้อมูล
 
-  }
+  //var db = await this.openDatabase();
 
+}
 
 class _PostdetailState extends State<Postdetail> {
   CollectionReference _postCollection =
       FirebaseFirestore.instance.collection('Post');
-      
-void initState() {
+
+  void initState() {
     super.initState();
     readDataStudent();
-  } 
+  }
+
   dynamic student_model;
-      Future<Null> readDataStudent() async {
+  Future<Null> readDataStudent() async {
     await FirebaseFirestore.instance
         .collection('Student')
         .doc(AuthProviderService.instance.user.uid)
         .get()
         .then((value) {
       setState(() {
-         student_model = value.data();
+        student_model = value.data();
       });
     });
   }
@@ -52,7 +54,8 @@ void initState() {
   PostDes _postdes = PostDes();
   var uuid = Uuid();
   var uid = AuthProviderService.instance.user?.uid ?? '';
-  
+  String catagory = 'General';
+    
 
   @override
   Widget build(BuildContext context) {
@@ -62,36 +65,45 @@ void initState() {
       appBar: AppBar(
         centerTitle: true,
         title: Text("Post",
-              style: TextStyle(
-                color: Colors.white,
-              )),
-
-          backgroundColor:
-              // const Color(0xffff9e23),
-              const Color(0xffff711b),
-          
+            style: TextStyle(
+              color: Colors.white,
+            )),
+       flexibleSpace: Container(
+              decoration: new BoxDecoration(
+                gradient: new LinearGradient(
+                  colors: [
+                    const Color(0xffff9e23),
+                    const Color(0xffff711b),
+                    const Color(0xffff4814),
+                  ],
+                ),
+              ),
+            ),
         actions: [
           TextButton(
-            onPressed: () async {
-              print('Done');
+              onPressed: () async {
+                print('Done');
 
-              if (_formKey.currentState.validate()) {
-                _formKey.currentState.save();
-                await _postCollection.add({
-                  'titleName': _postdes.title,
-                  'contentText': _postdes.description,
-                   'uid' :  uid.toString(),
-                   'postid' : uuid.v4(),
-                  'student':   student_model['name'],
-                });
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Post()));
-              }
-            },
-            child: Text("Done",
+                if (_formKey.currentState.validate()) {
+                  _formKey.currentState.save();
+                  await _postCollection.add({
+                    'titleName': _postdes.title.toLowerCase().trim(),
+                    'contentText': _postdes.description,
+                    'uid': uid.toString(),
+                    'postid': uuid.v4(),
+                    'student': student_model['name'],
+                    'catagory': _postdes.catagory,
+                    'timestamp': DateTime.now(),
+                  });
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => Post()));
+                }
+              },
+              child: Text(
+                "Done",
                 style: TextStyle(color: Colors.white, fontSize: 13),
-          )
-          )],
+              ))
+        ],
         leading: TextButton(
             onPressed: () => {
                   Navigator.push(
@@ -102,17 +114,29 @@ void initState() {
               style: TextStyle(color: Colors.white, fontSize: 13),
             )),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Container(
-                height: size.height * 0.6,
+      body: Container(
+            // decoration: BoxDecoration(
+            //   gradient: LinearGradient(
+            //     begin: Alignment(1.0, 1.0),
+            //    // end: Alignment(-1.34, 1.0),
+            //     // colors: [
+            //     //   const Color(0xffff9e23),
+            //     //   const Color(0xffff711b),
+            //     //   const Color(0xffff4814)
+            //     // ]
+
+            //     ) ,
+            //     ),
+            child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Container(
+                height: size.height * 0.45,
                 child: Stack(
                   children: <Widget>[
                     Container(
                       height: size.height * 0.15 - 27,
                       decoration: BoxDecoration(
-                        //  color: Colors.orange,
                           borderRadius: BorderRadius.only(
                               // bottomLeft: Radius.circular(36),
                               // bottomRight: Radius.circular(36),
@@ -193,10 +217,96 @@ void initState() {
                       ),
                     ),
                   ],
-                )),
-          ],
-        ),
-      ),
-    );
+                ),
+              ),
+// type and catagory
+              Container(
+                height: size.height * 0.1,
+                child: Stack(
+                  children: <Widget>[
+                    Container(
+                      height: size.height * 0.15 - 27,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              // bottomLeft: Radius.circular(36),
+                              // bottomRight: Radius.circular(36),
+                              )),
+                    ),
+                    Positioned(
+                      top: 10,
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.symmetric(horizontal: 20.0),
+                        padding: EdgeInsets.symmetric(horizontal: 20.0),
+                        height: size.height * 0.59,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              offset: Offset(0, 10),
+                              blurRadius: 50,
+                              color: Colors.black.withOpacity(0.23),
+                            )
+                          ],
+                        ),
+                        child: Form(
+                          child: SingleChildScrollView(
+                            child: Column(children: <Widget>[
+                            
+                              Container(
+                                  //  padding: EdgeInsets.all(20.0),
+                                  child: Row(
+                                children: [
+                                  Text(
+                                    "Select catagory",
+                                    //  style:
+                                    //  TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(width: 55),
+                                  DropdownButton(
+                                      value: catagory,
+                                      items: [
+                                        DropdownMenuItem(
+                                          child: Text("General"),
+                                          value: 'General',
+                                        ),
+                                        DropdownMenuItem(
+                                          child: Text("Promote"),
+                                          value: 'Promote',
+                                        ),
+                                        DropdownMenuItem(
+                                          child: Text("Goods"),
+                                          value: 'Goods',
+                                        ),
+                                        DropdownMenuItem(
+                                          child: Text("Club"),
+                                          value: 'Club',
+                                        ),
+                                      ],
+                                      onChanged: (value) {
+                                        setState(() {
+                                          catagory = value;
+
+                                          _postdes.catagory = catagory;
+                                        });
+                                      }),
+                                ],
+                              )),
+                             
+                            ]),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        )));
   }
 }
