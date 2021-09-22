@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -380,18 +381,21 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
                               Container(
                                 child: ConstrainedBox(
                                   constraints: BoxConstraints.tightFor(
-                                      width: 280, height: 40),
+                                      width: 400, height: 60),
                                   child: TextField(
                                     onChanged: (String contact) {
                                       _lostdes.contact = contact;
                                     },
-                                    decoration: InputDecoration(
-                                      hintText: 'Contact',
-                                      border: OutlineInputBorder(),
-                                    ),
+                                    decoration: new InputDecoration(
+                                        labelText: "Enter your number",
+                                        icon: Icon(Icons.call)),
+                                    keyboardType: TextInputType.number,
+                                    inputFormatters: <TextInputFormatter>[
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
                                   ),
                                 ),
-                              )
+                              ),
                             ]),
                           ),
                         ),
