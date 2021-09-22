@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:himod/LostAndFound/component/body_found.dart';
+import 'package:himod/LostAndFound/component/body_lost.dart';
+
+class MyTabView {
+  final String titleName;
+  final Widget screen;
+  MyTabView(this.titleName, this.screen);
+}
 
 class LostAndFoundScreen extends StatefulWidget {
   LostAndFoundScreen({Key key}) : super(key: key);
@@ -9,22 +16,39 @@ class LostAndFoundScreen extends StatefulWidget {
   _LostAndFoundScreenState createState() => _LostAndFoundScreenState();
 }
 
-class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
+class _LostAndFoundScreenState extends State<LostAndFoundScreen>
+    with SingleTickerProviderStateMixin {
+  List<MyTabView> _myTabViews = [];
+  TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _myTabViews.add(MyTabView('LOST', BodyLost()));
+    _myTabViews.add(
+      MyTabView('FOUND', BodyFound()),
+    );
+
+    _tabController = TabController(vsync: this, length: _myTabViews.length);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _tabController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 2,
-        child: Scaffold(
+    return Container(
+      child: Scaffold(
+          backgroundColor: Colors.white,
           appBar: AppBar(
-            bottom: const TabBar(
-              tabs: [
-                Tab(icon: Icon(Icons.search)),
-                Tab(icon: Icon(Icons.directions_transit)),
-              ],
-            ),
             centerTitle: true,
-            title: const Text("LostAndFound"),
+            title: const Text(
+              "LostAndFound",
+              style: TextStyle(color: Colors.white),
+            ),
             flexibleSpace: Container(
               decoration: new BoxDecoration(
                 gradient: new LinearGradient(
@@ -37,35 +61,54 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
               ),
             ),
           ),
-          body: SafeArea(
-            child: TabBarView(
-              children: <Widget>[
-                Column(
-                  // mainAxisAlignment: MainAxisAlignment.start,
+          body: Scaffold(
+            backgroundColor: Colors.white,
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(50),
+              child: Container(
+                child: Stack(
                   children: [
-                    Center(
-                      child: BodyLostAndFound(),
+                    TabBar(
+                      controller: _tabController,
+                      labelColor: Color(0xffff4814),
+                      indicatorColor: Color(0xffff4814),
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      indicatorWeight: 2,
+                      unselectedLabelColor: Colors.black,
+                      tabs: _myTabViews.map((e) {
+                        return Container(
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text("${e.titleName}"),
+                          ),
+                        );
+                      }).toList(),
                     ),
                   ],
                 ),
-                Column(
-                  children: [
-                    Row(
-                      children: [
-                        new Text(
-                          "data",
-                          textAlign: TextAlign.start,
-                        ),
-                      ],
-                    ),
-                  ],
+              ),
+            ),
+            body: Stack(
+              children: [
+                Container(
+                  height: 1,
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.black38,
+                          blurRadius: 5,
+                          offset: Offset(0, 0.8)),
+                    ],
+                  ),
+                ),
+                TabBarView(
+                  controller: _tabController,
+                  children: _myTabViews.map((e) => e.screen).toList(),
                 ),
               ],
             ),
-            
-          ),
-        ),
-      ),
+          )),
     );
   }
 }
