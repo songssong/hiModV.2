@@ -19,14 +19,11 @@ class _SignupState extends State<Signup> {
     return Scaffold(
         body: Container(
       decoration: BoxDecoration(
-          gradient: LinearGradient(
-              colors: [
-              const Color(0xffff9e23),
-              const Color(0xffff711b),
-              const Color(0xffff4814)
-            ],
-              end: Alignment.bottomCenter,
-              begin: Alignment.topCenter)),
+          gradient: LinearGradient(colors: [
+        const Color(0xffff9e23),
+        const Color(0xffff711b),
+        const Color(0xffff4814)
+      ], end: Alignment.bottomCenter, begin: Alignment.topCenter)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -50,8 +47,7 @@ class _SignupState extends State<Signup> {
                   await AuthProviderService.instance.signIn();
                   EasyLoading.dismiss();
                   //เมื่อ login ครั้งแรกเสร็จแล้วให้ส่งไปที่หน้า Post
-                  Navigator.pop(context, '/post');
-                  // setState(() {}
+                  Navigator.popAndPushNamed(context, '/homepage');
                 }),
           ),
         ],
