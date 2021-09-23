@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:himod/LostAndFound/lostandfound_screen.dart';
+import 'package:himod/Profile/profile_screen.dart';
 import 'package:himod/component/appbar.dart';
 import 'package:himod/component/body.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -9,7 +11,6 @@ import 'package:himod/component/bottombar.dart';
 import 'package:himod/main.dart';
 import 'package:himod/postdetail.dart';
 import 'package:himod/component/appbar.dart';
-import 'package:himod/search.dart';
 import 'package:himod/service/auth_provider_service.dart';
 import 'package:himod/signup.dart';
 import 'package:provider/provider.dart';
@@ -59,6 +60,8 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                   if (customIcon2.icon == Icons.cancel) {
                     name = "";
                   }
+
+                  ///  if(customIcon.icon == Icons.cancel)
 
                   customSearchBar = ListTile(
                     leading: Icon(
@@ -117,7 +120,10 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                   // .collection('titleName')
                   .where("titleName", isEqualTo: name)
                   .snapshots()
-              : FirebaseFirestore.instance.collection("Post").orderBy('timestamp',descending:true).snapshots(),
+              : FirebaseFirestore.instance
+                  .collection("Post")
+                  .orderBy('timestamp', descending: true)
+                  .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
@@ -154,46 +160,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
         ),
         backgroundColor: Colors.yellow[600],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.orange,
-        shape: CircularNotchedRectangle(),
-        child: Container(
-          height: 60,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Icon(
-                  Icons.notes,
-                  size: 40.0,
-                  color: Colors.white,
-                ),
-                Icon(
-                  Icons.sports_esports,
-                  size: 40.0,
-                  color: Colors.white,
-                ),
-                SizedBox.shrink(),
-                IconButton(
-                  icon: FaIcon(
-                    FontAwesomeIcons.question,
-                    size: 30.0,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {},
-                ),
-                Icon(
-                  Icons.notifications,
-                  size: 40.0,
-                  color: Colors.white,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+      //
     );
   }
 
