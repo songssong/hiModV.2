@@ -34,6 +34,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: customSearchBar,
         //   TextField(
         //     onChanged: (val) => initiateSearch(val),
@@ -94,11 +95,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
             icon: customIcon,
           ),
         ],
-        centerTitle: true,
-        leading: IconButton(
-          icon: FaIcon(FontAwesomeIcons.user),
-          onPressed: () => Navigator.pushNamed(context, '/profile'),
-        ),
+
         // bottom: PreferredSize(
         //   preferredSize: Size.fromHeight(30.0),
         //   child: Container(
