@@ -45,7 +45,7 @@ class _BodyLostState extends State<BodyLost> {
             }
             return ListView(
               children: snapshot.data.docs.map((DocumentSnapshot doc) {
-                print(doc.data());
+                // print(doc.data());
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   child: Column(
@@ -68,6 +68,17 @@ class _BodyLostState extends State<BodyLost> {
               }).toList(),
             );
           }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/lostnfounddetail', (route) => false);
+        },
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.yellow[600],
+      ),
     );
   }
 }
