@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:himod/Widget/customCard.dart';
+import 'package:himod/service/auth_provider_service.dart';
+import 'package:intl/intl.dart';
 
 class BodyLost extends StatefulWidget {
   BodyLost({Key key}) : super(key: key);
@@ -11,62 +13,59 @@ class BodyLost extends StatefulWidget {
 }
 
 class _BodyLostState extends State<BodyLost> {
+  final String type = "Lost";
+  DateTime dateTime;
+
   @override
-  // void initState() {
-  //   super.initState();
-  //   readDataLostAndFound();
-  // }
-
-  // dynamic student_model;
-
-  // Future<Null> readDataLostAndFound() async {
-  //   await FirebaseFirestore.instance
-  //       .collection('Student')
-  //       .doc()
-  //       .get()
-  //       .then((value) {
-  //     setState(()  {
-  //       student_model = value.data();
-  //     });
-  //   });
-  // }
-
   Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder(
-          stream:
-              FirebaseFirestore.instance.collection('LostandFound').snapshots(),
+          stream: FirebaseFirestore.instance
+              .collection('LostandFound')
+              .where('typeName', isEqualTo: type)
+              .orderBy('timestamp', descending: true)
+              .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            return ListView(
-              children: snapshot.data.docs.map((DocumentSnapshot doc) {
-                // print(doc.data());
-                return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 5,
-                      ),
-                      CustomCard(
-                        onClick: () => {print('object')},
-                        nameUser: doc['student'] ?? 'student_name',
-                        // profileImg: student_model['imageUrl'].toString() ?? Container(),
-                        // dateTime: doc['timestamp'],
-                        contentImg: doc['urlImage'],
-                        nameTitle: doc['titleName'],
-                        content: doc['contentText'],
-                      ),
-                    ],
-                  ),
+            if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+                return Center(
+                  child: CircularProgressIndicator(),
                 );
-              }).toList(),
-            );
+              default:
+                return ListView(
+                  children: snapshot.data.docs.map((DocumentSnapshot doc) {
+                    // print(doc.data());
+                    Timestamp t = doc['timestamp'];
+                    DateTime d = DateTime.fromMicrosecondsSinceEpoch(
+                        t.microsecondsSinceEpoch);
+                    String formatDate =
+                        DateFormat('yyyy-MM-dd – kk:mm').format(d);
+                    // print(d);
+                    return Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 5,
+                          ),
+                          CustomCard(
+                            onClick: () => {print('object')},
+                            nameUser: doc['student'],
+                            profileImg: doc['profileImg'],
+                            dateTime: formatDate,
+                            contentImg: doc['urlImage'],
+                            nameTitle: doc['titleName'],
+                            content: doc['contentText'],
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                );
+            }
           }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

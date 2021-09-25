@@ -4,6 +4,7 @@ import 'package:himod/Profile/component/profile_pic.dart';
 import 'package:himod/Widget/customCard.dart';
 import 'package:himod/post.dart';
 import 'package:himod/service/auth_provider_service.dart';
+import 'package:intl/intl.dart';
 
 class BodyFound extends StatefulWidget {
   BodyFound({Key key}) : super(key: key);
@@ -15,45 +16,70 @@ class BodyFound extends StatefulWidget {
 // String url = AuthProviderService.instance.user?.photoURL ?? '';
 
 class _BodyFoundState extends State<BodyFound> {
+  final String type = "Found";
+  DateTime dateTime;
+
   @override
-  void initState() {
-    super.initState();
-    // readDataLostAndFound();
-  }
-
-  // dynamic data_found;
-
-  // Future<Null> readDataLostAndFound() async {
-  //   await FirebaseFirestore.instance
-  //       .collection('LostandFound')
-  //       .doc(AuthProviderService.instance.user.uid)
-  //       .get()
-  //       .then((value) {
-  //     setState(() {
-  //       data_found = value.data();
-  //     });
-  //   });
-  // }
-
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Column(
-        children: [
-          SizedBox(
-            height: 15,
-          ),
-          CustomCard(
-            onClick: () => {print('object')},
-            nameUser: "Thanapat Roemruai",
-            dateTime: "10 sep 21",
-            contentImg:
-                "https://post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/02/322868_1100-800x825.jpg",
-            content:
-                "หมาหายช่วยด้วยยยยยยยยยยยยยยย ไอสัสหน้าหี โปรเจคคคคคคคคคคคคคคคคค",
-            nameTitle: "หมาหาย!",
-          ),
-        ],
+    return Scaffold(
+      body: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('LostandFound')
+              .where('typeName', isEqualTo: type)
+              .orderBy('timestamp', descending: true)
+              .snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              default:
+                return ListView(
+                  children: snapshot.data.docs.map((DocumentSnapshot doc) {
+                    // print(doc.data());
+                    Timestamp t = doc['timestamp'];
+                    DateTime d = DateTime.fromMicrosecondsSinceEpoch(
+                        t.microsecondsSinceEpoch);
+                    String formatDate =
+                        DateFormat('yyyy-MM-dd – kk:mm').format(d);
+                    // print(d);
+                    return Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 5,
+                          ),
+                          CustomCard(
+                            onClick: () => {print('object')},
+                            nameUser: doc['student'],
+                            profileImg: doc['profileImg'],
+                            dateTime: formatDate,
+                            contentImg: doc['urlImage'],
+                            nameTitle: doc['titleName'],
+                            content: doc['contentText'],
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                );
+            }
+          }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/lostnfounddetail', (route) => false);
+        },
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.yellow[600],
       ),
     );
   }
