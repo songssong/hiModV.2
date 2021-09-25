@@ -139,6 +139,7 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
                     'contact': _lostdes.contact,
                     'urlImage': _lostdes.urlImage,
                     'student': student_model['name'],
+                    'profileImg': student_model['imageUrl'],
                     'timestamp': DateTime.now(),
                   });
                   Navigator.push(
