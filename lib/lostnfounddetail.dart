@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:himod/homepage.dart';
 import 'package:path/path.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -142,10 +143,8 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
                     'profileImg': student_model['imageUrl'],
                     'timestamp': DateTime.now(),
                   });
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => LostAndFoundScreen()));
+                  Navigator.pop(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
                 }
               },
               child: Text("Done",
@@ -156,10 +155,8 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
           ],
           leading: TextButton(
               onPressed: () => {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => LostAndFoundScreen()))
+                    Navigator.pop(context,
+                        MaterialPageRoute(builder: (context) => HomePage()))
                   },
               child: Text(
                 "Cancel",

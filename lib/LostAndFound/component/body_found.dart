@@ -72,8 +72,7 @@ class _BodyFoundState extends State<BodyFound> {
           }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamedAndRemoveUntil(
-              context, '/lostnfounddetail', (route) => false);
+          Navigator.of(context).pushNamed('/lostnfounddetail');
         },
         child: Icon(
           Icons.add,

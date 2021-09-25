@@ -30,7 +30,7 @@ class _BodyProfileState extends State<BodyProfile> {
         .get()
         .then((value) {
       setState(() {
-         student_model = value.data();
+        student_model = value.data();
       });
     });
   }
@@ -196,7 +196,7 @@ class _BodyProfileState extends State<BodyProfile> {
                   await AuthProviderService.instance.signOut();
                   EasyLoading.dismiss();
                   setState(() {
-                    Navigator.pushReplacementNamed(context, '/signup');
+                    Navigator.popAndPushNamed(context, '/signup');
                   });
                 },
                 child: Text(

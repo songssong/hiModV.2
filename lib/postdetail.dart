@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:himod/homepage.dart';
 import 'package:himod/post.dart';
 import 'package:himod/service/auth_provider_service.dart';
 import 'package:uuid/uuid.dart';
@@ -92,11 +93,11 @@ class _PostdetailState extends State<Postdetail> {
                       'postid': uuid.v4(),
                       'student': student_model['name'],
                       'catagory': _postdes.catagory,
-                      'profileImg':student_model['imageUrl'],
+                      'profileImg': student_model['imageUrl'],
                       'timestamp': DateTime.now(),
                     });
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Post()));
+                    Navigator.pop(context,
+                        MaterialPageRoute(builder: (context) => HomePage()));
                   }
                 },
                 child: Text(
@@ -106,8 +107,8 @@ class _PostdetailState extends State<Postdetail> {
           ],
           leading: TextButton(
               onPressed: () => {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Post()))
+                    Navigator.pop(context,
+                        MaterialPageRoute(builder: (context) => HomePage()))
                   },
               child: Text(
                 "Cancel",

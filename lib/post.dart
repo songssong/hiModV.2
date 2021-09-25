@@ -144,8 +144,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
           }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamedAndRemoveUntil(
-              context, '/postdetail', (route) => false);
+          Navigator.of(context).pushNamed('/postdetail');
         },
         child: Icon(
           Icons.add,
