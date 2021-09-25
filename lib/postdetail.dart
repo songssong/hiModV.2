@@ -17,7 +17,7 @@ class PostDes {
   String postId;
   String userId;
   String catagory;
-  
+
   //PostDes({this.title, this.description, this.userId});
   PostDes({this.title, this.description});
 
@@ -54,67 +54,67 @@ class _PostdetailState extends State<Postdetail> {
   PostDes _postdes = PostDes();
   var uuid = Uuid();
   var uid = AuthProviderService.instance.user?.uid ?? '';
-  String catagory = 'General';
-    
+  String catagory; //= 'General';
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text("Post",
-            style: TextStyle(
-              color: Colors.white,
-            )),
-       flexibleSpace: Container(
-              decoration: new BoxDecoration(
-                gradient: new LinearGradient(
-                  colors: [
-                    const Color(0xffff9e23),
-                    const Color(0xffff711b),
-                    const Color(0xffff4814),
-                  ],
-                ),
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text("Post",
+              style: TextStyle(
+                color: Colors.white,
+              )),
+          flexibleSpace: Container(
+            decoration: new BoxDecoration(
+              gradient: new LinearGradient(
+                colors: [
+                  const Color(0xffff9e23),
+                  const Color(0xffff711b),
+                  const Color(0xffff4814),
+                ],
               ),
             ),
-        actions: [
-          TextButton(
-              onPressed: () async {
-                print('Done');
+          ),
+          actions: [
+            TextButton(
+                onPressed: () async {
+                  print('Done');
 
-                if (_formKey.currentState.validate()) {
-                  _formKey.currentState.save();
-                  await _postCollection.add({
-                    'titleName': _postdes.title.toLowerCase().trim(),
-                    'contentText': _postdes.description,
-                    'uid': uid.toString(),
-                    'postid': uuid.v4(),
-                    'student': student_model['name'],
-                    'catagory': _postdes.catagory,
-                    'timestamp': DateTime.now(),
-                  });
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => Post()));
-                }
-              },
-              child: Text(
-                "Done",
-                style: TextStyle(color: Colors.white, fontSize: 13),
-              ))
-        ],
-        leading: TextButton(
-            onPressed: () => {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => Post()))
+                  if (_formKey.currentState.validate()) {
+                    _formKey.currentState.save();
+                    await _postCollection.add({
+                      'titleName': _postdes.title.toLowerCase().trim(),
+                      'contentText': _postdes.description,
+                      'uid': uid.toString(),
+                      'postid': uuid.v4(),
+                      'student': student_model['name'],
+                      'catagory': _postdes.catagory,
+                      'profileImg':student_model['imageUrl'],
+                      'timestamp': DateTime.now(),
+                    });
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Post()));
+                  }
                 },
-            child: Text(
-              "Cancel",
-              style: TextStyle(color: Colors.white, fontSize: 13),
-            )),
-      ),
-      body: Container(
+                child: Text(
+                  "Done",
+                  style: TextStyle(color: Colors.white, fontSize: 13),
+                ))
+          ],
+          leading: TextButton(
+              onPressed: () => {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Post()))
+                  },
+              child: Text(
+                "Cancel",
+                style: TextStyle(color: Colors.white, fontSize: 13),
+              )),
+        ),
+        body: Container(
             // decoration: BoxDecoration(
             //   gradient: LinearGradient(
             //     begin: Alignment(1.0, 1.0),
@@ -256,7 +256,6 @@ class _PostdetailState extends State<Postdetail> {
                         child: Form(
                           child: SingleChildScrollView(
                             child: Column(children: <Widget>[
-                            
                               Container(
                                   //  padding: EdgeInsets.all(20.0),
                                   child: Row(
@@ -296,7 +295,6 @@ class _PostdetailState extends State<Postdetail> {
                                       }),
                                 ],
                               )),
-                             
                             ]),
                           ),
                         ),

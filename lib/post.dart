@@ -13,10 +13,14 @@ import 'package:himod/postdetail.dart';
 import 'package:himod/component/appbar.dart';
 import 'package:himod/service/auth_provider_service.dart';
 import 'package:himod/signup.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
 
-//void main() => runApp(MyApp());
+import 'Widget/customCard.dart';
+
+void main() => runApp(MyApp());
+
 class Post extends StatefulWidget {
   @override
   _PostState createState() => _PostState();
@@ -25,11 +29,11 @@ class Post extends StatefulWidget {
 class _PostState extends State<Post> with SingleTickerProviderStateMixin {
   Future<Null> readdataPost() async {}
 
-  final TextEditingController _controller = new TextEditingController();
   Icon customIcon = const Icon(Icons.search);
   Icon customIcon2 = const Icon(Icons.cancel);
   Widget customSearchBar = const Text('Post');
   String name = "";
+  DateTime dateTime;
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,12 +62,6 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
               setState(() {
                 if (customIcon.icon == Icons.search) {
                   customIcon = Icon(Icons.cancel);
-                  if (customIcon2.icon == Icons.cancel) {
-                    name = "";
-                  }
-
-                  ///  if(customIcon.icon == Icons.cancel)
-
                   customSearchBar = ListTile(
                     leading: Icon(
                       Icons.search,
@@ -95,25 +93,12 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
             icon: customIcon,
           ),
         ],
-
-        // bottom: PreferredSize(
-        //   preferredSize: Size.fromHeight(30.0),
-        //   child: Container(
-        //     child: TabBar(
-        //       indicatorColor: Colors.black,
-        //       isScrollable: true,
-        //       labelColor: Colors.black,
-        //    //   controller: _tabController,
-        //    //   tabs: _tabList,
-        //     ),
-        //   ),
-        // ),
       ),
       body: StreamBuilder<QuerySnapshot>(
           stream: name != "" && name != null
               ? FirebaseFirestore.instance
                   .collection('Post')
-                  // .doc(uid)
+                  // .doc(AuthProviderService.instance.user.uid)
                   // .collection('titleName')
                   .where("titleName", isEqualTo: name)
                   .snapshots()
@@ -130,16 +115,27 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
               default:
                 return ListView(
                   children: snapshot.data.docs.map((document) {
-                    print('log: ${document.data()}');
-                    return Card(
-                      child: ListTile(
-                        leading: FlutterLogo(size: 72.0),
-                        // leading: CircleAvatar(backgroundColor: ),
-
-                        title: Text(document["student"]),
-                        subtitle: Text(document["titleName"]),
-
-                        isThreeLine: true,
+                    // print(document.data());
+                    Timestamp t = document['timestamp'];
+                    DateTime d = DateTime.fromMicrosecondsSinceEpoch(
+                        t.microsecondsSinceEpoch);
+                    String formatDate =
+                        DateFormat('yyyy-MM-dd – kk:mm').format(d);
+                    // print(d);
+                    return Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      child: Column(
+                        children: [
+                          CustomCard(
+                            onClick: () => {print('object')},
+                            nameUser: document['student'] ?? 'student_name',
+                            profileImg: document['profileImg'],
+                            dateTime: formatDate,
+                            nameTitle: document['titleName'],
+                            content: document['contentText'],
+                          ),
+                        ],
                       ),
                     );
                   }).toList(),
