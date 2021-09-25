@@ -35,24 +35,23 @@ class CustomCard extends StatelessWidget {
         onTap: onClick,
         child: Column(
           children: [
-            ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(profileImg != null
-                    ? NetworkImage(profileImg)
-                    : 'https://shortrecap.co/wp-content/uploads/2020/05/Catcover_web.jpg'
-                        .toString()),
-              ),
-              title: Text(nameUser ?? ""),
+            new ListTile(
+              leading: CircleAvatar(backgroundImage: NetworkImage(profileImg)),
+              title: Text(nameUser) != null ? Text(nameUser) : 'name',
               subtitle: Text(dateTime),
             ),
             Padding(
                 padding: EdgeInsets.only(top: 1.0, bottom: 1.0),
                 child: contentImg != null
-                    ? Image(image: NetworkImage(contentImg))
+                    ? Image(
+                        image: NetworkImage(contentImg),
+                        width: 300,
+                        fit: BoxFit.cover,
+                      )
                     : Container()),
             ListTile(
-              title: Text(nameTitle),
-              subtitle: Text(content),
+              title: Text(nameTitle) ?? "",
+              subtitle: Text(content) ?? "",
             ),
           ],
         ),
