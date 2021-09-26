@@ -101,6 +101,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                   // .doc(AuthProviderService.instance.user.uid)
                   // .collection('titleName')
                   .where("titleName", isEqualTo: name)
+                 .orderBy('timestamp', descending: true)
                   .snapshots()
               : FirebaseFirestore.instance
                   .collection("Post")
