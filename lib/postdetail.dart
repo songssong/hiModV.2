@@ -55,7 +55,7 @@ class _PostdetailState extends State<Postdetail> {
   PostDes _postdes = PostDes();
   var uuid = Uuid();
   var uid = AuthProviderService.instance.user?.uid ?? '';
-  String catagory; //= 'General';
+  String catagory = 'General';
 
   @override
   Widget build(BuildContext context) {
@@ -286,13 +286,17 @@ class _PostdetailState extends State<Postdetail> {
                                           child: Text("Club"),
                                           value: 'Club',
                                         ),
+                                        
                                       ],
                                       onChanged: (value) {
+                                        
                                         setState(() {
-                                          catagory = value;
+                                          
+                                        catagory = (value);
 
                                           _postdes.catagory = catagory;
                                         });
+                                        
                                       }),
                                 ],
                               )),
