@@ -101,7 +101,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                   // .doc(AuthProviderService.instance.user.uid)
                   // .collection('titleName')
                   .where("titleName", isEqualTo: name)
-                 .orderBy('timestamp', descending: true)
+                  .orderBy('timestamp', descending: true)
                   .snapshots()
               : FirebaseFirestore.instance
                   .collection("Post")
@@ -115,7 +115,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                 return new Text('Loading...');
               default:
                 return ListView(
-                  children: snapshot.data.docs.map((document) {
+                  children: snapshot.data.docs.map((DocumentSnapshot document) {
                     // print(document.data());
                     Timestamp t = document['timestamp'];
                     DateTime d = DateTime.fromMicrosecondsSinceEpoch(
@@ -133,6 +133,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                             nameUser: document['student'] ?? 'student_name',
                             profileImg: document['profileImg'],
                             dateTime: formatDate,
+                            contentImg: document['urlImage'],
                             nameTitle: document['titleName'],
                             content: document['contentText'],
                           ),
@@ -143,6 +144,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                 );
             }
           }),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).pushNamed('/postdetail');

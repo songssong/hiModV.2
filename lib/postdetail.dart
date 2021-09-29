@@ -1,10 +1,16 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:himod/homepage.dart';
 import 'package:himod/post.dart';
 import 'package:himod/service/auth_provider_service.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
+import 'dart:math';
+
 //import 'package:form_field_validator/form_field_validator.dart';
 
 class Postdetail extends StatefulWidget {
@@ -18,6 +24,7 @@ class PostDes {
   String postId;
   String userId;
   String catagory;
+  String urlImage;
 
   //PostDes({this.title, this.description, this.userId});
   PostDes({this.title, this.description});
@@ -49,6 +56,34 @@ class _PostdetailState extends State<Postdetail> {
         student_model = value.data();
       });
     });
+  }
+
+  final ImagePicker _picker = ImagePicker();
+  File file;
+  String downloadurl;
+
+  getImage() async {
+    final _temp = await _picker.pickImage(
+        source: ImageSource.gallery, maxHeight: 800, maxWidth: 800);
+
+    setState(() {
+      file = File(_temp.path);
+    });
+  }
+
+  Future<void> UploadtoStorage() async {
+    FirebaseStorage _storage = FirebaseStorage.instance;
+
+    // dynamic urlImage;
+
+    Random random = Random();
+    int i = random.nextInt(100000);
+
+    var Imageupload =
+        await _storage.ref().child('Post/post$i.jpg').putFile(file);
+    var downloadurl = await (Imageupload).ref.getDownloadURL();
+
+    _postdes.urlImage = downloadurl;
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -84,6 +119,10 @@ class _PostdetailState extends State<Postdetail> {
                 onPressed: () async {
                   print('Done');
 
+                  if (file != null) {
+                    await UploadtoStorage();
+                  }
+
                   if (_formKey.currentState.validate()) {
                     _formKey.currentState.save();
                     await _postCollection.add({
@@ -95,6 +134,7 @@ class _PostdetailState extends State<Postdetail> {
                       'catagory': _postdes.catagory,
                       'profileImg': student_model['imageUrl'],
                       'timestamp': DateTime.now(),
+                      'urlImage': _postdes.urlImage,
                     });
                     Navigator.pop(context,
                         MaterialPageRoute(builder: (context) => HomePage()));
@@ -286,17 +326,13 @@ class _PostdetailState extends State<Postdetail> {
                                           child: Text("Club"),
                                           value: 'Club',
                                         ),
-                                        
                                       ],
                                       onChanged: (value) {
-                                        
                                         setState(() {
-                                          
-                                        catagory = (value);
+                                          catagory = (value);
 
                                           _postdes.catagory = catagory;
                                         });
-                                        
                                       }),
                                 ],
                               )),
@@ -307,7 +343,28 @@ class _PostdetailState extends State<Postdetail> {
                     ),
                   ],
                 ),
-              )
+              ),
+              Container(
+                padding: EdgeInsets.all(10),
+                height: size.height * 0.3,
+                child: Ink(
+                  color: Colors.grey[300],
+                  child: InkWell(
+                    onTap: () async {
+                      await getImage();
+                      print('image path: ${file}');
+
+                      print('image path: ${_postdes.urlImage}');
+                    },
+                    child: file != null
+                        ? Image.file(file)
+                        : Container(
+                            height: 150,
+                            child: Center(child: Text("Upload a photo")),
+                          ),
+                  ),
+                ),
+              ),
             ],
           ),
         )));
