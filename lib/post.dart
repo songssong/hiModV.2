@@ -26,8 +26,92 @@ class Post extends StatefulWidget {
   _PostState createState() => _PostState();
 }
 
+enum Type { All, General, Promote, Goods, Club }
+
 class _PostState extends State<Post> with SingleTickerProviderStateMixin {
+  String _value = "";
+
+  void _setValue(String value) => setState(() => _value = value);
+
   Future<Null> readdataPost() async {}
+  Future _askUser() async {
+    switch (await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: const Text('Select category'),
+            children: <Widget>[
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  Navigator.pop(context, Type.All);
+                },
+                child: const Text(
+                  'All',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  Navigator.pop(context, Type.General);
+                },
+                child: const Text(
+                  'General',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  Navigator.pop(context, Type.Promote);
+                },
+                child: const Text(
+                  'Promote',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  Navigator.pop(context, Type.Goods);
+                },
+                child: const Text(
+                  'Goods',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  Navigator.pop(context, Type.Club);
+                },
+                child: const Text(
+                  'Club',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ],
+          );
+        })) {
+      case Type.All:
+        _setValue('');
+        break;
+      case Type.General:
+        _setValue('General');
+        break;
+      case Type.Promote:
+        _setValue('Promote');
+        break;
+      case Type.Goods:
+        _setValue('Goods');
+        break;
+      case Type.Club:
+        _setValue('Club');
+        print(_value);
+        break;
+    }
+  }
 
   Icon customIcon = const Icon(Icons.search);
   Icon customIcon2 = const Icon(Icons.cancel);
@@ -43,6 +127,14 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
         //   TextField(
         //     onChanged: (val) => initiateSearch(val),
         //  ),
+        leading: IconButton(
+          onPressed: () => _askUser(),
+          icon: Icon(
+            Icons.filter_list_alt,
+            color: Colors.white,
+            size: 30,
+          ),
+        ),
         flexibleSpace: Container(
           decoration: new BoxDecoration(
             gradient: new LinearGradient(
@@ -95,12 +187,20 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
         ],
       ),
       body: StreamBuilder<QuerySnapshot>(
-          stream: name != "" && name != null
+          // stream: name != "" && name != null
+          //     ? FirebaseFirestore.instance
+          //         .collection('Post')
+          //         // .doc(AuthProviderService.instance.user.uid)
+          //         // .collection('titleName')
+          //         .where("titleName", isEqualTo: name)
+          //         .orderBy('timestamp', descending: true)
+          //         .snapshots()
+          stream: _value != ""
               ? FirebaseFirestore.instance
                   .collection('Post')
                   // .doc(AuthProviderService.instance.user.uid)
                   // .collection('titleName')
-                  .where("titleName", isEqualTo: name)
+                  .where("catagory", isEqualTo: _value)
                   .orderBy('timestamp', descending: true)
                   .snapshots()
               : FirebaseFirestore.instance

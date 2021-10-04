@@ -67,10 +67,11 @@ flutter:
   assets:
     - images/logonew.png
     - images/logologin.png
-    - images/post.png
-    - images/activities.png
-    - images/lost.png
-    - images/icon.png
+    - images/Activity.png
+    - images/Home.png
+    - images/Mod.png
+    - images/Notification.png
+    - images/user.png
     
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
