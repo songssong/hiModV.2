@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:himod/activity.dart';
+import 'package:himod/notification.dart';
 import 'package:himod/post.dart';
 
 import 'LostAndFound/lostandfound_screen.dart';
@@ -17,9 +19,9 @@ class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
   final screens = [
     Post(),
-    Center(child: Text('Activity', style: TextStyle(fontSize: 55))),
+    Activity(),
     LostAndFoundScreen(),
-    Center(child: Text('Notification', style: TextStyle(fontSize: 55))),
+    Noti(),
     ProfileScreen(),
   ];
   List<Widget> _screen = [
