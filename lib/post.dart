@@ -236,6 +236,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                             contentImg: document['urlImage'],
                             nameTitle: document['titleName'],
                             content: document['contentText'],
+                            catagory: document['catagory'],
                           ),
                         ],
                       ),
