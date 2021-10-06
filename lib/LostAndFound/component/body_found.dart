@@ -62,6 +62,7 @@ class _BodyFoundState extends State<BodyFound> {
                             contentImg: doc['urlImage'],
                             nameTitle: doc['titleName'],
                             content: doc['contentText'],
+                            catagory: doc['catagory'],
                           ),
                         ],
                       ),

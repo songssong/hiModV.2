@@ -59,6 +59,7 @@ class _BodyLostState extends State<BodyLost> {
                             contentImg: doc['urlImage'],
                             nameTitle: doc['titleName'],
                             content: doc['contentText'],
+                            catagory: doc['catagory'],
                           ),
                         ],
                       ),
