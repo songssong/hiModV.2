@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:himod/LostAndFound/component/viewpost_lostandfound.dart';
 import 'package:himod/Profile/component/profile_pic.dart';
 import 'package:himod/Widget/customCard.dart';
 import 'package:himod/post.dart';
@@ -55,7 +56,11 @@ class _BodyFoundState extends State<BodyFound> {
                             height: 5,
                           ),
                           CustomCard(
-                            onClick: () => {print('object')},
+                            onClick: () => {Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ViewOnlyPost(uid: doc['uid'],lostandfoundid: doc['lostandfoundid'],type: "found"),
+                                  ))},
                             nameUser: doc['student'],
                             profileImg: doc['profileImg'],
                             dateTime: formatDate,

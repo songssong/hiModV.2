@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:himod/LostAndFound/component/viewpost_lostandfound.dart';
 import 'package:himod/Widget/customCard.dart';
 import 'package:himod/service/auth_provider_service.dart';
 import 'package:intl/intl.dart';
@@ -52,7 +53,13 @@ class _BodyLostState extends State<BodyLost> {
                             height: 5,
                           ),
                           CustomCard(
-                            onClick: () => {print('object')},
+                            onClick: () => {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ViewOnlyPost(uid: doc['uid'],lostandfoundid: doc['lostandfoundid'], type: "lost"),
+                                  ))
+                            },
                             nameUser: doc['student'],
                             profileImg: doc['profileImg'],
                             dateTime: formatDate,
