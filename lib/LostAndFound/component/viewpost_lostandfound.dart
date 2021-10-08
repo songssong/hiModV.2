@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:himod/Widget/customViewPost_LostAndFound.dart';
+import 'package:himod/Widget/customViewLostAndFound.dart';
 import 'package:intl/intl.dart';
 
 class ViewOnlyPost extends StatefulWidget {
@@ -71,7 +71,7 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
                       String formatDate =
                           DateFormat('yyyy-MM-dd – kk:mm').format(d);
                       // print(doc.data());
-                      return CustomViewPost(
+                      return CustomViewLostAndFound(
                         nameUser: doc['student'],
                         profileImg: doc['profileImg'],
                         contentImg: doc['urlImage'],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class CustomViewPost extends StatelessWidget {
+class CustomViewLostAndFound extends StatelessWidget {
   final String nameUser;
   final String profileImg;
   final String contentImg;
@@ -12,7 +12,7 @@ class CustomViewPost extends StatelessWidget {
   final String category;
   final String type;
 
-  CustomViewPost(
+  CustomViewLostAndFound(
       {Key key,
       this.nameUser,
       this.profileImg,
