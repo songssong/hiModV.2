@@ -41,16 +41,30 @@ class CustomCard extends StatelessWidget {
               leading: CircleAvatar(backgroundImage: NetworkImage(profileImg)),
               title: Text(nameUser) != null ? Text(nameUser) : 'name',
               subtitle: Text(dateTime),
-              trailing: Text(
-                catagory,
-                style: TextStyle(
-                  foreground: Paint()
-                    ..style = PaintingStyle.stroke
-                    ..strokeWidth = 1
-                    ..color = Colors.orange,
-                  fontSize: 10,
-                  letterSpacing: 1.5,
-                  height: 1,
+              trailing: Container(
+                padding: EdgeInsets.all(2),
+                child: Text(
+                  catagory,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 13,
+                  ),
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(40.0)),
+                  gradient: new LinearGradient(
+                    colors: [
+                      const Color(0xffff9e23),
+                      const Color(0xffff711b),
+                      const Color(0xffff4814),
+                    ],
+                  ),
+                  boxShadow: const [
+                    BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 2,
+                        offset: Offset(1, 1)),
+                  ],
                 ),
               ),
             ),
