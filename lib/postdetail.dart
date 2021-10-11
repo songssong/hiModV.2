@@ -86,6 +86,24 @@ class _PostdetailState extends State<Postdetail> {
     _postdes.urlImage = downloadurl;
   }
 
+  void _addToDatabase(String name) {
+    List<String> splitList = name.split(" ");
+
+    List<String> indexList = [];
+
+    for (int i = 0; i < splitList.length; i++) {
+      for (int y = 1; y < splitList[i].length + 1; y++) {
+        indexList.add(splitList[i].substring(0, y).toLowerCase());
+        print(indexList);
+
+        FirebaseFirestore.instance
+            .collection('Post')
+            .doc()
+            .set({'titleName': name, 'searchIndex': indexList});
+      }
+    }
+  }
+
   final _formKey = GlobalKey<FormState>();
   PostDes _postdes = PostDes();
   var uuid = Uuid();
