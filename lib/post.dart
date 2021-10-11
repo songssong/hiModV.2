@@ -13,6 +13,7 @@ import 'package:himod/postdetail.dart';
 import 'package:himod/component/appbar.dart';
 import 'package:himod/service/auth_provider_service.dart';
 import 'package:himod/signup.dart';
+import 'package:himod/viewpost_post.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
@@ -229,7 +230,16 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                       child: Column(
                         children: [
                           CustomCard(
-                            onClick: () => {print('object')},
+                            onClick: () => {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ViewPost(
+                                      uid: document['uid'],
+                                      postid: document['postid'],
+                                    ),
+                                  ))
+                            },
                             nameUser: document['student'] ?? 'student_name',
                             profileImg: document['profileImg'],
                             dateTime: formatDate,
