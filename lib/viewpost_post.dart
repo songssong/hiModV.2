@@ -38,11 +38,26 @@ class _ViewPostState extends State<ViewPost> {
                 ],
               ),
             ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+              PopupMenuButton(
+                  color: Colors.white,
+                  itemBuilder: (context) => [
+                        PopupMenuItem(
+                          child: Text("First"),
+                          value: 1,
+                        ),
+                        PopupMenuItem(
+                          child: Text("Second"),
+                          value: 2,
+                        ),
+                      ]),
+            ]),
           ),
         ),
         body: FutureBuilder(
-            future:
-                postref.where('postid', isEqualTo: widget.postid).get(),
+            future: postref.where('postid', isEqualTo: widget.postid).get(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError)
