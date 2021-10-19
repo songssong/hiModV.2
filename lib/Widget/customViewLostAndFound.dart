@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:himod/Widget/imageDialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CustomViewLostAndFound extends StatelessWidget {
@@ -31,13 +32,23 @@ class CustomViewLostAndFound extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          contentImg != null
-              ? Image(
-                  image: NetworkImage(contentImg),
-                  width: 300,
-                  fit: BoxFit.cover,
-                )
-              : Container(),
+          InkWell(
+            child: contentImg != null
+                ? Image(
+                    image: NetworkImage(contentImg),
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  )
+                : Container(),
+            onTap: () async {
+              await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ImageDialog(
+                            contentImg: contentImg,
+                          )));
+            },
+          ),
           SizedBox(
             height: 10,
           ),
