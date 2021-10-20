@@ -282,123 +282,141 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
                               )),
                     ),
                     Positioned(
-                      top: 10,
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                        alignment: Alignment.center,
-                        margin: EdgeInsets.symmetric(horizontal: 20.0),
-                        padding: EdgeInsets.symmetric(horizontal: 20.0),
-                        height: size.height * 0.59,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              offset: Offset(0, 10),
-                              blurRadius: 50,
-                              color: Colors.black.withOpacity(0.23),
-                            )
-                          ],
-                        ),
-                        child: Form(
-                          child: SingleChildScrollView(
-                            child: Column(children: <Widget>[
-                              Container(
-                                  // padding: EdgeInsets.all(20.0),
-                                  child: Row(
-                                children: [
-                                  Text(
-                                    "Select catagory",
-                                    //style:
-
-                                    //  TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(width: 100),
-                                  DropdownButton(
-                                      value: type,
-                                      isDense: true,
-                                      items: [
-                                        DropdownMenuItem(
-                                          child: Text("Lost"),
-                                          value: 'Lost',
-                                        ),
-                                        DropdownMenuItem(
-                                          child: Text("Found"),
-                                          value: 'Found',
-                                        ),
-                                      ],
-                                      onChanged: (value) {
-                                        setState(() {
-                                          type = value;
-                                          _lostdes.type = type;
-                                        });
-                                      }),
-                                ],
-                              )),
-                              Container(
-                                  //  padding: EdgeInsets.all(20.0),
-                                  child: Row(
-                                children: [
-                                  Text(
-                                    "Select catagory",
-                                    //  style:
-                                    //  TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(width: 55),
-                                  DropdownButton(
-                                      value: catagory,
-                                      items: [
-                                        DropdownMenuItem(
-                                          child: Text("General"),
-                                          value: 'General',
-                                        ),
-                                        DropdownMenuItem(
-                                          child: Text("Electric"),
-                                          value: 'Electric',
-                                        ),
-                                        DropdownMenuItem(
-                                          child: Text("Education"),
-                                          value: 'Education',
-                                        ),
-                                        DropdownMenuItem(
-                                          child: Text("Other"),
-                                          value: 'Other',
-                                        ),
-                                      ],
-                                      onChanged: (value) {
-                                        setState(() {
-                                          catagory = value;
-
-                                          _lostdes.catagory = catagory;
-                                        });
-                                      }),
-                                ],
-                              )),
-                              Container(
-                                child: ConstrainedBox(
-                                  constraints: BoxConstraints.tightFor(
-                                      width: 400, height: 60),
-                                  child: TextField(
-                                    onChanged: (String contact) {
-                                      _lostdes.contact = contact;
-                                    },
-                                    decoration: new InputDecoration(
-                                        labelText: "Enter your number",
-                                        icon: Icon(Icons.call)),
-                                    keyboardType: TextInputType.number,
-                                    inputFormatters: <TextInputFormatter>[
-                                      FilteringTextInputFormatter.digitsOnly
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ]),
+                        top: 10,
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.symmetric(horizontal: 20.0),
+                          padding: EdgeInsets.symmetric(horizontal: 20.0),
+                          height: size.height * 0.59,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                offset: Offset(0, 10),
+                                blurRadius: 50,
+                                color: Colors.black.withOpacity(0.23),
+                              )
+                            ],
                           ),
-                        ),
-                      ),
-                    ),
+                          child: Form(
+                            child: SingleChildScrollView(
+                              child: Column(children: <Widget>[
+                                Container(
+                                    padding: EdgeInsets.only(bottom: 15),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          "Select catagory",
+                                          //style:
+
+                                          //  TextStyle(fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(width: 100),
+                                        DropdownButton(
+                                            value: type,
+                                            isDense: true,
+                                            items: [
+                                              DropdownMenuItem(
+                                                child: Text("Lost"),
+                                                value: 'Lost',
+                                              ),
+                                              DropdownMenuItem(
+                                                child: Text("Found"),
+                                                value: 'Found',
+                                              ),
+                                            ],
+                                            onChanged: (value) {
+                                              setState(() {
+                                                type = value;
+                                                _lostdes.type = type;
+                                              });
+                                            }),
+                                      ],
+                                    )),
+                                Container(
+                                    padding: EdgeInsets.only(bottom: 15.0),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          "Select catagory",
+                                          //  style:
+                                          //  TextStyle(fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(width: 55),
+                                        DropdownButton(
+                                            value: catagory,
+                                            items: [
+                                              DropdownMenuItem(
+                                                child: Text("General"),
+                                                value: 'General',
+                                              ),
+                                              DropdownMenuItem(
+                                                child: Text("Electric"),
+                                                value: 'Electric',
+                                              ),
+                                              DropdownMenuItem(
+                                                child: Text("Education"),
+                                                value: 'Education',
+                                              ),
+                                              DropdownMenuItem(
+                                                child: Text("Other"),
+                                                value: 'Other',
+                                              ),
+                                            ],
+                                            onChanged: (value) {
+                                              setState(() {
+                                                catagory = value;
+
+                                                _lostdes.catagory = catagory;
+                                              });
+                                            }),
+                                      ],
+                                    )),
+                                Container(
+                                  //  padding: EdgeInsets.all(20.0),
+                                  child: Row(children: [
+                                    Text(
+                                      "Contract",
+                                      //  style:
+                                      //  TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                                    Container(
+                                        padding: EdgeInsets.only(left: 40),
+                                        child: ConstrainedBox(
+                                          constraints: BoxConstraints.tightFor(
+                                              width: 200, height: 30),
+                                          child: TextField(
+                                            onChanged: (String contact) {
+                                              _lostdes.contact = contact;
+                                            },
+                                            decoration: new InputDecoration(
+                                              contentPadding: EdgeInsets.only(
+                                                  bottom: 12.0,
+                                                  left: 10.0,
+                                                  right: 10.0),
+                                              hintText:
+                                                  ('Enter your phone number'),
+                                            ),
+                                            keyboardType: TextInputType.number,
+                                            inputFormatters: <
+                                                TextInputFormatter>[
+                                              FilteringTextInputFormatter.allow(
+                                                  RegExp(r'[0-9]')),
+                                              LengthLimitingTextInputFormatter(
+                                                  10),
+                                            ],
+                                          ),
+                                        ))
+                                  ]),
+                                ),
+                              ]),
+                            ),
+                          ),
+                        ))
                   ],
                 ),
               ),
