@@ -8,7 +8,9 @@ import 'package:himod/service/auth_provider_service.dart';
 import 'package:intl/intl.dart';
 
 class BodyFound extends StatefulWidget {
-  BodyFound({Key key}) : super(key: key);
+  BodyFound({Key key, this.type_filter}) : super(key: key);
+
+  final String type_filter;
 
   @override
   _BodyFoundState createState() => _BodyFoundState();
@@ -17,18 +19,27 @@ class BodyFound extends StatefulWidget {
 // String url = AuthProviderService.instance.user?.photoURL ?? '';
 
 class _BodyFoundState extends State<BodyFound> {
-  final String type = "Found";
+  // final String type = "Found";
   DateTime dateTime;
+  String type = "Found";
 
   @override
   Widget build(BuildContext context) {
+    print('found ${widget.type_filter}');
     return Scaffold(
       body: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('LostandFound')
-              .where('typeName', isEqualTo: type)
-              .orderBy('timestamp', descending: true)
-              .snapshots(),
+          stream: widget.type_filter != ""
+              ? FirebaseFirestore.instance
+                  .collection('LostandFound')
+                  .where('typeName', isEqualTo: type)
+                  .where('catagory', isEqualTo: widget.type_filter)
+                  .orderBy('timestamp', descending: true)
+                  .snapshots()
+              : FirebaseFirestore.instance
+                  .collection("LostandFound")
+                  .where('typeName', isEqualTo: type)
+                  .orderBy('timestamp', descending: true)
+                  .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
@@ -56,11 +67,16 @@ class _BodyFoundState extends State<BodyFound> {
                             height: 5,
                           ),
                           CustomCard(
-                            onClick: () => {Navigator.push(
+                            onClick: () => {
+                              Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ViewOnlyPost(uid: doc['uid'],lostandfoundid: doc['lostandfoundid'],type: "found"),
-                                  ))},
+                                    builder: (context) => ViewOnlyPost(
+                                        uid: doc['uid'],
+                                        lostandfoundid: doc['lostandfoundid'],
+                                        type: "found"),
+                                  ))
+                            },
                             nameUser: doc['student'],
                             profileImg: doc['profileImg'],
                             dateTime: formatDate,

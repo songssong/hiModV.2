@@ -318,13 +318,6 @@ class _ActivitydetailState extends State<Activitydetail> {
                                         _activitydes.contact = contact;
                                       },
                                       decoration: new InputDecoration(
-                                        // border: InputBorder.none,
-                                        // focusedBorder: OutlineInputBorder(
-                                        //     borderRadius: BorderRadius.all(
-                                        //         Radius.circular(5.0)),
-                                        //     borderSide:
-                                        //         BorderSide(color: Colors.blue)),
-                                        // filled: true,
                                         contentPadding: EdgeInsets.only(
                                             bottom: 12.0,
                                             left: 10.0,

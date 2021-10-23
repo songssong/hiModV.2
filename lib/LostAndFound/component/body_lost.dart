@@ -7,25 +7,40 @@ import 'package:himod/service/auth_provider_service.dart';
 import 'package:intl/intl.dart';
 
 class BodyLost extends StatefulWidget {
-  BodyLost({Key key}) : super(key: key);
+  BodyLost({Key key, this.type_filter}) : super(key: key);
+
+  final String type_filter;
 
   @override
   _BodyLostState createState() => _BodyLostState();
 }
 
 class _BodyLostState extends State<BodyLost> {
-  final String type = "Lost";
   DateTime dateTime;
+  String type = "Lost";
+
+  void initState() {
+    print(widget.type_filter.toString());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    print('lost ${widget.type_filter}');
     return Scaffold(
       body: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('LostandFound')
-              .where('typeName', isEqualTo: type)
-              .orderBy('timestamp', descending: true)
-              .snapshots(),
+          stream: widget.type_filter != ""
+              ? FirebaseFirestore.instance
+                  .collection('LostandFound')
+                  .where('typeName', isEqualTo: type)
+                  .where('catagory', isEqualTo: widget.type_filter)
+                  .orderBy('timestamp', descending: true)
+                  .snapshots()
+              : FirebaseFirestore.instance
+                  .collection("LostandFound")
+                  .where('typeName', isEqualTo: type)
+                  .orderBy('timestamp', descending: true)
+                  .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
@@ -57,7 +72,10 @@ class _BodyLostState extends State<BodyLost> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ViewOnlyPost(uid: doc['uid'],lostandfoundid: doc['lostandfoundid'], type: "lost"),
+                                    builder: (context) => ViewOnlyPost(
+                                        uid: doc['uid'],
+                                        lostandfoundid: doc['lostandfoundid'],
+                                        type: "lost"),
                                   ))
                             },
                             nameUser: doc['student'],
