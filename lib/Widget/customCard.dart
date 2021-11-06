@@ -47,7 +47,7 @@ class CustomCard extends StatelessWidget {
                   catagory,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 13,
+                    fontSize: 12,
                   ),
                 ),
                 decoration: BoxDecoration(
@@ -73,7 +73,7 @@ class CustomCard extends StatelessWidget {
                 child: contentImg != null
                     ? Image(
                         image: NetworkImage(contentImg),
-                        width: 300,
+                        width: double.infinity,
                         fit: BoxFit.cover,
                       )
                     : Container()),

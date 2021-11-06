@@ -26,18 +26,17 @@ class CustomViewPost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 70),
       child: Column(
         children: [
           InkWell(
             child: contentImg != null
                 ? ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
+                    // borderRadius: BorderRadius.circular(10.0),
                     child: Image(
                       image: NetworkImage(contentImg),
                       width: double.infinity,
-
-                      // fit: BoxFit.cover,
+                      fit: BoxFit.cover,
                     ),
                   )
                 : Container(),
@@ -114,8 +113,5 @@ class CustomViewPost extends StatelessWidget {
         ],
       ),
     );
-    
   }
 }
-
-
