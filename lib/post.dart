@@ -213,7 +213,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
             if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
-                return new Text('Loading...');
+                return Center(child: CircularProgressIndicator());
               default:
                 return ListView(
                   children: snapshot.data.docs.map((DocumentSnapshot document) {
@@ -231,14 +231,14 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                         children: [
                           CustomCard(
                             onClick: () => {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ViewPost(
-                                      uid: document['uid'],
-                                      postid: document['postid'],
-                                    ),
-                                  ))
+                              // print(document.id),
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return ViewPost(
+                                  uid:document['uid'],
+                                  postid: document.id,
+                                );
+                              }))
                             },
                             nameUser: document['student'] ?? 'student_name',
                             profileImg: document['profileImg'],
