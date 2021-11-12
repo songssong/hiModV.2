@@ -164,53 +164,57 @@ class _ActivitydetailState extends State<Activitydetail> {
                     ),
                     child: Form(
                       key: _formKey,
-                      child: SingleChildScrollView(
-                        child: Column(children: <Widget>[
-                          Container(
-                            height: size.height * 0.05,
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                                color: Colors.white),
-                            margin: EdgeInsets.only(top: 10),
-                            padding: EdgeInsets.only(left: 10),
-                            child: TextFormField(
-                              onSaved: (String title) {
-                                _activitydes.title = title;
-                              },
-                              validator: RequiredValidator(
-                                  errorText: 'title not complete'),
-                              decoration: InputDecoration(
-                                hintText: "Title..",
-                                hintStyle: TextStyle(
-                                    fontSize: 16.0, color: Colors.grey),
+                      child: Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: <Widget>[
+                              Container(
+                                height: size.height * 0.05,
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    color: Colors.white),
+                                margin: EdgeInsets.only(top: 10),
+                                padding: EdgeInsets.only(left: 10),
+                                child: TextFormField(
+                                  onSaved: (String title) {
+                                    _activitydes.title = title;
+                                  },
+                                  validator: RequiredValidator(
+                                      errorText: 'title not complete'),
+                                  decoration: InputDecoration(
+                                    hintText: "Title..",
+                                    hintStyle: TextStyle(
+                                        fontSize: 16.0, color: Colors.grey),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                          Container(
-                            height: size.height * 1.5,
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
-                                color: Colors.white),
-                            margin: EdgeInsets.only(top: 20),
-                            padding: EdgeInsets.only(left: 10),
-                            child: TextFormField(
-                              onSaved: (String description) {
-                                _activitydes.description = description;
-                              },
-                              validator: RequiredValidator(
-                                  errorText: 'Description not complete'),
-                              decoration: InputDecoration(
-                                hintText: " ' Type Description '",
-                                hintStyle: TextStyle(
-                                    fontSize: 12.0, color: Colors.grey),
+                              Container(
+                                height: size.height * 1.5,
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20)),
+                                    color: Colors.white),
+                                margin: EdgeInsets.only(top: 20),
+                                padding: EdgeInsets.only(left: 10),
+                                child: TextFormField(
+                                  onSaved: (String description) {
+                                    _activitydes.description = description;
+                                  },
+                                  validator: RequiredValidator(
+                                      errorText: 'Description not complete'),
+                                  decoration: InputDecoration(
+                                    hintText: " ' Type Description '",
+                                    hintStyle: TextStyle(
+                                        fontSize: 12.0, color: Colors.grey),
+                                  ),
+                                  maxLines: 7,
+                                  maxLength: 250,
+                                ),
                               ),
-                              maxLines: 7,
-                              maxLength: 250,
-                            ),
+                            ],
                           ),
-                        ]),
+                        ),
                       ),
                     ),
                   ),
@@ -308,30 +312,32 @@ class _ActivitydetailState extends State<Activitydetail> {
                                 //  style:
                                 //  TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              Container(
-                                  padding: EdgeInsets.only(left: 40),
-                                  child: ConstrainedBox(
-                                    constraints: BoxConstraints.tightFor(
-                                        width: 200, height: 30),
-                                    child: TextField(
-                                      onChanged: (String contact) {
-                                        _activitydes.contact = contact;
-                                      },
-                                      decoration: new InputDecoration(
-                                        contentPadding: EdgeInsets.only(
-                                            bottom: 12.0,
-                                            left: 10.0,
-                                            right: 10.0),
-                                        hintText: ('Enter your phone number'),
+                              Expanded(
+                                child: Container(
+                                    padding: EdgeInsets.only(left: 40),
+                                    child: ConstrainedBox(
+                                      constraints: BoxConstraints.tightFor(
+                                          width: 200, height: 30),
+                                      child: TextField(
+                                        onChanged: (String contact) {
+                                          _activitydes.contact = contact;
+                                        },
+                                        decoration: new InputDecoration(
+                                          contentPadding: EdgeInsets.only(
+                                              bottom: 12.0,
+                                              left: 10.0,
+                                              right: 10.0),
+                                          hintText: ('Enter your phone number'),
+                                        ),
+                                        keyboardType: TextInputType.number,
+                                        inputFormatters: <TextInputFormatter>[
+                                          FilteringTextInputFormatter.allow(
+                                              RegExp(r'[0-9]')),
+                                          LengthLimitingTextInputFormatter(10),
+                                        ],
                                       ),
-                                      keyboardType: TextInputType.number,
-                                      inputFormatters: <TextInputFormatter>[
-                                        FilteringTextInputFormatter.allow(
-                                            RegExp(r'[0-9]')),
-                                        LengthLimitingTextInputFormatter(10),
-                                      ],
-                                    ),
-                                  ))
+                                    )),
+                              )
                             ],
                           )),
                         ])))))
@@ -511,6 +517,9 @@ class _ActivitydetailState extends State<Activitydetail> {
                         ),
                       )))
             ]),
+          ),
+          SizedBox(
+            height: 20,
           ),
         ]))));
   }
