@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:himod/Widget/customViewLostAndFound.dart';
+import 'package:himod/homepage.dart';
+import 'package:himod/service/auth_provider_service.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 class ViewOnlyPost extends StatefulWidget {
   const ViewOnlyPost({Key key, this.uid, this.lostandfoundid, this.type})
@@ -20,6 +23,27 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
 
   CollectionReference lostref =
       FirebaseFirestore.instance.collection('LostandFound');
+
+  var uuid;
+  var uid;
+
+  void initState() {
+    super.initState();
+    readDataStudent();
+  }
+
+  dynamic student_model;
+  Future<Null> readDataStudent() async {
+    await FirebaseFirestore.instance
+        .collection('Student')
+        .doc(AuthProviderService.instance.user.uid)
+        .get()
+        .then((value) {
+      setState(() {
+        student_model = value.data();
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,14 +71,51 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
                 ],
               ),
             ),
+             child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                PopupMenuButton(
+                  color: Colors.white,
+                  itemBuilder: (context) => [
+                    if (AuthProviderService.instance.user.uid == widget.uid)
+                      PopupMenuItem(
+                        child: Text("Delete"),
+                        value: 1,
+                      ),
+                    if (AuthProviderService.instance.user.uid == widget.uid)
+                      PopupMenuItem(
+                        child: Text("Edit"),
+                        value: 2,
+                      ),
+                    if (AuthProviderService.instance.user.uid != widget.uid)
+                      PopupMenuItem(
+                        child: Text("Report"),
+                        value: 3,
+                      ),
+                  ],
+                  onSelected: (value) {
+                    setState(() async {
+                       if (value == 1){    await
+                       print(widget.lostandfoundid);
+                        deleteData(widget.lostandfoundid);}
+                      if (value == 3) {
+                        _askUser();
+                       
+                      }
+                    });
+                  },
+                ),
+              ]),
+            ],
+          ),
           ),
         ),
-        body: FutureBuilder(
-            future: lostref
-                .where('lostandfoundid', isEqualTo: widget.lostandfoundid)
-                .get(),
+        body: FutureBuilder<DocumentSnapshot<Object>>(
+            future: lostref.doc(widget.lostandfoundid).get(),
             builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                (BuildContext context,
+            AsyncSnapshot<DocumentSnapshot<Object>> snapshot) {
               if (snapshot.hasError)
                 return new Text('Error: ${snapshot.error}');
               switch (snapshot.connectionState) {
@@ -63,30 +124,155 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
                     child: CircularProgressIndicator(),
                   );
                 default:
-                  return ListView(
-                    children: snapshot.data.docs.map((DocumentSnapshot doc) {
-                      Timestamp t = doc['timestamp'];
+                 
+                   
+                      Timestamp t = snapshot.data['timestamp'];
                       DateTime d = DateTime.fromMicrosecondsSinceEpoch(
                           t.microsecondsSinceEpoch);
                       String formatDate =
                           DateFormat('yyyy-MM-dd – kk:mm').format(d);
                       // print(doc.data());
                       return CustomViewLostAndFound(
-                        nameUser: doc['student'],
-                        profileImg: doc['profileImg'],
-                        contentImg: doc['urlImage'],
-                        nameTitle: doc['titleName'],
-                        content: doc['contentText'],
-                        contact: doc['contact'],
-                        category: doc['catagory'],
-                        type: doc['typeName'],
+                        nameUser: snapshot.data['student'],
+                        profileImg: snapshot.data['profileImg'],
+                        contentImg: snapshot.data['urlImage'],
+                        nameTitle: snapshot.data['titleName'],
+                        content: snapshot.data['contentText'],
+                        contact: snapshot.data['contact'],
+                        category: snapshot.data['catagory'],
+                        type: snapshot.data['typeName'],
                         dateTime: formatDate,
                       );
-                    }).toList(),
-                  );
+                   
+                 
               }
             }),
       ),
     );
   }
+   deleteData(docID) async {
+    await FirebaseFirestore.instance.collection('LostandFound').doc(docID).delete();
+    Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
+  }
+
+  CollectionReference postreport =
+      FirebaseFirestore.instance.collection('Report');
+  reportData(docID) async {
+    await postreport.add({
+      'postid': widget.lostandfoundid,
+      'student': student_model['name'],
+      'timestamp': DateTime.now(),
+    });
+  }
+var uuid2 = Uuid();
+
+  Future _askUser() async {
+    switch (await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: const Text('Report'),
+            children: <Widget>[
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  postreport.add({
+                    'reportid': uuid2.v4(),
+                    'typePost': 'Lostandfound',
+                    'report': 'ใช้คำพูดที่ไม่เหมาะสม',
+                    'postid': widget.lostandfoundid,
+                    'student': student_model['name'],
+                    'timestamp': DateTime.now(),
+                  });
+                  Navigator.pop(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
+                },
+                child: const Text(
+                  'ใช้คำพูดที่ไม่เหมาะสม',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  postreport.add({
+                    'reportid': uuid2.v4(),
+                    'typePost': 'Lostandfound',
+                    'report': 'เข้าข่ายเกี่ยวกับเรื่องลามก อนาจาร',
+                    'postid': widget.lostandfoundid,
+                    'student': student_model['name'],
+                    'timestamp': DateTime.now(),
+                  });
+                  Navigator.pop(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
+                },
+                child: const Text(
+                  'เข้าข่ายเกี่ยวกับเรื่องลามก อนาจาร',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  postreport.add({
+                    'reportid': uuid2.v4(),
+                    'typePost': 'Lostandfound',
+                    'report': 'มีการพูดในสิ่งที่ผิดกฏหมาย',
+                    'postid': widget.lostandfoundid,
+                    'student': student_model['name'],
+                    'timestamp': DateTime.now(),
+                  });
+                  Navigator.pop(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
+                },
+                child: const Text(
+                  'มีการพูดในสิ่งที่ผิดกฏหมาย',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  postreport.add({
+                    'reportid': uuid2.v4(),
+                    'typePost': 'Lostandfound',
+                    'report': 'ข้อมูลเท็จ',
+                    'postid': widget.lostandfoundid,
+                    'student': student_model['name'],
+                    'timestamp': DateTime.now(),
+                  });
+                  Navigator.pop(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
+                },
+                child: const Text(
+                  'ข้อมูลเท็จ',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  postreport.add({
+                    'reportid': uuid2.v4(),
+                    'typePost': 'Lostandfound',
+                    'report':
+                        'เข้าข่ายมีข้อมูลส่วนตัวที่มีเจตนาทำให้คนผิดเสียหาย',
+                    'postid': widget.lostandfoundid,
+                    'student': student_model['name'],
+                    'timestamp': DateTime.now(),
+                  });
+                  Navigator.pop(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
+                },
+                child: const Text(
+                  'เข้าข่ายมีข้อมูลส่วนตัวที่มีเจตนาทำให้คนผิดเสียหาย',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ],
+          );
+        })) {
+    }
+  }
 }
+

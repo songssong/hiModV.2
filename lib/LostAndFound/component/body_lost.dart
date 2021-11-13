@@ -51,9 +51,9 @@ class _BodyLostState extends State<BodyLost> {
                 );
               default:
                 return ListView(
-                  children: snapshot.data.docs.map((DocumentSnapshot doc) {
+                  children: snapshot.data.docs.map((DocumentSnapshot document) {
                     // print(doc.data());
-                    Timestamp t = doc['timestamp'];
+                    Timestamp t = document['timestamp'];
                     DateTime d = DateTime.fromMicrosecondsSinceEpoch(
                         t.microsecondsSinceEpoch);
                     String formatDate =
@@ -72,19 +72,19 @@ class _BodyLostState extends State<BodyLost> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ViewOnlyPost(
-                                        uid: doc['uid'],
-                                        lostandfoundid: doc['lostandfoundid'],
-                                        type: "lost"),
-                                  ))
+                                    builder: (context) {return ViewOnlyPost(
+                                        uid: document['uid'],
+                                        lostandfoundid: document.id,
+                                        type: "lost");
+                                    }))
                             },
-                            nameUser: doc['student'],
-                            profileImg: doc['profileImg'],
+                            nameUser: document['student'],
+                            profileImg: document['profileImg'],
                             dateTime: formatDate,
-                            contentImg: doc['urlImage'],
-                            nameTitle: doc['titleName'],
-                            content: doc['contentText'],
-                            catagory: doc['catagory'],
+                            contentImg: document['urlImage'],
+                            nameTitle: document['titleName'],
+                            content: document['contentText'],
+                            catagory: document['catagory'],
                           ),
                         ],
                       ),
