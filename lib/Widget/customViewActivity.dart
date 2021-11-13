@@ -161,7 +161,7 @@ class CustomViewActivity extends StatelessWidget {
                                     style: TextStyle(color: Colors.blue[900]),
                                   ),
                                 )
-                              : Container(), //ดึงจำนวนคนที่ join มาใส่ข้างหน้า
+                              : Container(),
                         ],
                       ),
                     ],
@@ -170,43 +170,6 @@ class CustomViewActivity extends StatelessWidget {
               ],
             ),
           ),
-          //button Join
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
-                  child: RaisedButton(
-                    elevation: 5,
-                    padding: EdgeInsets.all(6),
-                    color: Colors.blue[500],
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    onPressed: () {
-                      print("ปุ่ม join อยู่นี้จ้า");
-                    },
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.add_circle_rounded,
-                          color: Colors.white,
-                        ),
-                        SizedBox(width: 2),
-                        Text(
-                          "Join Activity",
-                          style: TextStyle(color: Colors.white, fontSize: 14),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              // SizedBox(
-              //   width: 1,
-              // ),
-            ],
-          )
         ],
       ),
     );

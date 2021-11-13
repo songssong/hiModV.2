@@ -55,17 +55,56 @@ class _ViewActivityState extends State<ViewActivity> {
                   DateTime.fromMicrosecondsSinceEpoch(t.microsecondsSinceEpoch);
               String formatDate = DateFormat('yyyy-MM-dd – kk:mm').format(d);
               return SingleChildScrollView(
-                child: CustomViewActivity(
-                  nameUser: snapshot.data['student'],
-                  profileImg: snapshot.data['profileImg'],
-                  nameTitle: snapshot.data['titleName'],
-                  content: snapshot.data['contentText'],
-                  category: snapshot.data['catagory'],
-                  contact: snapshot.data['contact'],
-                  capacity: snapshot.data['amount'],
-                  select_date: snapshot.data['date'],
-                  select_time: snapshot.data['time'],
-                  timeStamp: formatDate,
+                child: Column(
+                  children: [
+                    CustomViewActivity(
+                      nameUser: snapshot.data['student'],
+                      profileImg: snapshot.data['profileImg'],
+                      nameTitle: snapshot.data['titleName'],
+                      content: snapshot.data['contentText'],
+                      category: snapshot.data['catagory'],
+                      contact: snapshot.data['contact'],
+                      capacity: snapshot.data['amount'],
+                      select_date: snapshot.data['date'],
+                      select_time: snapshot.data['time'],
+                      timeStamp: formatDate,
+                    ),
+                    //button Join
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                            child: RaisedButton(
+                              elevation: 5,
+                              padding: EdgeInsets.all(6),
+                              color: Colors.blue[500],
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0)),
+                              onPressed: () {
+                                print("ปุ่ม join อยู่นี้จ้า");
+                              },
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.add_circle_rounded,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(width: 2),
+                                  Text(
+                                    "Join Activity",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               );
           }
