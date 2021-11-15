@@ -36,7 +36,7 @@ class _ViewPostState extends State<ViewPost> {
 
   var uuid;
   var uid;
- String  commentId;
+  String commentId;
   void initState() {
     super.initState();
     readDataStudent();
@@ -166,15 +166,13 @@ class _ViewPostState extends State<ViewPost> {
                       ),
                   ],
                   onSelected: (value) {
-                    
                     setState(() async {
-                       if (value == 1){   
-                          await deleteData(widget.postid);
-                          deleteComment(commentId);
-                          }
+                      if (value == 1) {
+                        await deleteData(widget.postid);
+                        deleteComment(commentId);
+                      }
                       if (value == 3) {
                         _askUser();
-                        
                       }
                     });
                   },
@@ -189,6 +187,19 @@ class _ViewPostState extends State<ViewPost> {
             future: postref.doc(widget.postid).get(),
             builder: (BuildContext context,
                 AsyncSnapshot<DocumentSnapshot<Object>> snapshot_post) {
+              if (snapshot_post.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (snapshot_post.hasError) {
+                return new Text('Error: ${snapshot_post.hasError}');
+              }
+
+              if (!snapshot_post.hasData || !snapshot_post.data.exists) {
+                return Text('empty data');
+              }
+
               return StreamBuilder<QuerySnapshot>(
                 stream: commentref
                     .where('postid', isEqualTo: widget.postid)
@@ -196,14 +207,14 @@ class _ViewPostState extends State<ViewPost> {
                     .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot<Object>> snapshot_comment) {
-                  if (snapshot_comment.hasError || snapshot_post.hasError)
-                    return new Text(
-                        'Error: ${snapshot_post.hasError}${snapshot_comment.hasError}');
-                  if (snapshot_post.connectionState ==
+                  if (snapshot_comment.connectionState ==
                       ConnectionState.waiting) {
                     return Center(
                       child: CircularProgressIndicator(),
                     );
+                  }
+                  if (snapshot_comment.hasError) {
+                    return new Text('Error: ${snapshot_comment.hasError}');
                   }
                   Timestamp t = snapshot_post.data['timestamp'];
                   DateTime d = DateTime.fromMicrosecondsSinceEpoch(
@@ -240,7 +251,7 @@ class _ViewPostState extends State<ViewPost> {
                                   .map((DocumentSnapshot doc) {
                                 if (doc != null) {
                                   Timestamp t = doc['timestamp'];
-                                commentId= doc.id;
+                                  commentId = doc.id;
                                   DateTime d =
                                       DateTime.fromMicrosecondsSinceEpoch(
                                           t.microsecondsSinceEpoch);
@@ -252,7 +263,6 @@ class _ViewPostState extends State<ViewPost> {
                                     profileImg: doc['profileImg'],
                                     content: doc['contentText'],
                                     dateTime: formatDate,
-                                    
                                   );
                                 }
                                 return Container();
@@ -281,15 +291,14 @@ class _ViewPostState extends State<ViewPost> {
   deleteData(docID) async {
     var testCom = "N9aNJBPK3t3wytLY7Dpj";
     await FirebaseFirestore.instance.collection('Post').doc(docID).delete();
-   
+
     Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
   }
-deleteComment(docID) async {
+
+  deleteComment(docID) async {
     var testCom = "N9aNJBPK3t3wytLY7Dpj";
-     await FirebaseFirestore.instance
-        .collection('Comment')
-        .doc(docID)
-        .delete();
+
+    FirebaseFirestore.instance.collection('Comment').doc(docID).delete();
     Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
   }
 
@@ -302,7 +311,8 @@ deleteComment(docID) async {
       'timestamp': DateTime.now(),
     });
   }
-var uuid2 = Uuid();
+
+  var uuid2 = Uuid();
   Future _askUser() async {
     switch (await showDialog(
         context: context,
@@ -393,7 +403,7 @@ var uuid2 = Uuid();
                     'reportid': uuid2.v4(),
                     'typePost': 'Post',
                     'report':
-                    'เข้าข่ายมีข้อมูลส่วนตัวที่มีเจตนาทำให้คนผิดเสียหาย',
+                        'เข้าข่ายมีข้อมูลส่วนตัวที่มีเจตนาทำให้คนผิดเสียหาย',
                     'postid': widget.postid,
                     'student': student_model['name'],
                     'timestamp': DateTime.now(),
