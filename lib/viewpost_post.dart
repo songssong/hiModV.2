@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
+import 'package:himod/Comment/component/button_comment.dart';
 import 'package:himod/LostAndFound/lostandfound_screen.dart';
-import 'package:himod/Widget/customViewPost.dart';
+import 'package:himod/Widget/_customBodyComment.dart';
+import 'package:himod/Widget/_customViewPost.dart';
 import 'package:himod/homepage.dart';
 import 'package:himod/lostnfounddetail.dart';
 import 'package:himod/post.dart';
@@ -16,10 +17,7 @@ class ViewPost extends StatefulWidget {
   final String uid;
   final String postid;
 
-
-  ViewPost(
-      {Key key, this.postid,  this.uid})
-      : super(key: key);
+  ViewPost({Key key, this.postid, this.uid}) : super(key: key);
 
   @override
   _ViewPostState createState() => _ViewPostState();
@@ -100,6 +98,10 @@ class _ViewPostState extends State<ViewPost> {
   }
 
   CollectionReference postref = FirebaseFirestore.instance.collection('Post');
+  CollectionReference commentref =
+      FirebaseFirestore.instance.collection('Comment');
+  // CollectionReference _delcommentref =
+  //     FirebaseFirestore.instance.collection('Comment').where('').snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -134,21 +136,20 @@ class _ViewPostState extends State<ViewPost> {
                         child: Text("Delete"),
                         value: 1,
                       ),
-                       if (AuthProviderService.instance.user.uid == widget.uid)
-                    PopupMenuItem(
-                      child: Text("Edit"),
-                      value: 2, 
-                    ),
+                    if (AuthProviderService.instance.user.uid == widget.uid)
+                      PopupMenuItem(
+                        child: Text("Edit"),
+                        value: 2,
+                      ),
                     if (AuthProviderService.instance.user.uid != widget.uid)
-                    PopupMenuItem(
-                      child: Text("Report"),
-                      value: 3, 
-                    ),
+                      PopupMenuItem(
+                        child: Text("Report"),
+                        value: 3,
+                      ),
                   ],
                   onSelected: (value) {
-                    setState(() async{
-                      if (value == 1) 
-                      await  deleteData(widget.postid);
+                    setState(() async {
+                      if (value == 1) await deleteData(widget.postid);
                     });
                   },
                 ),
@@ -157,50 +158,105 @@ class _ViewPostState extends State<ViewPost> {
           ),
         ),
       ),
-      body: FutureBuilder<DocumentSnapshot<Object>>(
-        future: postref.doc(widget.postid).get(),
-        builder: (BuildContext context,
-            AsyncSnapshot<DocumentSnapshot<Object>> snapshot) {
-          print(snapshot.data);
-          if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return Center(
-                child: CircularProgressIndicator(),
+      body: SafeArea(
+        child: FutureBuilder<DocumentSnapshot<Object>>(
+            future: postref.doc(widget.postid).get(),
+            builder: (BuildContext context,
+                AsyncSnapshot<DocumentSnapshot<Object>> snapshot_post) {
+              return StreamBuilder<QuerySnapshot>(
+                stream: commentref
+                    .where('postid', isEqualTo: widget.postid)
+                    .orderBy('timestamp', descending: true)
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot<Object>> snapshot_comment) {
+                  if (snapshot_comment.hasError || snapshot_post.hasError)
+                    return new Text(
+                        'Error: ${snapshot_post.hasError}${snapshot_comment.hasError}');
+                  if (snapshot_post.connectionState ==
+                      ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  Timestamp t = snapshot_post.data['timestamp'];
+                  DateTime d = DateTime.fromMicrosecondsSinceEpoch(
+                      t.microsecondsSinceEpoch);
+                  String formatDate =
+                      DateFormat('yyyy-MM-dd – kk:mm').format(d);
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        CustomViewPost(
+                          nameUser: snapshot_post.data['student'],
+                          profileImg: snapshot_post.data['profileImg'],
+                          contentImg: snapshot_post.data['urlImage'],
+                          nameTitle: snapshot_post.data['titleName'],
+                          content: snapshot_post.data['contentText'],
+                          category: snapshot_post.data['catagory'],
+                          dateTime: formatDate,
+                        ),
+                        Column(
+                          children: [
+                            Text(
+                              'comment',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 1,
+                            ),
+                            ListView(
+                              shrinkWrap: true,
+                              children: snapshot_comment.data.docs
+                                  .map((DocumentSnapshot doc) {
+                                if (doc != null) {
+                                  Timestamp t = doc['timestamp'];
+                                  DateTime d =
+                                      DateTime.fromMicrosecondsSinceEpoch(
+                                          t.microsecondsSinceEpoch);
+                                  String formatDate =
+                                      DateFormat('yyyy-MM-dd – kk:mm')
+                                          .format(d);
+                                  return BodyComment(
+                                    nameUser: doc['student'],
+                                    profileImg: doc['profileImg'],
+                                    content: doc['contentText'],
+                                    dateTime: formatDate,
+                                  );
+                                }
+                                return Container();
+                              }).toList(),
+                            ),
+                            SizedBox(
+                              height: 60,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
               );
-            default:
-              Timestamp t = snapshot.data['timestamp'];
-              DateTime d =
-                  DateTime.fromMicrosecondsSinceEpoch(t.microsecondsSinceEpoch);
-              String formatDate = DateFormat('yyyy-MM-dd – kk:mm').format(d);
-              return SingleChildScrollView(
-                child: CustomViewPost(
-                  // onClick: deleteData(snapshot.data.docs),
-                  nameUser: snapshot.data['student'],
-                  profileImg: snapshot.data['profileImg'],
-                  contentImg: snapshot.data['urlImage'],
-                  nameTitle: snapshot.data['titleName'],
-                  content: snapshot.data['contentText'],
-                  category: snapshot.data['catagory'],
-                  dateTime: formatDate,
-                ),
-              );
-          }
-        },
+            }),
       ),
-      
+      bottomSheet: ButtonComment(
+        postid: widget.postid,
+      ),
     );
   }
 
-  
-  Future editPost() async {
-    
-  }
+  Future editPost() async {}
 
   deleteData(docID) async {
+    var testCom = "N9aNJBPK3t3wytLY7Dpj";
     await FirebaseFirestore.instance.collection('Post').doc(docID).delete();
+    await FirebaseFirestore.instance
+        .collection('Comment')
+        .doc(testCom)
+        .delete();
     Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
   }
-
-
 }
