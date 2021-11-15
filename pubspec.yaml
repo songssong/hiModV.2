@@ -47,6 +47,7 @@ dependencies:
   url_launcher: ^6.0.10
   
   
+  
 
   
 
@@ -76,6 +77,11 @@ flutter:
     - images/Notification.png
     - images/user.png
     - images/Phone.png
+    - images/Game.png
+    - images/General.png
+    - images/Other.png
+    - images/Sports.png
+    - images/Study.png
     
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
