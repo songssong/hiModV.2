@@ -36,6 +36,24 @@ class _ViewPostState extends State<ViewPost> {
 
   var uuid;
   var uid;
+ String  commentId;
+  void initState() {
+    super.initState();
+    readDataStudent();
+  }
+
+  dynamic student_model;
+  Future<Null> readDataStudent() async {
+    await FirebaseFirestore.instance
+        .collection('Student')
+        .doc(AuthProviderService.instance.user.uid)
+        .get()
+        .then((value) {
+      setState(() {
+        student_model = value.data();
+      });
+    });
+  }
 
 //  showDeleteConfirmation() {
 //       Widget cancelButton = FlatButton(
@@ -148,8 +166,16 @@ class _ViewPostState extends State<ViewPost> {
                       ),
                   ],
                   onSelected: (value) {
+                    
                     setState(() async {
-                      if (value == 1) await deleteData(widget.postid);
+                       if (value == 1){   
+                          await deleteData(widget.postid);
+                          deleteComment(commentId);
+                          }
+                      if (value == 3) {
+                        _askUser();
+                        
+                      }
                     });
                   },
                 ),
@@ -214,6 +240,7 @@ class _ViewPostState extends State<ViewPost> {
                                   .map((DocumentSnapshot doc) {
                                 if (doc != null) {
                                   Timestamp t = doc['timestamp'];
+                                commentId= doc.id;
                                   DateTime d =
                                       DateTime.fromMicrosecondsSinceEpoch(
                                           t.microsecondsSinceEpoch);
@@ -225,6 +252,7 @@ class _ViewPostState extends State<ViewPost> {
                                     profileImg: doc['profileImg'],
                                     content: doc['contentText'],
                                     dateTime: formatDate,
+                                    
                                   );
                                 }
                                 return Container();
@@ -253,10 +281,134 @@ class _ViewPostState extends State<ViewPost> {
   deleteData(docID) async {
     var testCom = "N9aNJBPK3t3wytLY7Dpj";
     await FirebaseFirestore.instance.collection('Post').doc(docID).delete();
-    await FirebaseFirestore.instance
+   
+    Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
+  }
+deleteComment(docID) async {
+    var testCom = "N9aNJBPK3t3wytLY7Dpj";
+     await FirebaseFirestore.instance
         .collection('Comment')
-        .doc(testCom)
+        .doc(docID)
         .delete();
     Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
+  }
+
+  CollectionReference postreport =
+      FirebaseFirestore.instance.collection('Report');
+  reportData(docID) async {
+    await postreport.add({
+      'postid': widget.postid,
+      'student': student_model['name'],
+      'timestamp': DateTime.now(),
+    });
+  }
+var uuid2 = Uuid();
+  Future _askUser() async {
+    switch (await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: const Text('Report'),
+            children: <Widget>[
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  postreport.add({
+                    'reportid': uuid2.v4(),
+                    'typePost': 'Post',
+                    'report': 'ใช้คำพูดที่ไม่เหมาะสม',
+                    'postid': widget.postid,
+                    'student': student_model['name'],
+                    'timestamp': DateTime.now(),
+                  });
+                  Navigator.pop(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
+                },
+                child: const Text(
+                  'ใช้คำพูดที่ไม่เหมาะสม',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  postreport.add({
+                    'reportid': uuid2.v4(),
+                    'typePost': 'Post',
+                    'report': 'เข้าข่ายเกี่ยวกับเรื่องลามก อนาจาร',
+                    'postid': widget.postid,
+                    'student': student_model['name'],
+                    'timestamp': DateTime.now(),
+                  });
+                  Navigator.pop(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
+                },
+                child: const Text(
+                  'เข้าข่ายเกี่ยวกับเรื่องลามก อนาจาร',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  postreport.add({
+                    'reportid': uuid2.v4(),
+                    'typePost': 'Post',
+                    'report': 'มีการพูดในสิ่งที่ผิดกฏหมาย',
+                    'postid': widget.postid,
+                    'student': student_model['name'],
+                    'timestamp': DateTime.now(),
+                  });
+                  Navigator.pop(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
+                },
+                child: const Text(
+                  'มีการพูดในสิ่งที่ผิดกฏหมาย',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  postreport.add({
+                    'reportid': uuid2.v4(),
+                    'typePost': 'Post',
+                    'report': 'ข้อมูลเท็จ',
+                    'postid': widget.postid,
+                    'student': student_model['name'],
+                    'timestamp': DateTime.now(),
+                  });
+                  Navigator.pop(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
+                },
+                child: const Text(
+                  'ข้อมูลเท็จ',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  postreport.add({
+                    'reportid': uuid2.v4(),
+                    'typePost': 'Post',
+                    'report':
+                    'เข้าข่ายมีข้อมูลส่วนตัวที่มีเจตนาทำให้คนผิดเสียหาย',
+                    'postid': widget.postid,
+                    'student': student_model['name'],
+                    'timestamp': DateTime.now(),
+                  });
+                  Navigator.pop(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
+                },
+                child: const Text(
+                  'เข้าข่ายมีข้อมูลส่วนตัวที่มีเจตนาทำให้คนผิดเสียหาย',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ],
+          );
+        })) {
+    }
   }
 }
