@@ -54,7 +54,7 @@ class _ButtonCommentState extends State<ButtonComment> {
       child: Form(
         key: _formKey,
         child: TextFormField(
-          autofocus: true,
+          autofocus: false,
           controller: _textController,
           decoration: InputDecoration(
             border: InputBorder.none,
