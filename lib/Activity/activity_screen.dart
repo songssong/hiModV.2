@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:himod/Activity/activity_viewonlypost.dart';
-import 'package:himod/Widget/customCard_Activity.dart';
+import 'package:himod/Widget/_customCardActivity.dart';
 import 'package:intl/intl.dart';
 
 class Activity extends StatefulWidget {
@@ -71,6 +71,11 @@ class _ActivityState extends State<Activity> {
                           }))
                         },
                         profileImg: doc['profileImg'],
+                        nameUser: doc['student'],
+                        catagory: doc['catagory'],
+                        content: doc['contentText'],
+                        nameTitle: doc['titleName'],
+                        capacity: doc['amount'],
                         dateTime: formatDate,
                       );
                     }).toList(),
