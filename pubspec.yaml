@@ -45,6 +45,7 @@ dependencies:
   intl: ^0.17.0
   jiffy: ^4.1.0
   url_launcher: ^6.0.10
+  firebase_messaging: ^11.1.0
   
   
   
@@ -94,17 +95,25 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
+  fonts:
+    - family: Mitr
+      fonts:
+        - asset: fonts/IBMPlexSansThai-ExtraLight.ttf
+        - asset: fonts/IBMPlexSansThai-Light.ttf
+        - asset: fonts/IBMPlexSansThai-Medium.ttf
+        - asset: fonts/IBMPlexSansThai-Regular.ttf
+        - asset: fonts/IBMPlexSansThai-SemiBold.ttf
+        - asset: fonts/IBMPlexSansThai-Thin.ttf
+    - family: MitrBold
+      fonts:
+        - asset: fonts/IBMPlexSansThai-Bold.ttf
+        # - asset: fonts/Mitr-ExtraLight.ttf
+        # - asset: fonts/Mitr-Light.ttf
+        # - asset: fonts/Mitr-Medium.ttf
+        # - asset: fonts/Mitr-Regular.ttf
+        # - asset: fonts/Mitr-SemiBold.ttf
+          
+    
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
