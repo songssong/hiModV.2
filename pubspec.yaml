@@ -107,11 +107,7 @@ flutter:
     - family: MitrBold
       fonts:
         - asset: fonts/IBMPlexSansThai-Bold.ttf
-        # - asset: fonts/Mitr-ExtraLight.ttf
-        # - asset: fonts/Mitr-Light.ttf
-        # - asset: fonts/Mitr-Medium.ttf
-        # - asset: fonts/Mitr-Regular.ttf
-        # - asset: fonts/Mitr-SemiBold.ttf
+        
           
     
   #
