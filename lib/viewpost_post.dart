@@ -328,8 +328,8 @@ class _ViewPostState extends State<ViewPost> {
                     'typePost': 'Post',
                     'report': 'ใช้คำพูดที่ไม่เหมาะสม',
                     'postid': widget.postid,
-                    'student': student_model['name'],
-                    'timestamp': DateTime.now(),
+                    'reporter': student_model['name'],
+                    'reporttime': DateTime.now(),
                   });
                   Navigator.pop(context,
                       MaterialPageRoute(builder: (context) => HomePage()));
