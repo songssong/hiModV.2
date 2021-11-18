@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:himod/Widget/customViewLostAndFound.dart';
+import 'package:himod/Widget/_customViewLostAndFound.dart';
 import 'package:himod/homepage.dart';
 import 'package:himod/service/auth_provider_service.dart';
 import 'package:intl/intl.dart';
@@ -55,11 +55,17 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
           title: widget.type != "lost"
               ? Text(
                   "Found",
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Mitr',
+                      fontWeight: FontWeight.bold),
                 )
               : Text(
                   "Lost",
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Mitr',
+                      fontWeight: FontWeight.bold),
                 ),
           flexibleSpace: Container(
             decoration: new BoxDecoration(
@@ -129,16 +135,18 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
                   String formatDate =
                       DateFormat('yyyy-MM-dd – kk:mm').format(d);
                   // print(doc.data());
-                  return CustomViewLostAndFound(
-                    nameUser: snapshot.data['student'],
-                    profileImg: snapshot.data['profileImg'],
-                    contentImg: snapshot.data['urlImage'],
-                    nameTitle: snapshot.data['titleName'],
-                    content: snapshot.data['contentText'],
-                    contact: snapshot.data['contact'],
-                    category: snapshot.data['catagory'],
-                    type: snapshot.data['typeName'],
-                    dateTime: formatDate,
+                  return SingleChildScrollView(
+                    child: CustomViewLostAndFound(
+                      nameUser: snapshot.data['student'],
+                      profileImg: snapshot.data['profileImg'],
+                      contentImg: snapshot.data['urlImage'],
+                      nameTitle: snapshot.data['titleName'],
+                      content: snapshot.data['contentText'],
+                      contact: snapshot.data['contact'],
+                      category: snapshot.data['catagory'],
+                      type: snapshot.data['typeName'],
+                      dateTime: formatDate,
+                    ),
                   );
               }
             }),
