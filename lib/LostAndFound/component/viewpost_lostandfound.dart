@@ -71,51 +71,50 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
                 ],
               ),
             ),
-             child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                PopupMenuButton(
-                  color: Colors.white,
-                  itemBuilder: (context) => [
-                    if (AuthProviderService.instance.user.uid == widget.uid)
-                      PopupMenuItem(
-                        child: Text("Delete"),
-                        value: 1,
-                      ),
-                    if (AuthProviderService.instance.user.uid == widget.uid)
-                      PopupMenuItem(
-                        child: Text("Edit"),
-                        value: 2,
-                      ),
-                    if (AuthProviderService.instance.user.uid != widget.uid)
-                      PopupMenuItem(
-                        child: Text("Report"),
-                        value: 3,
-                      ),
-                  ],
-                  onSelected: (value) {
-                    setState(() async {
-                       if (value == 1){    await
-                       print(widget.lostandfoundid);
-                        deleteData(widget.lostandfoundid);}
-                      if (value == 3) {
-                        _askUser();
-                       
-                      }
-                    });
-                  },
-                ),
-              ]),
-            ],
-          ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  PopupMenuButton(
+                    color: Colors.white,
+                    itemBuilder: (context) => [
+                      if (AuthProviderService.instance.user.uid == widget.uid)
+                        PopupMenuItem(
+                          child: Text("Delete"),
+                          value: 1,
+                        ),
+                      if (AuthProviderService.instance.user.uid == widget.uid)
+                        PopupMenuItem(
+                          child: Text("Edit"),
+                          value: 2,
+                        ),
+                      if (AuthProviderService.instance.user.uid != widget.uid)
+                        PopupMenuItem(
+                          child: Text("Report"),
+                          value: 3,
+                        ),
+                    ],
+                    onSelected: (value) {
+                      setState(() async {
+                        if (value == 1) {
+                          await print(widget.lostandfoundid);
+                          deleteData(widget.lostandfoundid);
+                        }
+                        if (value == 3) {
+                          _askUser();
+                        }
+                      });
+                    },
+                  ),
+                ]),
+              ],
+            ),
           ),
         ),
         body: FutureBuilder<DocumentSnapshot<Object>>(
             future: lostref.doc(widget.lostandfoundid).get(),
-            builder:
-                (BuildContext context,
-            AsyncSnapshot<DocumentSnapshot<Object>> snapshot) {
+            builder: (BuildContext context,
+                AsyncSnapshot<DocumentSnapshot<Object>> snapshot) {
               if (snapshot.hasError)
                 return new Text('Error: ${snapshot.error}');
               switch (snapshot.connectionState) {
@@ -124,34 +123,34 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
                     child: CircularProgressIndicator(),
                   );
                 default:
-                 
-                   
-                      Timestamp t = snapshot.data['timestamp'];
-                      DateTime d = DateTime.fromMicrosecondsSinceEpoch(
-                          t.microsecondsSinceEpoch);
-                      String formatDate =
-                          DateFormat('yyyy-MM-dd – kk:mm').format(d);
-                      // print(doc.data());
-                      return CustomViewLostAndFound(
-                        nameUser: snapshot.data['student'],
-                        profileImg: snapshot.data['profileImg'],
-                        contentImg: snapshot.data['urlImage'],
-                        nameTitle: snapshot.data['titleName'],
-                        content: snapshot.data['contentText'],
-                        contact: snapshot.data['contact'],
-                        category: snapshot.data['catagory'],
-                        type: snapshot.data['typeName'],
-                        dateTime: formatDate,
-                      );
-                   
-                 
+                  Timestamp t = snapshot.data['timestamp'];
+                  DateTime d = DateTime.fromMicrosecondsSinceEpoch(
+                      t.microsecondsSinceEpoch);
+                  String formatDate =
+                      DateFormat('yyyy-MM-dd – kk:mm').format(d);
+                  // print(doc.data());
+                  return CustomViewLostAndFound(
+                    nameUser: snapshot.data['student'],
+                    profileImg: snapshot.data['profileImg'],
+                    contentImg: snapshot.data['urlImage'],
+                    nameTitle: snapshot.data['titleName'],
+                    content: snapshot.data['contentText'],
+                    contact: snapshot.data['contact'],
+                    category: snapshot.data['catagory'],
+                    type: snapshot.data['typeName'],
+                    dateTime: formatDate,
+                  );
               }
             }),
       ),
     );
   }
-   deleteData(docID) async {
-    await FirebaseFirestore.instance.collection('LostandFound').doc(docID).delete();
+
+  deleteData(docID) async {
+    await FirebaseFirestore.instance
+        .collection('LostandFound')
+        .doc(docID)
+        .delete();
     Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
   }
 
@@ -160,11 +159,12 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
   reportData(docID) async {
     await postreport.add({
       'postid': widget.lostandfoundid,
-      'student': student_model['name'],
-      'timestamp': DateTime.now(),
+      'reporter': student_model['name'],
+      'reporttime': DateTime.now(),
     });
   }
-var uuid2 = Uuid();
+
+  var uuid2 = Uuid();
 
   Future _askUser() async {
     switch (await showDialog(
@@ -181,8 +181,8 @@ var uuid2 = Uuid();
                     'typePost': 'Lostandfound',
                     'report': 'ใช้คำพูดที่ไม่เหมาะสม',
                     'postid': widget.lostandfoundid,
-                    'student': student_model['name'],
-                    'timestamp': DateTime.now(),
+                    'reporter': student_model['name'],
+                    'reporttime': DateTime.now(),
                   });
                   Navigator.pop(context,
                       MaterialPageRoute(builder: (context) => HomePage()));
@@ -200,8 +200,8 @@ var uuid2 = Uuid();
                     'typePost': 'Lostandfound',
                     'report': 'เข้าข่ายเกี่ยวกับเรื่องลามก อนาจาร',
                     'postid': widget.lostandfoundid,
-                    'student': student_model['name'],
-                    'timestamp': DateTime.now(),
+                    'reporter': student_model['name'],
+                    'reporttime': DateTime.now(),
                   });
                   Navigator.pop(context,
                       MaterialPageRoute(builder: (context) => HomePage()));
@@ -219,8 +219,8 @@ var uuid2 = Uuid();
                     'typePost': 'Lostandfound',
                     'report': 'มีการพูดในสิ่งที่ผิดกฏหมาย',
                     'postid': widget.lostandfoundid,
-                    'student': student_model['name'],
-                    'timestamp': DateTime.now(),
+                    'reporter': student_model['name'],
+                    'reporttime': DateTime.now(),
                   });
                   Navigator.pop(context,
                       MaterialPageRoute(builder: (context) => HomePage()));
@@ -238,8 +238,8 @@ var uuid2 = Uuid();
                     'typePost': 'Lostandfound',
                     'report': 'ข้อมูลเท็จ',
                     'postid': widget.lostandfoundid,
-                    'student': student_model['name'],
-                    'timestamp': DateTime.now(),
+                    'reporter': student_model['name'],
+                    'reporttime': DateTime.now(),
                   });
                   Navigator.pop(context,
                       MaterialPageRoute(builder: (context) => HomePage()));
@@ -258,8 +258,8 @@ var uuid2 = Uuid();
                     'report':
                         'เข้าข่ายมีข้อมูลส่วนตัวที่มีเจตนาทำให้คนผิดเสียหาย',
                     'postid': widget.lostandfoundid,
-                    'student': student_model['name'],
-                    'timestamp': DateTime.now(),
+                    'reporter': student_model['name'],
+                    'reporttime': DateTime.now(),
                   });
                   Navigator.pop(context,
                       MaterialPageRoute(builder: (context) => HomePage()));
@@ -275,4 +275,3 @@ var uuid2 = Uuid();
     }
   }
 }
-
