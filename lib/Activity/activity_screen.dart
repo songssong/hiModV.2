@@ -24,7 +24,10 @@ class _ActivityState extends State<Activity> {
         centerTitle: true,
         title: const Text(
           "Activity",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Mitr',
+              fontWeight: FontWeight.bold),
         ),
         flexibleSpace: Container(
           decoration: new BoxDecoration(
@@ -88,12 +91,12 @@ class _ActivityState extends State<Activity> {
                             );
                           }));
                         },
-                        profileImg: doc['profileImg'],
                         nameUser: doc['student'],
-                        catagory: doc['catagory'],
                         content: doc['contentText'],
                         nameTitle: doc['titleName'],
+                        profileImg: doc['profileImg'],
                         capacity: doc['amount'],
+                        catagory: doc['catagory'],
                         dateTime: formatDate,
                       );
                     }).toList(),

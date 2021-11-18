@@ -270,7 +270,10 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen>
             ),
             title: const Text(
               "LostAndFound",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Mitr',
+                  fontWeight: FontWeight.bold),
             ),
             flexibleSpace: Container(
               decoration: new BoxDecoration(

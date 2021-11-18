@@ -55,16 +55,26 @@ class CustomViewPost extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(5.0),
             child: Card(
-              shape:
-                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
               elevation: 6,
               child: Column(
                 children: [
                   ListTile(
                     leading: CircleAvatar(
                         backgroundImage: NetworkImage(profileImg) ?? ""),
-                    title: Text(nameUser) ?? "",
-                    subtitle: Text(dateTime),
+                    title: Text(
+                          nameUser,
+                          style: TextStyle(
+                              fontFamily: 'Mitr', fontWeight: FontWeight.bold),
+                        ) ??
+                        "",
+                    subtitle: Text(
+                      dateTime,
+                      style: TextStyle(
+                        fontFamily: 'Mitr',
+                      ),
+                    ),
                     trailing: Container(
                       padding: EdgeInsets.all(2),
                       child: Text(
@@ -95,16 +105,22 @@ class CustomViewPost extends StatelessWidget {
                   ),
                   Container(
                     child: Padding(
-                      padding: const EdgeInsets.all(1.0),
+                      padding: const EdgeInsets.fromLTRB(1, 0, 1, 7),
                       child: ListTile(
                         title: Text(
                               nameTitle,
-                              textScaleFactor: 1.5,
+                              style: TextStyle(
+                                  fontFamily: 'Mitr',
+                                  fontWeight: FontWeight.w500),
+                              textScaleFactor: 1.3,
                             ) ??
                             "",
                         subtitle: Text(
                               content,
-                              style: TextStyle(fontSize: 16),
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontFamily: 'Mitr',
+                              ),
                             ) ??
                             "",
                       ),

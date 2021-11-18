@@ -158,6 +158,7 @@ class _ViewActivityState extends State<ViewActivity> {
                                                   "UnJoin Activity",
                                                   style: TextStyle(
                                                       color: Colors.white,
+                                                      fontFamily: 'Mitr',
                                                       fontSize: 14),
                                                 )
                                               : // SizedBox(width: 2),
@@ -166,6 +167,7 @@ class _ViewActivityState extends State<ViewActivity> {
                                                   "Join Activity",
                                                   style: TextStyle(
                                                       color: Colors.white,
+                                                      fontFamily: 'Mitr',
                                                       fontSize: 14),
                                                 )
                                         ],

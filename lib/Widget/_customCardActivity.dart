@@ -34,20 +34,21 @@ class CustomActivity extends StatelessWidget {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.fromLTRB(0, 4, 8, 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Icon(
                       Icons.access_time_sharp,
-                      size: 14,
+                      size: 12,
                       color: Colors.grey,
                     ),
                     Text(
                       dateTime,
                       style: TextStyle(
-                        fontSize: 11,
+                        fontSize: 10,
                         color: Colors.grey,
+                        fontFamily: 'Mitr',
                       ),
                     ),
                   ],
@@ -58,7 +59,7 @@ class CustomActivity extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: 70,
+                    width: 65,
                     child: Image.asset(
                       imgaeActivity(),
                     ),
@@ -66,12 +67,13 @@ class CustomActivity extends StatelessWidget {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(0, 13, 0, 0),
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: Text(
                   nameTitle,
                   style: TextStyle(
-                    fontSize: 15,
-                  ),
+                      fontSize: 15,
+                      fontFamily: 'Mitr',
+                      fontWeight: FontWeight.w500),
                 ),
               ),
               Divider(color: Colors.grey[350]),
@@ -87,19 +89,21 @@ class CustomActivity extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey,
+                            fontFamily: 'Mitr',
                           ),
                         ),
                       ),
                     ),
                     Container(width: 1, color: Colors.grey[350]),
                     Padding(
-                      padding: const EdgeInsets.all(1.0),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: Container(
                         child: Text(
-                          "1/${capacity}",
+                          "0/${capacity}",
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 11,
                             color: Colors.grey,
+                            fontFamily: 'Mitr',
                           ),
                         ),
                       ),

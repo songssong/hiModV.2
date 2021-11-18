@@ -4,13 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:himod/LostAndFound/lostandfound_screen.dart';
 import 'package:himod/Profile/profile_screen.dart';
-import 'package:himod/component/appbar.dart';
 import 'package:himod/component/body.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:himod/component/bottombar.dart';
 import 'package:himod/main.dart';
 import 'package:himod/postdetail.dart';
-import 'package:himod/component/appbar.dart';
 import 'package:himod/service/auth_provider_service.dart';
 import 'package:himod/signup.dart';
 import 'package:himod/viewpost_post.dart';
@@ -18,7 +16,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
 
-import 'Widget/customCard.dart';
+import 'Widget/_customCard.dart';
 
 void main() => runApp(MyApp());
 
@@ -114,9 +112,18 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
     }
   }
 
-  Icon customIcon = const Icon(Icons.search);
-  Icon customIcon2 = const Icon(Icons.cancel);
-  Widget customSearchBar = const Text('Post');
+  Icon customIcon = const Icon(
+    Icons.search,
+    color: Colors.white,
+  );
+  Icon customIcon2 = const Icon(
+    Icons.cancel,
+    color: Colors.white,
+  );
+  Widget customSearchBar = const Text(
+    'Post',
+    style: TextStyle(color: Colors.white),
+  );
   String name = "";
   DateTime dateTime;
 
@@ -154,11 +161,14 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
             onPressed: () {
               setState(() {
                 if (customIcon.icon == Icons.search) {
-                  customIcon = Icon(Icons.cancel);
+                  customIcon = Icon(
+                    Icons.cancel,
+                    color: Colors.white,
+                  );
                   customSearchBar = ListTile(
                     leading: Icon(
                       Icons.search,
-                      color: Colors.black,
+                      color: Colors.grey[200],
                       size: 28,
                     ),
                     title: TextField(
@@ -166,7 +176,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                       decoration: InputDecoration(
                         hintText: 'search',
                         hintStyle: TextStyle(
-                          color: Colors.black,
+                          color: Colors.grey[200],
                           fontSize: 18,
                           fontStyle: FontStyle.italic,
                         ),
@@ -178,8 +188,17 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                     ),
                   );
                 } else {
-                  customIcon = Icon(Icons.search);
-                  customSearchBar = Text('Post');
+                  customIcon = Icon(
+                    Icons.search,
+                    color: Colors.white,
+                  );
+                  customSearchBar = Text(
+                    'Post',
+                    style: TextStyle(
+                        fontFamily: 'Mitr',
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  );
                 }
               });
             },
@@ -235,7 +254,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
                                 return ViewPost(
-                                  uid:document['uid'],
+                                  uid: document['uid'],
                                   postid: document.id,
                                 );
                               }))

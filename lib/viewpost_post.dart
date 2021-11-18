@@ -130,7 +130,10 @@ class _ViewPostState extends State<ViewPost> {
         centerTitle: true,
         title: Text(
           "Post",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Mitr',
+              fontWeight: FontWeight.bold),
         ),
         flexibleSpace: Container(
           decoration: new BoxDecoration(
@@ -240,6 +243,7 @@ class _ViewPostState extends State<ViewPost> {
                               style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 14,
+                                fontFamily: 'Mitr',
                               ),
                             ),
                             SizedBox(
@@ -289,7 +293,6 @@ class _ViewPostState extends State<ViewPost> {
   Future editPost() async {}
 
   deleteData(docID) async {
-    var testCom = "N9aNJBPK3t3wytLY7Dpj";
     await FirebaseFirestore.instance.collection('Post').doc(docID).delete();
 
     Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));

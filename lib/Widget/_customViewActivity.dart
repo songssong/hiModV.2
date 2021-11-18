@@ -1,19 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:himod/Activity/activity_viewonlypost.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-
-import 'package:himod/LostAndFound/lostandfound_screen.dart';
-
-import 'package:himod/homepage.dart';
-import 'package:himod/lostnfounddetail.dart';
-import 'package:himod/post.dart';
-import 'package:himod/postdetail.dart';
-import 'package:himod/service/auth_provider_service.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:uuid/uuid.dart';
 
 class CustomViewActivity extends StatelessWidget {
   final String nameUser;
@@ -27,7 +13,7 @@ class CustomViewActivity extends StatelessWidget {
   final String category;
   final int capacity;
   final Function onClick;
-  CustomViewActivity(
+  const CustomViewActivity(
       {Key key,
       this.nameUser,
       this.profileImg,
@@ -64,8 +50,12 @@ class CustomViewActivity extends StatelessWidget {
                             fontFamily: 'Mitr', fontWeight: FontWeight.bold),
                       ) ??
                       "",
-                  subtitle:
-                      Text(timeStamp, style: TextStyle(fontFamily: 'Mitr')),
+                  subtitle: Text(
+                    timeStamp,
+                    style: TextStyle(
+                      fontFamily: 'Mitr',
+                    ),
+                  ),
                   trailing: Container(
                     padding: EdgeInsets.all(2),
                     child: Text(
@@ -100,15 +90,18 @@ class CustomViewActivity extends StatelessWidget {
                     child: ListTile(
                       title: Text(
                             nameTitle,
-                            textScaleFactor: 1.3,
                             style: TextStyle(
                                 fontFamily: 'Mitr',
                                 fontWeight: FontWeight.w500),
+                            textScaleFactor: 1.3,
                           ) ??
                           "",
                       subtitle: Text(
                             content,
-                            style: TextStyle(fontSize: 16, fontFamily: 'Mitr'),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontFamily: 'Mitr',
+                            ),
                           ) ??
                           "",
                     ),
@@ -123,14 +116,16 @@ class CustomViewActivity extends StatelessWidget {
                           // Text(
                           //   "Start-Date : ",
                           // ),
-                          Icon(
-                            Icons.date_range_outlined,
-                            size: 20,
-                          ),
+                          Icon(Icons.date_range_outlined, size: 20),
                           SizedBox(
                             width: 1,
                           ),
-                          Text("${select_date}"),
+                          Text(
+                            "${select_date}",
+                            style: TextStyle(
+                              fontSize: 13,
+                            ),
+                          ),
                         ],
                       ),
                       SizedBox(
@@ -141,33 +136,16 @@ class CustomViewActivity extends StatelessWidget {
                           // Text(
                           //   "Start-Date : ",
                           // ),
-                          Icon(
-                            Icons.access_time,
-                            size: 20,
-                          ),
-                          SizedBox(
-                            width: 1,
-                          ),
-                          Text("${select_time}"),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 2,
-                      ),
-                      Row(
-                        children: [
-                          // Text(
-                          //   "Capacity : ",
-                          // ),
-                          Icon(
-                            Icons.people_alt_rounded,
-                            size: 20,
-                          ),
+                          Icon(Icons.access_time, size: 20),
                           SizedBox(
                             width: 1,
                           ),
                           Text(
-                              "0/${capacity}"), //ดึงจำนวนคนที่ join มาใส่ข้างหน้า แทนค่าแทนเลข 1
+                            "${select_time}",
+                            style: TextStyle(
+                              fontSize: 13,
+                            ),
+                          ),
                         ],
                       ),
                       SizedBox(
@@ -178,7 +156,29 @@ class CustomViewActivity extends StatelessWidget {
                           // Text(
                           //   "Capacity : ",
                           // ),
-                          contact != null ? Icon(Icons.phone) : Container(),
+                          Icon(Icons.people_alt_rounded, size: 20),
+                          SizedBox(
+                            width: 1,
+                          ),
+                          Text(
+                            "0/${capacity}",
+                            style: TextStyle(
+                              fontSize: 13,
+                            ),
+                          ), //ดึงจำนวนคนที่ join มาใส่ข้างหน้า แทนค่าแทนเลข 1
+                        ],
+                      ),
+                      SizedBox(
+                        height: 2,
+                      ),
+                      Row(
+                        children: [
+                          // Text(
+                          //   "Capacity : ",
+                          // ),
+                          contact != null
+                              ? Icon(Icons.phone, size: 20)
+                              : Container(),
                           SizedBox(
                             width: 1,
                           ),
@@ -190,7 +190,10 @@ class CustomViewActivity extends StatelessWidget {
                                   },
                                   child: Text(
                                     contact,
-                                    style: TextStyle(color: Colors.blue[900]),
+                                    style: TextStyle(
+                                      color: Colors.blue[900],
+                                      fontSize: 13,
+                                    ),
                                   ),
                                 )
                               : Container(),
@@ -207,22 +210,3 @@ class CustomViewActivity extends StatelessWidget {
     );
   }
 }
-// class _CustomViewActivity extends State<CustomViewActivity> {
-//   DateTime dateTime;
-//   VoidCallback onDelete;
-//   List<String> actions = <String>['Edit', 'Delete', 'Report'];
-
-//   var uuid;
-//   var uid;
-
-//   void initState() {
-//     super.initState();
-    
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     // TODO: implement build
-//     throw UnimplementedError();
-//   }
-// }

@@ -43,10 +43,7 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
 
   CollectionReference _lostCollection =
       FirebaseFirestore.instance.collection('LostandFound');
-  void initState() {
-    super.initState();
-    readDataStudent();
-  }
+  
 
   final ImagePicker _picker = ImagePicker();
   File file;
@@ -384,33 +381,35 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
                                       //  style:
                                       //  TextStyle(fontWeight: FontWeight.bold),
                                     ),
-                                    Container(
-                                        padding: EdgeInsets.only(left: 40),
-                                        child: ConstrainedBox(
-                                          constraints: BoxConstraints.tightFor(
-                                              width: 200, height: 30),
-                                          child: TextField(
-                                            onChanged: (String contact) {
-                                              _lostdes.contact = contact;
-                                            },
-                                            decoration: new InputDecoration(
-                                              contentPadding: EdgeInsets.only(
-                                                  bottom: 12.0,
-                                                  left: 10.0,
-                                                  right: 10.0),
-                                              hintText:
-                                                  ('Enter your phone number'),
+                                    Expanded(
+                                      child: Container(
+                                          padding: EdgeInsets.only(left: 40),
+                                          child: ConstrainedBox(
+                                            constraints: BoxConstraints.tightFor(
+                                                width: 200, height: 30),
+                                            child: TextField(
+                                              onChanged: (String contact) {
+                                                _lostdes.contact = contact;
+                                              },
+                                              decoration: new InputDecoration(
+                                                contentPadding: EdgeInsets.only(
+                                                    bottom: 12.0,
+                                                    left: 10.0,
+                                                    right: 10.0),
+                                                hintText:
+                                                    ('Enter your phone number'),
+                                              ),
+                                              keyboardType: TextInputType.number,
+                                              inputFormatters: <
+                                                  TextInputFormatter>[
+                                                FilteringTextInputFormatter.allow(
+                                                    RegExp(r'[0-9]')),
+                                                LengthLimitingTextInputFormatter(
+                                                    10),
+                                              ],
                                             ),
-                                            keyboardType: TextInputType.number,
-                                            inputFormatters: <
-                                                TextInputFormatter>[
-                                              FilteringTextInputFormatter.allow(
-                                                  RegExp(r'[0-9]')),
-                                              LengthLimitingTextInputFormatter(
-                                                  10),
-                                            ],
-                                          ),
-                                        ))
+                                          )),
+                                    )
                                   ]),
                                 ),
                               ]),

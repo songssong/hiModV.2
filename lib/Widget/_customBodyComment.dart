@@ -33,20 +33,31 @@ class BodyComment extends StatelessWidget {
                   leading: SizedBox(
                     height: 150,
                     child: CircleAvatar(
-                      backgroundImage: profileImg != null ? NetworkImage(profileImg) : Container(),
+                      backgroundImage: profileImg != null
+                          ? NetworkImage(profileImg)
+                          : Container(),
                     ),
                   ),
                   title: nameUser != null
                       ? Text(
                           nameUser,
                           style: TextStyle(
-                            fontSize: 13,
-                          ),
+                              fontSize: 15,
+                              fontFamily: 'Mitr',
+                              fontWeight: FontWeight.bold),
                         )
                       : Container(),
                   subtitle: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                    child: content != null ? Text("${content}") : Container(),
+                    child: content != null
+                        ? Text(
+                            "$content",
+                            style: TextStyle(
+                              fontFamily: 'Mitr',
+                              fontSize: 16,
+                            ),
+                          )
+                        : Container(),
                   ),
                 ),
               ),
@@ -55,6 +66,5 @@ class BodyComment extends StatelessWidget {
         ),
       ],
     );
-    ;
   }
 }
