@@ -1,5 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:himod/Activity/activity_viewonlypost.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+
+import 'package:himod/LostAndFound/lostandfound_screen.dart';
+
+import 'package:himod/homepage.dart';
+import 'package:himod/lostnfounddetail.dart';
+import 'package:himod/post.dart';
+import 'package:himod/postdetail.dart';
+import 'package:himod/service/auth_provider_service.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class CustomViewActivity extends StatelessWidget {
   final String nameUser;
@@ -13,7 +27,7 @@ class CustomViewActivity extends StatelessWidget {
   final String category;
   final int capacity;
   final Function onClick;
-  const CustomViewActivity(
+   CustomViewActivity(
       {Key key,
       this.nameUser,
       this.profileImg,
@@ -135,7 +149,7 @@ class CustomViewActivity extends StatelessWidget {
                             width: 1,
                           ),
                           Text(
-                              "1/${capacity}"), //ดึงจำนวนคนที่ join มาใส่ข้างหน้า แทนค่าแทนเลข 1
+                              "0/${capacity}"), //ดึงจำนวนคนที่ join มาใส่ข้างหน้า แทนค่าแทนเลข 1
                         ],
                       ),
                       SizedBox(
@@ -174,4 +188,26 @@ class CustomViewActivity extends StatelessWidget {
       ),
     );
   }
-}
+
+
+
+ }
+// class _CustomViewActivity extends State<CustomViewActivity> {
+//   DateTime dateTime;
+//   VoidCallback onDelete;
+//   List<String> actions = <String>['Edit', 'Delete', 'Report'];
+
+//   var uuid;
+//   var uid;
+
+//   void initState() {
+//     super.initState();
+    
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     // TODO: implement build
+//     throw UnimplementedError();
+//   }
+// }

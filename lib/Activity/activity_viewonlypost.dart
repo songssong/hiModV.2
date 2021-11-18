@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:himod/Widget/customCard_Activity.dart';
+
 import 'package:himod/Widget/customViewActivity.dart';
 import 'package:himod/homepage.dart';
 import 'package:himod/service/auth_provider_service.dart';
@@ -10,7 +10,13 @@ class ViewActivity extends StatefulWidget {
   final String uid;
   final String activityId;
   final String joinActivityid;
-  ViewActivity({Key key, this.uid, this.activityId, this.joinActivityid})
+  bool pressGeoON;
+  ViewActivity(
+      {Key key,
+      this.uid,
+      this.activityId,
+      this.joinActivityid,
+      this.pressGeoON})
       : super(key: key);
 
   @override
@@ -20,7 +26,7 @@ class ViewActivity extends StatefulWidget {
 class _ViewActivityState extends State<ViewActivity> {
   CollectionReference activityref =
       FirebaseFirestore.instance.collection('Activity');
-  bool pressGeoON = false;
+  //bool pressGeoON = false;
   bool cmbscritta = false;
 
   String joinActivityid;
@@ -32,6 +38,7 @@ class _ViewActivityState extends State<ViewActivity> {
     readDataStudent();
   }
 
+  var uid = AuthProviderService.instance.user?.uid ?? '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +48,10 @@ class _ViewActivityState extends State<ViewActivity> {
           centerTitle: true,
           title: Text(
             "Activity",
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'Mitr',
+                fontWeight: FontWeight.bold),
           ),
           flexibleSpace: Container(
             decoration: new BoxDecoration(
@@ -116,35 +126,34 @@ class _ViewActivityState extends State<ViewActivity> {
                                     child: RaisedButton(
                                       elevation: 5,
                                       padding: EdgeInsets.all(6),
-                                      color: pressGeoON
+                                      color: widget.pressGeoON
                                           ? Colors.red
                                           : Colors.blue[500],
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(20.0)),
                                       onPressed: () async {
-                                        setState(() {
-                                          pressGeoON = !pressGeoON;
-                                          cmbscritta = !cmbscritta;
-                                        });
-                                        if (pressGeoON == true) {
-                                          await joinActivity();
+                                        if (widget.pressGeoON) {
+                                          await unjoinActivity(joinActivityid);
+                                          print('unjoin');
+                                          // print(widget.activityId);
+                                          print(joinActivityid);
+                                        } else {
                                           print('join');
-                                         // print(widget.activityId);
+                                          joinActivity();
                                           print(joinActivityid);
                                         }
-
-                                        if (!pressGeoON == true) {
-                                          print('unjoin');
-                                           unjoinActivity(joinActivityid);
-                                           print(joinActivityid);
-                                        }
+                                        setState(() {
+                                          widget.pressGeoON =
+                                              !widget.pressGeoON;
+                                        });
                                       },
+
                                       // );
 
                                       child: Row(
                                         children: [
-                                          cmbscritta
+                                          widget.pressGeoON
                                               ? Text(
                                                   "UnJoin Activity",
                                                   style: TextStyle(
@@ -228,7 +237,7 @@ class _ViewActivityState extends State<ViewActivity> {
       'joinid': widget.activityId,
       'timestamp': DateTime.now(),
       'student': student_model['name'],
-      'studentId' : student_model['studentId'],
+      'studentuid': uid.toString(),
     });
   }
 
@@ -236,6 +245,9 @@ class _ViewActivityState extends State<ViewActivity> {
   calljoinid() async {}
 
   unjoinActivity(docid) async {
-    await FirebaseFirestore.instance.collection('JoinActivity').doc(docid).delete();
+    await FirebaseFirestore.instance
+        .collection('JoinActivity')
+        .doc(docid)
+        .delete();
   }
 }

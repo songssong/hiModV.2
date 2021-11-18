@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:himod/Activity/activity_viewonlypost.dart';
 import 'package:himod/Widget/_customCardActivity.dart';
+import 'package:himod/service/auth_provider_service.dart';
 import 'package:intl/intl.dart';
 
 class Activity extends StatefulWidget {
@@ -13,6 +14,7 @@ class Activity extends StatefulWidget {
 }
 
 class _ActivityState extends State<Activity> {
+  bool pressGeoON;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -61,14 +63,30 @@ class _ActivityState extends State<Activity> {
                       String formatDate =
                           DateFormat('yyyy-MM-dd – kk:mm').format(d);
                       return CustomActivity(
-                        onClick: () => {
+                        onClick: () async {
+                          print("aaaaaaaaaaaaaa");
+                          print(doc.id);
+
+                          var x = await checkStudent(
+                              doc.id, AuthProviderService.instance.user.uid);
+                         
+                          print(x.size);
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
+                            if (x.size > 0) {
+                              pressGeoON = true;
+                              print(pressGeoON);
+                            } else
+                              pressGeoON = false;
+
+                            print(pressGeoON);
+
                             return ViewActivity(
                               uid: doc['uid'],
                               activityId: doc.id,
+                              pressGeoON: pressGeoON,
                             );
-                          }))
+                          }));
                         },
                         profileImg: doc['profileImg'],
                         nameUser: doc['student'],
@@ -94,5 +112,16 @@ class _ActivityState extends State<Activity> {
         backgroundColor: Colors.yellow[600],
       ),
     ));
+  }
+
+  String checkStudents;
+  Future<QuerySnapshot<Map<String, dynamic>>> checkStudent(
+      join, studentjoin) async {
+    return await FirebaseFirestore.instance
+        .collection('JoinActivity')
+        .where("joinid", isEqualTo: join)
+        .where("studentuid", isEqualTo: studentjoin)
+        .get();
+//return checkStudents;
   }
 }
