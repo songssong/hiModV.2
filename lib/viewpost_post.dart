@@ -307,8 +307,8 @@ class _ViewPostState extends State<ViewPost> {
   reportData(docID) async {
     await postreport.add({
       'postid': widget.postid,
-      'student': student_model['name'],
-      'timestamp': DateTime.now(),
+      'reporter': student_model['name'],
+      'reporttime': DateTime.now(),
     });
   }
 
@@ -347,8 +347,8 @@ class _ViewPostState extends State<ViewPost> {
                     'typePost': 'Post',
                     'report': 'เข้าข่ายเกี่ยวกับเรื่องลามก อนาจาร',
                     'postid': widget.postid,
-                    'student': student_model['name'],
-                    'timestamp': DateTime.now(),
+                    'reporter': student_model['name'],
+                    'reporttime': DateTime.now(),
                   });
                   Navigator.pop(context,
                       MaterialPageRoute(builder: (context) => HomePage()));
@@ -366,8 +366,8 @@ class _ViewPostState extends State<ViewPost> {
                     'typePost': 'Post',
                     'report': 'มีการพูดในสิ่งที่ผิดกฏหมาย',
                     'postid': widget.postid,
-                    'student': student_model['name'],
-                    'timestamp': DateTime.now(),
+                    'reporter': student_model['name'],
+                    'reporttime': DateTime.now(),
                   });
                   Navigator.pop(context,
                       MaterialPageRoute(builder: (context) => HomePage()));
@@ -385,8 +385,8 @@ class _ViewPostState extends State<ViewPost> {
                     'typePost': 'Post',
                     'report': 'ข้อมูลเท็จ',
                     'postid': widget.postid,
-                    'student': student_model['name'],
-                    'timestamp': DateTime.now(),
+                    'reporter': student_model['name'],
+                    'reporttime': DateTime.now(),
                   });
                   Navigator.pop(context,
                       MaterialPageRoute(builder: (context) => HomePage()));
@@ -405,8 +405,8 @@ class _ViewPostState extends State<ViewPost> {
                     'report':
                         'เข้าข่ายมีข้อมูลส่วนตัวที่มีเจตนาทำให้คนผิดเสียหาย',
                     'postid': widget.postid,
-                    'student': student_model['name'],
-                    'timestamp': DateTime.now(),
+                    'reporter': student_model['name'],
+                    'reporttime': DateTime.now(),
                   });
                   Navigator.pop(context,
                       MaterialPageRoute(builder: (context) => HomePage()));
