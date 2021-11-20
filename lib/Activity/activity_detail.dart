@@ -101,7 +101,7 @@ class _ActivitydetailState extends State<Activitydetail> {
                       'titleName': _activitydes.title.toLowerCase().trim(),
                       'contentText': _activitydes.description,
                       'uid': uid.toString(),
-                      'postid': uuid.v4(),
+                      'activityid': uuid.v4(),
                       'student': student_model['name'],
                       'catagory': _activitydes.catagory,
                       'profileImg': student_model['imageUrl'],
