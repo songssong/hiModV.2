@@ -13,8 +13,105 @@ class Activity extends StatefulWidget {
   _ActivityState createState() => _ActivityState();
 }
 
+enum Type { All, General, Sports, Games, Study, Other }
+
 class _ActivityState extends State<Activity> {
+  String _value = "";
+  void _setValue(String value) => setState(() => _value = value);
+
   bool pressGeoON;
+  Future _askUser() async {
+    switch (await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: const Text('Select category'),
+            children: <Widget>[
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  Navigator.pop(context, Type.All);
+                },
+                child: const Text(
+                  'All',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  Navigator.pop(context, Type.General);
+                },
+                child: const Text(
+                  'General',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  Navigator.pop(context, Type.Sports);
+                },
+                child: const Text(
+                  'Sport',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  Navigator.pop(context, Type.Games);
+                },
+                child: const Text(
+                  'Games',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  Navigator.pop(context, Type.Study);
+                },
+                child: const Text(
+                  'Study',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  Navigator.pop(context, Type.Other);
+                },
+                child: const Text(
+                  'Other',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ],
+          );
+        })) {
+      case Type.All:
+        _setValue('');
+        break;
+      case Type.General:
+        _setValue('General');
+        break;
+      case Type.Sports:
+        _setValue('Sports');
+        break;
+      case Type.Games:
+        _setValue('Games');
+        break;
+      case Type.Study:
+        _setValue('Study');
+        print(_value);
+        break;
+      case Type.Other:
+        _setValue('Other');
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,6 +126,14 @@ class _ActivityState extends State<Activity> {
               fontFamily: 'Mitr',
               fontWeight: FontWeight.bold),
         ),
+        leading: IconButton(
+          onPressed: () => _askUser(),
+          icon: Icon(
+            Icons.filter_list_alt,
+            color: Colors.white,
+            size: 30,
+          ),
+        ),
         flexibleSpace: Container(
           decoration: new BoxDecoration(
             gradient: new LinearGradient(
@@ -41,11 +146,19 @@ class _ActivityState extends State<Activity> {
           ),
         ),
       ),
-      body: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('Activity')
-              .orderBy('timestamp', descending: true)
-              .snapshots(),
+      body: StreamBuilder<QuerySnapshot>(
+          stream: _value != ""
+              ? FirebaseFirestore.instance
+                  .collection('Activity')
+                  // .doc(AuthProviderService.instance.user.uid)
+                  // .collection('titleName')
+                  .where("catagory", isEqualTo: _value)
+                  .orderBy('timestamp', descending: true)
+                  .snapshots()
+              : FirebaseFirestore.instance
+                  .collection("Activity")
+                  .orderBy('timestamp', descending: true)
+                  .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
@@ -72,7 +185,7 @@ class _ActivityState extends State<Activity> {
 
                           var x = await checkStudent(
                               doc.id, AuthProviderService.instance.user.uid);
-                         
+
                           print(x.size);
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
