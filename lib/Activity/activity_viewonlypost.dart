@@ -31,6 +31,8 @@ class _ViewActivityState extends State<ViewActivity> {
 
   String joinActivityid;
   int count;
+  int amount;
+  bool isEnabled = true;
 
   void initState() {
     super.initState();
@@ -101,7 +103,8 @@ class _ViewActivityState extends State<ViewActivity> {
                       String formatDate =
                           DateFormat('yyyy-MM-dd – kk:mm').format(d);
                       count = snapshot.data['count'];
-                      
+                      amount = snapshot.data['amount'];
+
                       return SingleChildScrollView(
                         child: Column(
                           children: [
@@ -122,12 +125,40 @@ class _ViewActivityState extends State<ViewActivity> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
+                                if (count == amount)
+                                  Container(
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 0, 10, 0),
+                                      child: RaisedButton(
+                                        elevation: 5,
+                                        padding: EdgeInsets.all(6),
+                                        color: Colors.grey,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20.0)),
+                                        onPressed: null,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              "Full",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontFamily: 'Mitr',
+                                                  fontSize: 14),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 Container(
                                   child: Padding(
                                     padding:
                                         const EdgeInsets.fromLTRB(0, 0, 10, 0),
                                     child: RaisedButton(
                                       elevation: 5,
+                                      disabledElevation: 1,
                                       padding: EdgeInsets.all(6),
                                       color: widget.pressGeoON
                                           ? Colors.red
@@ -135,24 +166,31 @@ class _ViewActivityState extends State<ViewActivity> {
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(20.0)),
-                                      onPressed: () async {
-                                        if (widget.pressGeoON) {
-                                          await unjoinActivity(joinActivityid);
-                                          print('unjoin');
-                                          uncountjoin(widget.activityId);
-                                          print(joinActivityid);
-                                        } else {
-                                          print('join');
-                                          joinActivity();
+                                      onPressed: amount == count &&
+                                              AuthProviderService
+                                                      .instance.user.uid !=
+                                                  widget.uid
+                                          ? null
+                                          : () async {
+                                              if (widget.pressGeoON) {
+                                                await unjoinActivity(
+                                                    joinActivityid);
+                                                print('unjoin');
+                                                uncountjoin(widget.activityId);
+                                                print(joinActivityid);
+                                              } else {
+                                                print('join');
+                                                joinActivity();
 
-                                          countjoin(widget.activityId);
-                                           print(widget.activityId);
-                                        }
-                                        setState(() {
-                                          widget.pressGeoON =
-                                              !widget.pressGeoON;
-                                        });
-                                      },
+                                                countjoin(widget.activityId);
+                                                print(widget.activityId);
+                                              }
+                                              setState(() {
+                                                widget.pressGeoON =
+                                                    !widget.pressGeoON;
+                                                isEnabled = false;
+                                              });
+                                            },
 
                                       // );
 
@@ -245,21 +283,17 @@ class _ViewActivityState extends State<ViewActivity> {
     var collection = FirebaseFirestore.instance.collection('Activity');
     collection
         .doc(activityid)
-        .update({'count': count+1}) // <-- Updated data
+        .update({'count': count + 1}) // <-- Updated data
         .then((_) => print('Success'))
         .catchError((error) => print('Failed: $error'));
-
-    
   }
 
   Future<QuerySnapshot<Map<String, dynamic>>> uncountjoin(activityid) async {
     var collection = FirebaseFirestore.instance.collection('Activity');
     collection
         .doc(activityid)
-        .update({'count': count-1}) // <-- Updated data
+        .update({'count': count - 1}) // <-- Updated data
         .then((_) => print('Success'))
         .catchError((error) => print('Failed: $error'));
-
-    
   }
 }
