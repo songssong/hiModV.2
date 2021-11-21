@@ -10,7 +10,7 @@ class CustomActivity extends StatelessWidget {
   final int capacity;
   final Function onClick;
   final String catagory;
-
+  final int count;
   const CustomActivity(
       {Key key,
       this.nameUser,
@@ -20,7 +20,8 @@ class CustomActivity extends StatelessWidget {
       this.onClick,
       this.catagory,
       this.profileImg,
-      this.capacity})
+      this.capacity,
+      this.count})
       : super(key: key);
 
   @override
@@ -105,7 +106,7 @@ class CustomActivity extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: Container(
                         child: Text(
-                          "0/${capacity}",
+                          "${count}/${capacity}",
                           style: TextStyle(
                             fontSize: 11,
                             color: Colors.grey,

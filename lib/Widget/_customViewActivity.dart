@@ -13,20 +13,22 @@ class CustomViewActivity extends StatelessWidget {
   final String category;
   final int capacity;
   final Function onClick;
-  const CustomViewActivity(
-      {Key key,
-      this.nameUser,
-      this.profileImg,
-      this.select_date,
-      this.select_time,
-      this.timeStamp,
-      this.nameTitle,
-      this.content,
-      this.category,
-      this.capacity,
-      this.onClick,
-      this.contact})
-      : super(key: key);
+  final int count;
+  const CustomViewActivity({
+    Key key,
+    this.nameUser,
+    this.profileImg,
+    this.select_date,
+    this.select_time,
+    this.timeStamp,
+    this.nameTitle,
+    this.content,
+    this.category,
+    this.capacity,
+    this.onClick,
+    this.contact,
+    this.count,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,9 @@ class CustomViewActivity extends StatelessWidget {
       padding: const EdgeInsets.all(5.0),
       child: Column(
         children: [
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           // Custom Card for Activity
           Card(
             shape:
@@ -162,7 +166,7 @@ class CustomViewActivity extends StatelessWidget {
                             width: 1,
                           ),
                           Text(
-                            "0/${capacity}",
+                            "${count}/${capacity}",
                             style: TextStyle(
                               fontSize: 13,
                             ),

@@ -26,6 +26,7 @@ class ActivitydDes {
   String date;
   String time;
   Timestamp timeofday;
+  int count=0;
 
   ActivitydDes({this.title, this.description});
 
@@ -110,6 +111,7 @@ class _ActivitydetailState extends State<Activitydetail> {
                       'amount': _activitydes.amount,
                       'date': _activitydes.date,
                       'time': _activitydes.time,
+                      'count': _activitydes.count,
                     });
                     Navigator.pop(context,
                         MaterialPageRoute(builder: (context) => HomePage()));

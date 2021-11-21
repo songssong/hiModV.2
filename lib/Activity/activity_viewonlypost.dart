@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:himod/Widget/_customViewActivity.dart';
 
-import 'package:himod/Widget/customViewActivity.dart';
 import 'package:himod/homepage.dart';
 import 'package:himod/service/auth_provider_service.dart';
 import 'package:intl/intl.dart';
@@ -30,6 +30,7 @@ class _ViewActivityState extends State<ViewActivity> {
   bool cmbscritta = false;
 
   String joinActivityid;
+  int count;
 
   void initState() {
     super.initState();
@@ -99,7 +100,8 @@ class _ViewActivityState extends State<ViewActivity> {
                           t.microsecondsSinceEpoch);
                       String formatDate =
                           DateFormat('yyyy-MM-dd – kk:mm').format(d);
-
+                      count = snapshot.data['count'];
+                      
                       return SingleChildScrollView(
                         child: Column(
                           children: [
@@ -113,6 +115,7 @@ class _ViewActivityState extends State<ViewActivity> {
                               capacity: snapshot.data['amount'],
                               select_date: snapshot.data['date'],
                               select_time: snapshot.data['time'],
+                              count: snapshot.data['count'],
                               timeStamp: formatDate,
                             ),
                             //button Join
@@ -136,12 +139,14 @@ class _ViewActivityState extends State<ViewActivity> {
                                         if (widget.pressGeoON) {
                                           await unjoinActivity(joinActivityid);
                                           print('unjoin');
-                                          // print(widget.activityId);
+                                          uncountjoin(widget.activityId);
                                           print(joinActivityid);
                                         } else {
                                           print('join');
                                           joinActivity();
-                                          print(joinActivityid);
+
+                                          countjoin(widget.activityId);
+                                           print(widget.activityId);
                                         }
                                         setState(() {
                                           widget.pressGeoON =
@@ -192,23 +197,6 @@ class _ViewActivityState extends State<ViewActivity> {
   Stream<QuerySnapshot<Map<String, dynamic>>> _joinCollection2 =
       FirebaseFirestore.instance.collection('JoinActivity').snapshots();
 
-  // DocumentReference<Object> _joinCollection1 =
-  //     FirebaseFirestore.instance.collection('JoinActivity').doc();
-  // //DocumentSnapshot<Object> doc = _joinCollection1.get()
-  //List ;
-  // List student_join;
-  // Future<Null> studentJoin() async {
-  //   await FirebaseFirestore.instance
-  //       .collection('Student')
-  //       .doc('studentjoin')
-  //       .get()
-  //       .then((value) {
-  //     setState(() {
-  //       student_join = value.data[];
-  //     });
-  //   });
-  // }
-
   dynamic student_model;
   Future<Null> readDataStudent() async {
     await FirebaseFirestore.instance
@@ -251,5 +239,27 @@ class _ViewActivityState extends State<ViewActivity> {
         .collection('JoinActivity')
         .doc(docid)
         .delete();
+  }
+
+  Future<QuerySnapshot<Map<String, dynamic>>> countjoin(activityid) async {
+    var collection = FirebaseFirestore.instance.collection('Activity');
+    collection
+        .doc(activityid)
+        .update({'count': count+1}) // <-- Updated data
+        .then((_) => print('Success'))
+        .catchError((error) => print('Failed: $error'));
+
+    
+  }
+
+  Future<QuerySnapshot<Map<String, dynamic>>> uncountjoin(activityid) async {
+    var collection = FirebaseFirestore.instance.collection('Activity');
+    collection
+        .doc(activityid)
+        .update({'count': count-1}) // <-- Updated data
+        .then((_) => print('Success'))
+        .catchError((error) => print('Failed: $error'));
+
+    
   }
 }
