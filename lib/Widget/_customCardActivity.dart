@@ -54,7 +54,7 @@ class CustomActivity extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 1),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -66,17 +66,23 @@ class CustomActivity extends StatelessWidget {
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                child: Text(
-                  nameTitle,
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontFamily: 'Mitr',
-                      fontWeight: FontWeight.w500),
+              Text(
+                nameTitle,
+                style: TextStyle(
+                    fontSize: 15,
+                    fontFamily: 'Mitr',
+                    fontWeight: FontWeight.w500),
+              ),
+              Text(
+                nameUser,
+                style: TextStyle(
+                  fontSize: 10,
                 ),
               ),
-              Divider(color: Colors.grey[350]),
+              Padding(
+                padding: const EdgeInsets.only(),
+                child: Divider(color: Colors.grey[350]),
+              ),
               IntrinsicHeight(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,

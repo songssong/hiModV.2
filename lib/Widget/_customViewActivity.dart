@@ -34,6 +34,7 @@ class CustomViewActivity extends StatelessWidget {
       padding: const EdgeInsets.all(5.0),
       child: Column(
         children: [
+          SizedBox(height: 10,),
           // Custom Card for Activity
           Card(
             shape:
