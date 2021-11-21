@@ -43,7 +43,6 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
 
   CollectionReference _lostCollection =
       FirebaseFirestore.instance.collection('LostandFound');
-  
 
   final ImagePicker _picker = ImagePicker();
   File file;
@@ -94,6 +93,12 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
   LostnfoundDes _lostdes = LostnfoundDes();
   var uuid = Uuid();
   var uid = AuthProviderService.instance.user?.uid ?? '';
+
+  @override
+  void initState() {
+    readDataStudent();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -385,8 +390,9 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
                                       child: Container(
                                           padding: EdgeInsets.only(left: 40),
                                           child: ConstrainedBox(
-                                            constraints: BoxConstraints.tightFor(
-                                                width: 200, height: 30),
+                                            constraints:
+                                                BoxConstraints.tightFor(
+                                                    width: 200, height: 30),
                                             child: TextField(
                                               onChanged: (String contact) {
                                                 _lostdes.contact = contact;
@@ -399,11 +405,12 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
                                                 hintText:
                                                     ('Enter your phone number'),
                                               ),
-                                              keyboardType: TextInputType.number,
+                                              keyboardType:
+                                                  TextInputType.number,
                                               inputFormatters: <
                                                   TextInputFormatter>[
-                                                FilteringTextInputFormatter.allow(
-                                                    RegExp(r'[0-9]')),
+                                                FilteringTextInputFormatter
+                                                    .allow(RegExp(r'[0-9]')),
                                                 LengthLimitingTextInputFormatter(
                                                     10),
                                               ],
