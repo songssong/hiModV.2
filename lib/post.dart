@@ -218,8 +218,6 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
           stream: _value != ""
               ? FirebaseFirestore.instance
                   .collection('Post')
-                  // .doc(AuthProviderService.instance.user.uid)
-                  // .collection('titleName')
                   .where("catagory", isEqualTo: _value)
                   .orderBy('timestamp', descending: true)
                   .snapshots()
@@ -229,50 +227,154 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                   .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-                return Center(child: CircularProgressIndicator());
-              default:
-                return ListView(
-                  children: snapshot.data.docs.map((DocumentSnapshot document) {
-                    // print(document.data());
-                    Timestamp t = document['timestamp'];
-                    DateTime d = DateTime.fromMicrosecondsSinceEpoch(
-                        t.microsecondsSinceEpoch);
-                    String formatDate =
-                        DateFormat('yyyy-MM-dd – kk:mm').format(d);
-                    // print(d);
-                    return Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      child: Column(
-                        children: [
-                          CustomCard(
-                            onClick: () => {
-                              // print(document.id),
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return ViewPost(
-                                  uid: document['uid'],
-                                  postid: document.id,
-                                );
-                              }))
-                            },
-                            nameUser: document['student'] ?? 'student_name',
-                            profileImg: document['profileImg'],
-                            dateTime: formatDate,
-                            contentImg: document['urlImage'],
-                            nameTitle: document['titleName'],
-                            content: document['contentText'],
-                            catagory: document['catagory'],
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                );
-            }
+            return StreamBuilder<QuerySnapshot>(
+                stream: name != "" && name != null
+                    ? FirebaseFirestore.instance
+                        .collection('Post')
+                        // .doc(AuthProviderService.instance.user.uid)
+                        // .collection('titleName')
+                        .where("titleName", isEqualTo: name)
+                        .orderBy('timestamp', descending: true)
+                        .snapshots()
+                    : FirebaseFirestore.instance
+                        .collection("Post")
+                        .orderBy('timestamp', descending: true)
+                        .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot2) {
+                  if (snapshot.hasError)
+                    return new Text('Error: ${snapshot.error}');
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return Center(child: CircularProgressIndicator());
+
+                    default:
+                      if (_value != "") {
+                        return ListView(
+                          children: snapshot.data.docs
+                              .map((DocumentSnapshot document) {
+                            // print(document.data());
+                            Timestamp t = document['timestamp'];
+                            DateTime d = DateTime.fromMicrosecondsSinceEpoch(
+                                t.microsecondsSinceEpoch);
+                            String formatDate =
+                                DateFormat('yyyy-MM-dd – kk:mm').format(d);
+                            // print(d);
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                              child: Column(
+                                children: [
+                                  CustomCard(
+                                    onClick: () => {
+                                      // print(document.id),
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return ViewPost(
+                                          uid: document['uid'],
+                                          postid: document.id,
+                                        );
+                                      }))
+                                    },
+                                    nameUser:
+                                        document['student'] ?? 'student_name',
+                                    profileImg: document['profileImg'],
+                                    dateTime: formatDate,
+                                    contentImg: document['urlImage'],
+                                    nameTitle: document['titleName'],
+                                    content: document['contentText'],
+                                    catagory: document['catagory'],
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        );
+                      }
+                      if (name != "") {
+                        return ListView(
+                          children: snapshot2.data.docs
+                              .map((DocumentSnapshot document) {
+                            // print(document.data());
+                            Timestamp t = document['timestamp'];
+                            DateTime d = DateTime.fromMicrosecondsSinceEpoch(
+                                t.microsecondsSinceEpoch);
+                            String formatDate =
+                                DateFormat('yyyy-MM-dd – kk:mm').format(d);
+                            // print(d);
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                              child: Column(
+                                children: [
+                                  CustomCard(
+                                    onClick: () => {
+                                      // print(document.id),
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return ViewPost(
+                                          uid: document['uid'],
+                                          postid: document.id,
+                                        );
+                                      }))
+                                    },
+                                    nameUser:
+                                        document['student'] ?? 'student_name',
+                                    profileImg: document['profileImg'],
+                                    dateTime: formatDate,
+                                    contentImg: document['urlImage'],
+                                    nameTitle: document['titleName'],
+                                    content: document['contentText'],
+                                    catagory: document['catagory'],
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        );
+                      }
+                      return ListView(
+                        children:
+                            snapshot.data.docs.map((DocumentSnapshot document) {
+                          // print(document.data());
+                          Timestamp t = document['timestamp'];
+                          DateTime d = DateTime.fromMicrosecondsSinceEpoch(
+                              t.microsecondsSinceEpoch);
+                          String formatDate =
+                              DateFormat('yyyy-MM-dd – kk:mm').format(d);
+                          // print(d);
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10),
+                            child: Column(
+                              children: [
+                                CustomCard(
+                                  onClick: () => {
+                                    // print(document.id),
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return ViewPost(
+                                        uid: document['uid'],
+                                        postid: document.id,
+                                      );
+                                    }))
+                                  },
+                                  nameUser:
+                                      document['student'] ?? 'student_name',
+                                  profileImg: document['profileImg'],
+                                  dateTime: formatDate,
+                                  contentImg: document['urlImage'],
+                                  nameTitle: document['titleName'],
+                                  content: document['contentText'],
+                                  catagory: document['catagory'],
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      );
+                  }
+                });
           }),
 
       floatingActionButton: FloatingActionButton(
