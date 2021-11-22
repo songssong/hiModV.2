@@ -5,6 +5,7 @@ import 'package:himod/Widget/_customViewActivity.dart';
 import 'package:himod/homepage.dart';
 import 'package:himod/service/auth_provider_service.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 class ViewActivity extends StatefulWidget {
   final String uid;
@@ -66,6 +67,40 @@ class _ViewActivityState extends State<ViewActivity> {
                 ],
               ),
             ),
+             child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                PopupMenuButton(
+                  color: Colors.white,
+                  itemBuilder: (context) => [
+                    if (AuthProviderService.instance.user.uid == widget.uid)
+                      PopupMenuItem(
+                        child: Text("Delete"),
+                        value: 1,
+                      ),
+                   
+                    if (AuthProviderService.instance.user.uid != widget.uid)
+                      PopupMenuItem(
+                        child: Text("Report"),
+                        value: 3,
+                      ),
+                  ],
+                  onSelected: (value) {
+                    setState(() async {
+                      if (value == 1) {
+                        await deleteData(widget.activityId);
+                        //deleteComment(commentId);
+                      }
+                      if (value == 3) {
+                        _askUser();
+                      }
+                    });
+                  },
+                ),
+              ]),
+            ],
+          ),
           ),
         ),
         body: FutureBuilder<DocumentSnapshot<Object>>(
@@ -166,10 +201,9 @@ class _ViewActivityState extends State<ViewActivity> {
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(20.0)),
-                                      onPressed: amount == count &&
-                                              AuthProviderService
-                                                      .instance.user.uid !=
-                                                  widget.uid
+                                      onPressed: 
+                                      AuthProviderService.instance.user.uid == widget.uid
+                                      || (count == amount  &&  !widget.pressGeoON)
                                           ? null
                                           : () async {
                                               if (widget.pressGeoON) {
@@ -295,5 +329,137 @@ class _ViewActivityState extends State<ViewActivity> {
         .update({'count': count - 1}) // <-- Updated data
         .then((_) => print('Success'))
         .catchError((error) => print('Failed: $error'));
+  }
+  deleteData(docID) async {
+    await FirebaseFirestore.instance.collection('Activity').doc(docID).delete();
+
+    Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
+  }
+
+  deleteComment(docID) async {
+    var testCom = "N9aNJBPK3t3wytLY7Dpj";
+
+    FirebaseFirestore.instance.collection('Comment').doc(docID).delete();
+    Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
+  }
+
+  CollectionReference postreport =
+      FirebaseFirestore.instance.collection('Report');
+  reportData(docID) async {
+    await postreport.add({
+      'activityid': widget.activityId,
+      'reporter': student_model['name'],
+      'reporttime': DateTime.now(),
+    });
+  }
+
+  var uuid2 = Uuid();
+  Future _askUser() async {
+    switch (await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: const Text('Report'),
+            children: <Widget>[
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  postreport.add({
+                    'reportid': uuid2.v4(),
+                    'typePost': 'Activity',
+                    'report': 'ใช้คำพูดที่ไม่เหมาะสม',
+                    'postid': widget.activityId,
+                    'reporter': student_model['name'],
+                    'reporttime': DateTime.now(),
+                  });
+                  Navigator.pop(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
+                },
+                child: const Text(
+                  'ใช้คำพูดที่ไม่เหมาะสม',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  postreport.add({
+                    'reportid': uuid2.v4(),
+                    'typePost': 'Activity',
+                    'report': 'เข้าข่ายเกี่ยวกับเรื่องลามก อนาจาร',
+                    'postid': widget.activityId,
+                    'reporter': student_model['name'],
+                    'reporttime': DateTime.now(),
+                  });
+                  Navigator.pop(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
+                },
+                child: const Text(
+                  'เข้าข่ายเกี่ยวกับเรื่องลามก อนาจาร',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  postreport.add({
+                    'reportid': uuid2.v4(),
+                    'typePost': 'Activity',
+                    'report': 'มีการพูดในสิ่งที่ผิดกฏหมาย',
+                    'postid': widget.activityId,
+                    'reporter': student_model['name'],
+                    'reporttime': DateTime.now(),
+                  });
+                  Navigator.pop(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
+                },
+                child: const Text(
+                  'มีการพูดในสิ่งที่ผิดกฏหมาย',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  postreport.add({
+                    'reportid': uuid2.v4(),
+                    'typePost': 'Activity',
+                    'report': 'ข้อมูลเท็จ',
+                    'postid': widget.activityId,
+                    'reporter': student_model['name'],
+                    'reporttime': DateTime.now(),
+                  });
+                  Navigator.pop(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
+                },
+                child: const Text(
+                  'ข้อมูลเท็จ',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                onPressed: () {
+                  postreport.add({
+                    'reportid': uuid2.v4(),
+                    'typePost': 'Activity',
+                    'report':
+                        'เข้าข่ายมีข้อมูลส่วนตัวที่มีเจตนาทำให้คนผิดเสียหาย',
+                    'postid': widget.activityId,
+                    'reporter': student_model['name'],
+                    'reporttime': DateTime.now(),
+                  });
+                  Navigator.pop(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
+                },
+                child: const Text(
+                  'เข้าข่ายมีข้อมูลส่วนตัวที่มีเจตนาทำให้คนผิดเสียหาย',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ],
+          );
+        })) {
+    }
   }
 }
