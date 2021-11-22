@@ -17,16 +17,16 @@ class ActivitydDes {
   String title;
   String description;
   String activityId;
-  String catagory;
+  String catagory = 'General';
   String contact;
   String userId;
   DateTime activitydate;
-  int amount;
+  int amount = 1;
   TimeOfDay activitytime;
   String date;
   String time;
   Timestamp timeofday;
-  int count=0;
+  int count = 0;
 
   ActivitydDes({this.title, this.description});
 
@@ -59,11 +59,12 @@ class _ActivitydetailState extends State<Activitydetail> {
   ActivitydDes _activitydes = ActivitydDes();
   var uuid = Uuid();
   var uid = AuthProviderService.instance.user?.uid ?? '';
-  String catagory = 'General';
-  int val = 1;
+
+  //int val = 1;
 
   String test;
   String test2;
+  
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -98,21 +99,7 @@ class _ActivitydetailState extends State<Activitydetail> {
                   // }
                   if (_formKey.currentState.validate()) {
                     _formKey.currentState.save();
-                    await _ActCollection.add({
-                      'titleName': _activitydes.title.toLowerCase().trim(),
-                      'contentText': _activitydes.description,
-                      'uid': uid.toString(),
-                      'activityid': uuid.v4(),
-                      'student': student_model['name'],
-                      'catagory': _activitydes.catagory,
-                      'profileImg': student_model['imageUrl'],
-                      'timestamp': DateTime.now(),
-                      'contact': _activitydes.contact,
-                      'amount': _activitydes.amount,
-                      'date': _activitydes.date,
-                      'time': _activitydes.time,
-                      'count': _activitydes.count,
-                    });
+                  await _addToDatabase(_activitydes.title);
                     Navigator.pop(context,
                         MaterialPageRoute(builder: (context) => HomePage()));
                   }
@@ -272,7 +259,7 @@ class _ActivitydetailState extends State<Activitydetail> {
                                 ),
                                 SizedBox(width: 55),
                                 DropdownButton(
-                                    value: catagory,
+                                    value: _activitydes.catagory,
                                     items: [
                                       DropdownMenuItem(
                                         child: Text("General"),
@@ -297,9 +284,10 @@ class _ActivitydetailState extends State<Activitydetail> {
                                     ],
                                     onChanged: (value) {
                                       setState(() {
-                                        catagory = (value);
+                                        _activitydes.catagory = (value);
 
-                                        _activitydes.catagory = catagory;
+                                        _activitydes.catagory =
+                                            _activitydes.catagory;
                                       });
                                     })
                               ],
@@ -466,7 +454,7 @@ class _ActivitydetailState extends State<Activitydetail> {
                                     SizedBox(width: 55),
                                     Container(
                                       child: Text(
-                                        val.toString(),
+                                        _activitydes.amount.toString(),
                                         style: TextStyle(
                                             fontSize: 18.0,
                                             fontWeight: FontWeight.w900),
@@ -503,14 +491,16 @@ class _ActivitydetailState extends State<Activitydetail> {
                                         min: 1,
                                         max: 50,
                                         divisions: 50,
-                                        value: val.toDouble(),
-                                        label: val.round().toString(),
+                                        value: _activitydes.amount.toDouble(),
+                                        label: _activitydes.amount
+                                            .round()
+                                            .toString(),
                                         activeColor: Colors.orange,
                                         inactiveColor: Colors.red,
                                         onChanged: (double newValue) {
                                           setState(() {
-                                            val = newValue.round();
-                                            _activitydes.amount = val;
+                                            _activitydes.amount =
+                                                newValue.round();
                                           });
                                         },
                                       )))
@@ -562,5 +552,33 @@ class _ActivitydetailState extends State<Activitydetail> {
       "minute": _activitydes.activitytime.minute,
     }).format("h:mm a");
     _activitydes.time = activitytime;
+  }
+
+  _addToDatabase(String name) {
+    List<String> splitList = name.split(" ");
+    List<String> indexList = [];
+    for (int i = 0; i < splitList.length; i++) {
+      for (int y = 1; y < splitList[i].length + 1; y++) {
+        indexList.add(splitList[i].substring(0, y).toLowerCase());
+      }
+    }
+
+    print(indexList);
+    FirebaseFirestore.instance.collection('Activity').doc().set({
+      'titleName': name,
+      'searchIndex': indexList,
+      'contentText': _activitydes.description,
+      'uid': uid.toString(),
+      'activityid': uuid.v4(),
+      'student': student_model['name'],
+      'catagory': _activitydes.catagory,
+      'profileImg': student_model['imageUrl'],
+      'timestamp': DateTime.now(),
+      'contact': _activitydes.contact,
+      'amount': _activitydes.amount,
+      'date': _activitydes.date,
+      'time': _activitydes.time,
+      'count' : _activitydes.count,
+    });
   }
 }

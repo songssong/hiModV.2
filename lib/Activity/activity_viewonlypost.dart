@@ -11,13 +11,15 @@ class ViewActivity extends StatefulWidget {
   final String uid;
   final String activityId;
   final String joinActivityid;
+  final String studentjoin;
   bool pressGeoON;
   ViewActivity(
       {Key key,
       this.uid,
       this.activityId,
       this.joinActivityid,
-      this.pressGeoON})
+      this.pressGeoON,
+      this.studentjoin})
       : super(key: key);
 
   @override
@@ -67,54 +69,75 @@ class _ViewActivityState extends State<ViewActivity> {
                 ],
               ),
             ),
-             child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                PopupMenuButton(
-                  color: Colors.white,
-                  itemBuilder: (context) => [
-                    if (AuthProviderService.instance.user.uid == widget.uid)
-                      PopupMenuItem(
-                        child: Text("Delete"),
-                        value: 1,
-                      ),
-                   
-                    if (AuthProviderService.instance.user.uid != widget.uid)
-                      PopupMenuItem(
-                        child: Text("Report"),
-                        value: 3,
-                      ),
-                  ],
-                  onSelected: (value) {
-                    setState(() async {
-                      if (value == 1) {
-                        await deleteData(widget.activityId);
-                        //deleteComment(commentId);
-                      }
-                      if (value == 3) {
-                        _askUser();
-                      }
-                    });
-                  },
-                ),
-              ]),
-            ],
-          ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  PopupMenuButton(
+                    color: Colors.white,
+                    itemBuilder: (context) => [
+                      if (AuthProviderService.instance.user.uid == widget.uid)
+                        PopupMenuItem(
+                          child: Text("Delete"),
+                          value: 1,
+                        ),
+                      if (AuthProviderService.instance.user.uid != widget.uid)
+                        PopupMenuItem(
+                          child: Text("Report"),
+                          value: 3,
+                        ),
+                    ],
+                    onSelected: (value) {
+                      setState(() async {
+                        if (value == 1) {
+                          await deleteData(widget.activityId);
+                          //deleteComment(commentId);
+                        }
+                        if (value == 3) {
+                          _askUser();
+                        }
+                      });
+                    },
+                  ),
+                ]),
+              ],
+            ),
           ),
         ),
         body: FutureBuilder<DocumentSnapshot<Object>>(
             future: activityref.doc(widget.activityId).get(),
             builder: (BuildContext context,
                 AsyncSnapshot<DocumentSnapshot<Object>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (snapshot.hasError) {
+                    return new Text('Error: ${snapshot.hasError}');
+                  }
+
+                  if (snapshot.hasError) {
+                    return new Text('Error: ${snapshot.hasError}');
+                  }
               return StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('JoinActivity')
                     .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot<Object>> snapshotjoin) {
-                  if (snapshot.hasError)
-                    return new Text('Error: ${snapshot.error}');
+                  if (snapshotjoin.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (snapshotjoin.hasError) {
+                    return new Text('Error: ${snapshotjoin.hasError}');
+                  }
+
+                  if (snapshotjoin.hasError) {
+                    return new Text('Error: ${snapshotjoin.hasError}');
+                  }
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
                       return Center(
@@ -201,9 +224,11 @@ class _ViewActivityState extends State<ViewActivity> {
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(20.0)),
-                                      onPressed: 
-                                      AuthProviderService.instance.user.uid == widget.uid
-                                      || (count == amount  &&  !widget.pressGeoON)
+                                      onPressed: AuthProviderService
+                                                      .instance.user.uid ==
+                                                  widget.uid ||
+                                              (count == amount &&
+                                                  !widget.pressGeoON)
                                           ? null
                                           : () async {
                                               if (widget.pressGeoON) {
@@ -283,17 +308,6 @@ class _ViewActivityState extends State<ViewActivity> {
     });
   }
 
-  showStudent(docID) async {
-    String joinid;
-    await FirebaseFirestore.instance
-        .collection('JoinActivity')
-        .doc(joinid = 'joinid');
-
-    //for (var i = 0; i < ; i++) {
-
-    //   }
-  }
-
   joinActivity() async {
     await _joinCollection.add({
       'joinid': widget.activityId,
@@ -330,6 +344,7 @@ class _ViewActivityState extends State<ViewActivity> {
         .then((_) => print('Success'))
         .catchError((error) => print('Failed: $error'));
   }
+
   deleteData(docID) async {
     await FirebaseFirestore.instance.collection('Activity').doc(docID).delete();
 
@@ -461,5 +476,12 @@ class _ViewActivityState extends State<ViewActivity> {
           );
         })) {
     }
+  }
+
+  Future<QuerySnapshot<Map<String, dynamic>>> showStudents(joinid) async {
+    return await FirebaseFirestore.instance
+        .collection('JoinActivity')
+        .where("joinid", isEqualTo: joinid)
+        .get();
   }
 }
