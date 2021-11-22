@@ -32,7 +32,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
 
   void _setValue(String value) => setState(() => _value = value);
 
-  Future<Null> readdataPost() async {}
+  
   Future _askUser() async {
     switch (await showDialog(
         context: context,
@@ -132,9 +132,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
       appBar: AppBar(
         centerTitle: true,
         title: customSearchBar,
-        //   TextField(
-        //     onChanged: (val) => initiateSearch(val),
-        //  ),
+      
         leading: IconButton(
           onPressed: () => _askUser(),
           icon: Icon(
@@ -159,12 +157,17 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
           IconButton(
             //  icon: const Icon(Icons.search),
             onPressed: () {
+               if (customIcon2.icon == Icons.cancel)
+                   name= "";
               setState(() {
                 if (customIcon.icon == Icons.search) {
+                 
                   customIcon = Icon(
                     Icons.cancel,
                     color: Colors.white,
+                  
                   );
+                  
                   customSearchBar = ListTile(
                     leading: Icon(
                       Icons.search,
@@ -207,14 +210,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
         ],
       ),
       body: StreamBuilder<QuerySnapshot>(
-          // stream: name != "" && name != null
-          //     ? FirebaseFirestore.instance
-          //         .collection('Post')
-          //         // .doc(AuthProviderService.instance.user.uid)
-          //         // .collection('titleName')
-          //         .where("titleName", isEqualTo: name)
-          //         .orderBy('timestamp', descending: true)
-          //         .snapshots()
+                
           stream: _value != ""
               ? FirebaseFirestore.instance
                   .collection('Post')
@@ -231,10 +227,8 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                 stream: name != "" && name != null
                     ? FirebaseFirestore.instance
                         .collection('Post')
-                        // .doc(AuthProviderService.instance.user.uid)
-                        // .collection('titleName')
-                        .where("titleName", isEqualTo: name)
-                        .orderBy('timestamp', descending: true)
+                        .where("searchIndex", arrayContains: name)
+                       // .orderBy('timestamp', descending: true)
                         .snapshots()
                     : FirebaseFirestore.instance
                         .collection("Post")
@@ -396,4 +390,6 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
       name = val.toLowerCase().trim();
     });
   }
+
+ 
 }

@@ -32,7 +32,7 @@ class Comment {
 class _ViewPostState extends State<ViewPost> {
   DateTime dateTime;
   VoidCallback onDelete;
-  List<String> actions = <String>['Edit', 'Delete', 'Report'];
+  //List<String> actions = <String>['Edit', 'Delete', 'Report'];
 
   var uuid;
   var uid;
@@ -157,11 +157,7 @@ class _ViewPostState extends State<ViewPost> {
                         child: Text("Delete"),
                         value: 1,
                       ),
-                    if (AuthProviderService.instance.user.uid == widget.uid)
-                      PopupMenuItem(
-                        child: Text("Edit"),
-                        value: 2,
-                      ),
+                   
                     if (AuthProviderService.instance.user.uid != widget.uid)
                       PopupMenuItem(
                         child: Text("Report"),
@@ -172,7 +168,7 @@ class _ViewPostState extends State<ViewPost> {
                     setState(() async {
                       if (value == 1) {
                         await deleteData(widget.postid);
-                        deleteComment(commentId);
+                        await deleteComment(commentId);
                       }
                       if (value == 3) {
                         _askUser();
@@ -290,12 +286,11 @@ class _ViewPostState extends State<ViewPost> {
     );
   }
 
-  Future editPost() async {}
 
   deleteData(docID) async {
     await FirebaseFirestore.instance.collection('Post').doc(docID).delete();
 
-    Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
+   // Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
   }
 
   deleteComment(docID) async {

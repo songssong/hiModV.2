@@ -23,7 +23,7 @@ class PostDes {
   String description;
   String postId;
   String userId;
-  String catagory;
+  String catagory = 'General';
   String urlImage;
 
   //PostDes({this.title, this.description, this.userId});
@@ -90,7 +90,7 @@ class _PostdetailState extends State<Postdetail> {
   PostDes _postdes = PostDes();
   var uuid = Uuid();
   var uid = AuthProviderService.instance.user?.uid ?? '';
-  String catagory = 'General';
+  //String catagory = 'General';
 
   @override
   Widget build(BuildContext context) {
@@ -125,17 +125,19 @@ class _PostdetailState extends State<Postdetail> {
 
                   if (_formKey.currentState.validate()) {
                     _formKey.currentState.save();
-                    await _postCollection.add({
-                      'titleName': _postdes.title.toLowerCase().trim(),
-                      'contentText': _postdes.description,
-                      'uid': uid.toString(),
-                      'postid': uuid.v4(),
-                      'student': student_model['name'],
-                      'catagory': _postdes.catagory,
-                      'profileImg': student_model['imageUrl'],
-                      'timestamp': DateTime.now(),
-                      'urlImage': _postdes.urlImage,
-                    });
+                    await _addToDatabase(_postdes.title);
+                    // await _postCollection.add({
+                    //   'titleName': _addToDatabase(_postdes.title),
+                    //   // 'titleName': _postdes.title.toLowerCase().trim(),
+                    //   'contentText': _postdes.description,
+                    //   'uid': uid.toString(),
+                    //   'postid': uuid.v4(),
+                    //   'student': student_model['name'],
+                    //   'catagory': _postdes.catagory,
+                    //   'profileImg': student_model['imageUrl'],
+                    //   'timestamp': DateTime.now(),
+                    //   'urlImage': _postdes.urlImage,
+                    // });
                     Navigator.pop(context,
                         MaterialPageRoute(builder: (context) => HomePage()));
                   }
@@ -302,13 +304,13 @@ class _PostdetailState extends State<Postdetail> {
                                   child: Row(
                                 children: [
                                   Text(
-                                    "Select catagory",
+                                    "Select category",
                                     //  style:
                                     //  TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   SizedBox(width: 55),
                                   DropdownButton(
-                                      value: catagory,
+                                      value: _postdes.catagory,
                                       items: [
                                         DropdownMenuItem(
                                           child: Text("General"),
@@ -329,9 +331,9 @@ class _PostdetailState extends State<Postdetail> {
                                       ],
                                       onChanged: (value) {
                                         setState(() {
-                                          catagory = (value);
+                                          _postdes.catagory = (value);
 
-                                          _postdes.catagory = catagory;
+                                          
                                         });
                                       }),
                                 ],
@@ -368,5 +370,30 @@ class _PostdetailState extends State<Postdetail> {
             ],
           ),
         )));
+  }
+
+  //Future<QuerySnapshot<Map<String, dynamic>>>
+  _addToDatabase(String name) {
+    List<String> splitList = name.split(" ");
+    List<String> indexList = [];
+    for (int i = 0; i < splitList.length; i++) {
+      for (int y = 1; y < splitList[i].length + 1; y++) {
+        indexList.add(splitList[i].substring(0, y).toLowerCase());
+      }
+    }
+
+    print(indexList);
+    FirebaseFirestore.instance.collection('Post').doc().set({
+      'titleName': name,
+      'searchIndex': indexList,
+      'contentText': _postdes.description,
+      'uid': uid.toString(),
+      'postid': uuid.v4(),
+      'student': student_model['name'],
+      'catagory': _postdes.catagory,
+      'profileImg': student_model['imageUrl'],
+      'timestamp': DateTime.now(),
+      'urlImage': _postdes.urlImage,
+    });
   }
 }
