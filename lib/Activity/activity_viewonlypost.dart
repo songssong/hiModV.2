@@ -108,18 +108,18 @@ class _ViewActivityState extends State<ViewActivity> {
             future: activityref.doc(widget.activityId).get(),
             builder: (BuildContext context,
                 AsyncSnapshot<DocumentSnapshot<Object>> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  if (snapshot.hasError) {
-                    return new Text('Error: ${snapshot.hasError}');
-                  }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (snapshot.hasError) {
+                return new Text('Error: ${snapshot.hasError}');
+              }
 
-                  if (snapshot.hasError) {
-                    return new Text('Error: ${snapshot.hasError}');
-                  }
+              if (snapshot.hasError) {
+                return new Text('Error: ${snapshot.hasError}');
+              }
               return StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('JoinActivity')
@@ -188,25 +188,16 @@ class _ViewActivityState extends State<ViewActivity> {
                                     child: Padding(
                                       padding: const EdgeInsets.fromLTRB(
                                           0, 0, 10, 0),
-                                      child: RaisedButton(
-                                        elevation: 5,
-                                        padding: EdgeInsets.all(6),
-                                        color: Colors.grey,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0)),
-                                        onPressed: null,
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              "Full",
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontFamily: 'Mitr',
-                                                  fontSize: 14),
-                                            )
-                                          ],
-                                        ),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            "Full!!",
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontFamily: 'Mitr',
+                                                fontSize: 15),
+                                          )
+                                        ],
                                       ),
                                     ),
                                   ),
@@ -217,10 +208,10 @@ class _ViewActivityState extends State<ViewActivity> {
                                     child: RaisedButton(
                                       elevation: 5,
                                       disabledElevation: 1,
-                                      padding: EdgeInsets.all(6),
+                                      padding: EdgeInsets.all(0),
                                       color: widget.pressGeoON
                                           ? Colors.red
-                                          : Colors.blue[500],
+                                          : Colors.orange[600],
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(20.0)),
@@ -257,7 +248,7 @@ class _ViewActivityState extends State<ViewActivity> {
                                         children: [
                                           widget.pressGeoON
                                               ? Text(
-                                                  "UnJoin Activity",
+                                                  "UnJoin",
                                                   style: TextStyle(
                                                       color: Colors.white,
                                                       fontFamily: 'Mitr',
@@ -266,7 +257,7 @@ class _ViewActivityState extends State<ViewActivity> {
                                               : // SizedBox(width: 2),
 
                                               Text(
-                                                  "Join Activity",
+                                                  "Join",
                                                   style: TextStyle(
                                                       color: Colors.white,
                                                       fontFamily: 'Mitr',
