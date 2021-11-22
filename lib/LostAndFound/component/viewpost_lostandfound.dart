@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:himod/Widget/_customViewLostAndFound.dart';
+
+
 import 'package:himod/homepage.dart';
 import 'package:himod/service/auth_provider_service.dart';
 import 'package:intl/intl.dart';
@@ -89,11 +91,7 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
                           child: Text("Delete"),
                           value: 1,
                         ),
-                      if (AuthProviderService.instance.user.uid == widget.uid)
-                        PopupMenuItem(
-                          child: Text("Edit"),
-                          value: 2,
-                        ),
+                     
                       if (AuthProviderService.instance.user.uid != widget.uid)
                         PopupMenuItem(
                           child: Text("Report"),
@@ -166,7 +164,7 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
       FirebaseFirestore.instance.collection('Report');
   reportData(docID) async {
     await postreport.add({
-      'postid': widget.lostandfoundid,
+      'lostandfoundid': widget.lostandfoundid,
       'reporter': student_model['name'],
       'reporttime': DateTime.now(),
     });
@@ -188,7 +186,7 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
                     'reportid': uuid2.v4(),
                     'typePost': 'Lostandfound',
                     'report': 'ใช้คำพูดที่ไม่เหมาะสม',
-                    'postid': widget.lostandfoundid,
+                    'lostandfoundid': widget.lostandfoundid,
                     'reporter': student_model['name'],
                     'reporttime': DateTime.now(),
                   });
@@ -207,7 +205,7 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
                     'reportid': uuid2.v4(),
                     'typePost': 'Lostandfound',
                     'report': 'เข้าข่ายเกี่ยวกับเรื่องลามก อนาจาร',
-                    'postid': widget.lostandfoundid,
+                    'lostandfoundid': widget.lostandfoundid,
                     'reporter': student_model['name'],
                     'reporttime': DateTime.now(),
                   });
@@ -226,7 +224,7 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
                     'reportid': uuid2.v4(),
                     'typePost': 'Lostandfound',
                     'report': 'มีการพูดในสิ่งที่ผิดกฏหมาย',
-                    'postid': widget.lostandfoundid,
+                    'lostandfoundid': widget.lostandfoundid,
                     'reporter': student_model['name'],
                     'reporttime': DateTime.now(),
                   });
@@ -245,7 +243,7 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
                     'reportid': uuid2.v4(),
                     'typePost': 'Lostandfound',
                     'report': 'ข้อมูลเท็จ',
-                    'postid': widget.lostandfoundid,
+                    'lostandfoundid': widget.lostandfoundid,
                     'reporter': student_model['name'],
                     'reporttime': DateTime.now(),
                   });
@@ -265,7 +263,7 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
                     'typePost': 'Lostandfound',
                     'report':
                         'เข้าข่ายมีข้อมูลส่วนตัวที่มีเจตนาทำให้คนผิดเสียหาย',
-                    'postid': widget.lostandfoundid,
+                    'lostandfoundid': widget.lostandfoundid,
                     'reporter': student_model['name'],
                     'reporttime': DateTime.now(),
                   });

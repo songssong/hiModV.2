@@ -24,12 +24,14 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen>
     with SingleTickerProviderStateMixin {
   String _value = "";
   String _filter = '';
+  
   void _setValue(String value) => setState(() => _value = value);
 
   Future _askuser() async {
     print(_tabController.index);
     if (_tabController.index == 0) {
       _asklost();
+      //initiateSearch(name);
     }
     if (_tabController.index == 1) {
       _askfound();
@@ -130,6 +132,10 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen>
         break;
     }
   }
+  
+
+
+
 
   Future _asklost() async {
     // print('ask lost');
@@ -235,12 +241,14 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen>
         'LOST',
         BodyLost(
           type_filter: _filter,
+          name: name,
         )));
     _myTabViews.add(
       MyTabView(
           'FOUND',
           BodyFound(
             type_filter: _filter,
+            name : name,
           )),
     );
 
@@ -254,11 +262,29 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen>
     _tabController.dispose();
   }
 
+  
+
   @override
+  Icon customIcon = const Icon(
+    Icons.search,
+    color: Colors.white,
+  );
+  Icon customIcon2 = const Icon(
+    Icons.cancel,
+    color: Colors.white,
+  );
+  Widget customSearchBar = const Text(
+    'LostAndFound',
+    style: TextStyle(color: Colors.white),
+  );
+  String name = "";
+  DateTime dateTime;
+  
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
           appBar: AppBar(
+             title: customSearchBar,
             centerTitle: true,
             leading: IconButton(
               onPressed: _askuser,
@@ -268,13 +294,7 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen>
                 size: 30,
               ),
             ),
-            title: const Text(
-              "LostAndFound",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'Mitr',
-                  fontWeight: FontWeight.bold),
-            ),
+          
             flexibleSpace: Container(
               decoration: new BoxDecoration(
                 gradient: new LinearGradient(
@@ -286,7 +306,65 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen>
                 ),
               ),
             ),
+
+
+           automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            //  icon: const Icon(Icons.search),
+            onPressed: () {
+               if (customIcon2.icon == Icons.cancel)
+                   name= "";
+              setState(() {
+                if (customIcon.icon == Icons.search) {
+                 
+                  customIcon = Icon(
+                    Icons.cancel,
+                    color: Colors.white,
+                  
+                  );
+                  
+                  customSearchBar = ListTile(
+                    leading: Icon(
+                      Icons.search,
+                      color: Colors.grey[200],
+                      size: 28,
+                    ),
+                    title: TextField(
+                      onChanged: (val) => initiateSearch(val),
+                      decoration: InputDecoration(
+                        hintText: 'search',
+                        hintStyle: TextStyle(
+                          color: Colors.grey[200],
+                          fontSize: 18,
+                          fontStyle: FontStyle.italic,
+                        ),
+                        border: InputBorder.none,
+                      ),
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                  );
+                } else {
+                  customIcon = Icon(
+                    Icons.search,
+                    color: Colors.white,
+                  );
+                  customSearchBar = Text(
+                    'LostAndFound',
+                    style: TextStyle(
+                        fontFamily: 'Mitr',
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  );
+                }
+              });
+            },
+            icon: customIcon,
           ),
+        ],
+      ),
           body: Scaffold(
             backgroundColor: Colors.white,
             appBar: PreferredSize(
@@ -335,11 +413,13 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen>
                         'LOST',
                         BodyLost(
                           type_filter: _filter,
+                          name :name
                         )).screen,
                     MyTabView(
                         'FOUND',
                         BodyFound(
                           type_filter: _filter,
+                          name : name,
                         )).screen,
                   ],
                 )
@@ -347,5 +427,10 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen>
             ),
           )),
     );
+  }
+  void initiateSearch(String val) {
+    setState(() {
+      name = val.toLowerCase().trim();
+    });
   }
 }

@@ -29,8 +29,8 @@ class LostnfoundDes {
   String title;
   String description;
   String lostnfoundId;
-  String type;
-  String catagory;
+  String type = 'Lost';
+  String catagory = 'General';
   String contact;
   String userId;
   String urlImage;
@@ -38,9 +38,6 @@ class LostnfoundDes {
 
 // ignore: camel_case_types
 class _lostnfounddetailState extends State<lostnfounddetail> {
-  String type = 'Lost';
-  String catagory = 'General';
-
   CollectionReference _lostCollection =
       FirebaseFirestore.instance.collection('LostandFound');
 
@@ -132,19 +129,7 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
                 }
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
-                  await _lostCollection.add({
-                    'titleName': _lostdes.title,
-                    'contentText': _lostdes.description,
-                    'typeName': _lostdes.type,
-                    'catagory': _lostdes.catagory,
-                    'uid': uid,
-                    'lostandfoundid': uuid.v4(),
-                    'contact': _lostdes.contact,
-                    'urlImage': _lostdes.urlImage,
-                    'student': student_model['name'],
-                    'profileImg': student_model['imageUrl'],
-                    'timestamp': DateTime.now(),
-                  });
+                  await _addToDatabase(_lostdes.title);
                   Navigator.pop(context,
                       MaterialPageRoute(builder: (context) => HomePage()));
                 }
@@ -312,14 +297,14 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
                                     child: Row(
                                       children: [
                                         Text(
-                                          "Select catagory",
+                                          "Select type",
                                           //style:
 
                                           //  TextStyle(fontWeight: FontWeight.bold),
                                         ),
                                         SizedBox(width: 100),
                                         DropdownButton(
-                                            value: type,
+                                            value: _lostdes.type,
                                             isDense: true,
                                             items: [
                                               DropdownMenuItem(
@@ -333,8 +318,7 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
                                             ],
                                             onChanged: (value) {
                                               setState(() {
-                                                type = value;
-                                                _lostdes.type = type;
+                                                _lostdes.type = value;
                                               });
                                             }),
                                       ],
@@ -344,13 +328,13 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
                                     child: Row(
                                       children: [
                                         Text(
-                                          "Select catagory",
+                                          "Select category",
                                           //  style:
                                           //  TextStyle(fontWeight: FontWeight.bold),
                                         ),
                                         SizedBox(width: 55),
                                         DropdownButton(
-                                            value: catagory,
+                                            value: _lostdes.catagory,
                                             items: [
                                               DropdownMenuItem(
                                                 child: Text("General"),
@@ -371,9 +355,10 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
                                             ],
                                             onChanged: (value) {
                                               setState(() {
-                                                catagory = value;
+                                                _lostdes.catagory = value;
 
-                                                _lostdes.catagory = catagory;
+                                                _lostdes.catagory =
+                                                    _lostdes.catagory;
                                               });
                                             }),
                                       ],
@@ -450,5 +435,31 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
             ],
           ),
         )));
+  }
+
+  _addToDatabase(String name) {
+    List<String> splitList = name.split(" ");
+    List<String> indexList = [];
+    for (int i = 0; i < splitList.length; i++) {
+      for (int y = 1; y < splitList[i].length + 1; y++) {
+        indexList.add(splitList[i].substring(0, y).toLowerCase());
+      }
+    }
+
+    print(indexList);
+    FirebaseFirestore.instance.collection('LostandFound').doc().set({
+      'titleName': name,
+      'searchIndex': indexList,
+      'contentText': _lostdes.description,
+      'typeName': _lostdes.type,
+      'catagory': _lostdes.catagory,
+      'uid': uid,
+      'lostandfoundid': uuid.v4(),
+      'contact': _lostdes.contact,
+      'urlImage': _lostdes.urlImage,
+      'student': student_model['name'],
+      'profileImg': student_model['imageUrl'],
+      'timestamp': DateTime.now(),
+    });
   }
 }
