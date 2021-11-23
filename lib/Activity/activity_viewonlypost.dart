@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:himod/Widget/_customViewActivity.dart';
-
+import 'package:himod/Widget/_customViewNameActivity.dart';
 import 'package:himod/homepage.dart';
 import 'package:himod/service/auth_provider_service.dart';
 import 'package:intl/intl.dart';
@@ -48,79 +48,81 @@ class _ViewActivityState extends State<ViewActivity> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: true,
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text(
-            "Activity",
-            style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Mitr',
-                fontWeight: FontWeight.bold),
-          ),
-          flexibleSpace: Container(
-            decoration: new BoxDecoration(
-              gradient: new LinearGradient(
-                colors: [
-                  const Color(0xffff9e23),
-                  const Color(0xffff711b),
-                  const Color(0xffff4814),
-                ],
-              ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                  PopupMenuButton(
-                    color: Colors.white,
-                    itemBuilder: (context) => [
-                      if (AuthProviderService.instance.user.uid == widget.uid)
-                        PopupMenuItem(
-                          child: Text("Delete"),
-                          value: 1,
-                        ),
-                      if (AuthProviderService.instance.user.uid != widget.uid)
-                        PopupMenuItem(
-                          child: Text("Report"),
-                          value: 3,
-                        ),
-                    ],
-                    onSelected: (value) {
-                      setState(() async {
-                        if (value == 1) {
-                          await deleteData(widget.activityId);
-                          //deleteComment(commentId);
-                        }
-                        if (value == 3) {
-                          _askUser();
-                        }
-                      });
-                    },
-                  ),
-                ]),
+      resizeToAvoidBottomInset: true,
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          "Activity",
+          style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Mitr',
+              fontWeight: FontWeight.bold),
+        ),
+        flexibleSpace: Container(
+          decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+              colors: [
+                const Color(0xffff9e23),
+                const Color(0xffff711b),
+                const Color(0xffff4814),
               ],
             ),
           ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                PopupMenuButton(
+                  color: Colors.white,
+                  itemBuilder: (context) => [
+                    if (AuthProviderService.instance.user.uid == widget.uid)
+                      PopupMenuItem(
+                        child: Text("Delete"),
+                        value: 1,
+                      ),
+                    if (AuthProviderService.instance.user.uid != widget.uid)
+                      PopupMenuItem(
+                        child: Text("Report"),
+                        value: 3,
+                      ),
+                  ],
+                  onSelected: (value) {
+                    setState(() async {
+                      if (value == 1) {
+                        await deleteData(widget.activityId);
+                        //deleteComment(commentId);
+                      }
+                      if (value == 3) {
+                        _askUser();
+                      }
+                    });
+                  },
+                ),
+              ]),
+            ],
+          ),
         ),
-        body: FutureBuilder<DocumentSnapshot<Object>>(
-            future: activityref.doc(widget.activityId).get(),
-            builder: (BuildContext context,
-                AsyncSnapshot<DocumentSnapshot<Object>> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              if (snapshot.hasError) {
-                return new Text('Error: ${snapshot.hasError}');
-              }
+      ),
+      body: FutureBuilder<DocumentSnapshot<Object>>(
+          //FutureBuilder 1
+          future: activityref.doc(widget.activityId).get(),
+          builder: (BuildContext context,
+              AsyncSnapshot<DocumentSnapshot<Object>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (snapshot.hasError) {
+              return new Text('Error: ${snapshot.hasError}');
+            }
 
-              if (snapshot.hasError) {
-                return new Text('Error: ${snapshot.hasError}');
-              }
-              return StreamBuilder<QuerySnapshot>(
+            if (snapshot.hasError) {
+              return new Text('Error: ${snapshot.hasError}');
+            }
+            return StreamBuilder<QuerySnapshot>(
+                //StreamBuilder 2
                 stream: FirebaseFirestore.instance
                     .collection('JoinActivity')
                     .snapshots(),
@@ -138,145 +140,173 @@ class _ViewActivityState extends State<ViewActivity> {
                   if (snapshotjoin.hasError) {
                     return new Text('Error: ${snapshotjoin.hasError}');
                   }
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    default:
-                      ListView(
-                        shrinkWrap: true,
-                        children:
-                            snapshotjoin.data.docs.map((DocumentSnapshot doc) {
-                          if (doc != null) {
-                            joinActivityid = doc.id;
-                          }
-                          return Container();
-                        }).toList(),
-                      );
+                  return StreamBuilder<QuerySnapshot>(
+                    //StreamBuilder 3
+                    stream: FirebaseFirestore.instance
+                        .collection('JoinActivity')
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot<Object>> snapshotjoinname) {
+                      if (snapshotjoinname.connectionState ==
+                          ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      if (snapshotjoinname.hasError) {
+                        return new Text('Error: ${snapshotjoinname.hasError}');
+                      }
 
-                      Timestamp t = snapshot.data['timestamp'];
-                      DateTime d = DateTime.fromMicrosecondsSinceEpoch(
-                          t.microsecondsSinceEpoch);
-                      String formatDate =
-                          DateFormat('yyyy-MM-dd – kk:mm').format(d);
-                      count = snapshot.data['count'];
-                      amount = snapshot.data['amount'];
+                      if (snapshotjoinname.hasError) {
+                        return new Text('Error: ${snapshotjoinname.hasError}');
+                      }
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.waiting:
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        default:
+                          ListView(
+                            shrinkWrap: true,
+                            children: snapshotjoin.data.docs
+                                .map((DocumentSnapshot doc) {
+                              if (doc != null) {
+                                joinActivityid = doc.id;
+                              }
+                              return Container();
+                            }).toList(),
+                          );
 
-                      return SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            CustomViewActivity(
-                              nameUser: snapshot.data['student'],
-                              profileImg: snapshot.data['profileImg'],
-                              nameTitle: snapshot.data['titleName'],
-                              content: snapshot.data['contentText'],
-                              category: snapshot.data['catagory'],
-                              contact: snapshot.data['contact'],
-                              capacity: snapshot.data['amount'],
-                              select_date: snapshot.data['date'],
-                              select_time: snapshot.data['time'],
-                              count: snapshot.data['count'],
-                              timeStamp: formatDate,
-                            ),
-                            //button Join
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                          Timestamp t = snapshot.data['timestamp'];
+                          DateTime d = DateTime.fromMicrosecondsSinceEpoch(
+                              t.microsecondsSinceEpoch);
+                          String formatDate =
+                              DateFormat('yyyy-MM-dd – kk:mm').format(d);
+                          count = snapshot.data['count'];
+                          amount = snapshot.data['amount'];
+
+                          return SingleChildScrollView(
+                            child: Column(
                               children: [
-                                if (count == amount)
-                                  Container(
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 0, 10, 0),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            "Full!!",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontFamily: 'Mitr',
-                                                fontSize: 15),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                Container(
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                    child: RaisedButton(
-                                      elevation: 5,
-                                      disabledElevation: 1,
-                                      padding: EdgeInsets.all(0),
-                                      color: widget.pressGeoON
-                                          ? Colors.red
-                                          : Colors.orange[600],
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20.0)),
-                                      onPressed: AuthProviderService
-                                                      .instance.user.uid ==
-                                                  widget.uid ||
-                                              (count == amount &&
-                                                  !widget.pressGeoON)
-                                          ? null
-                                          : () async {
-                                              if (widget.pressGeoON) {
-                                                await unjoinActivity(
-                                                    joinActivityid);
-                                                print('unjoin');
-                                                uncountjoin(widget.activityId);
-                                                print(joinActivityid);
-                                              } else {
-                                                print('join');
-                                                joinActivity();
-
-                                                countjoin(widget.activityId);
-                                                print(widget.activityId);
-                                              }
-                                              setState(() {
-                                                widget.pressGeoON =
-                                                    !widget.pressGeoON;
-                                                isEnabled = false;
-                                              });
-                                            },
-
-                                      // );
-
-                                      child: Row(
-                                        children: [
-                                          widget.pressGeoON
-                                              ? Text(
-                                                  "UnJoin",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontFamily: 'Mitr',
-                                                      fontSize: 14),
-                                                )
-                                              : // SizedBox(width: 2),
-
+                                CustomViewActivity(
+                                  nameUser: snapshot.data['student'],
+                                  profileImg: snapshot.data['profileImg'],
+                                  nameTitle: snapshot.data['titleName'],
+                                  content: snapshot.data['contentText'],
+                                  category: snapshot.data['catagory'],
+                                  contact: snapshot.data['contact'],
+                                  capacity: snapshot.data['amount'],
+                                  select_date: snapshot.data['date'],
+                                  select_time: snapshot.data['time'],
+                                  count: snapshot.data['count'],
+                                  timeStamp: formatDate,
+                                ),
+                                CustomViewName(
+                                  nameUserJoin:
+                                      "Thanapat Roemruai", //Student Join Name
+                                ),
+                                //button Join
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    if (count == amount)
+                                      Container(
+                                        child: Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              0, 0, 10, 0),
+                                          child: Row(
+                                            children: [
                                               Text(
-                                                  "Join",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontFamily: 'Mitr',
-                                                      fontSize: 14),
-                                                )
-                                        ],
+                                                "Full!!",
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontFamily: 'Mitr',
+                                                    fontSize: 15),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    Container(
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 0, 10, 0),
+                                        child: RaisedButton(
+                                          elevation: 5,
+                                          disabledElevation: 1,
+                                          padding: EdgeInsets.all(0),
+                                          color: widget.pressGeoON
+                                              ? Colors.red
+                                              : Colors.orange[600],
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20.0)),
+                                          onPressed: AuthProviderService
+                                                          .instance.user.uid ==
+                                                      widget.uid ||
+                                                  (count == amount &&
+                                                      !widget.pressGeoON)
+                                              ? null
+                                              : () async {
+                                                  if (widget.pressGeoON) {
+                                                    await unjoinActivity(
+                                                        joinActivityid);
+                                                    print('unjoin');
+                                                    uncountjoin(
+                                                        widget.activityId);
+                                                    print(joinActivityid);
+                                                  } else {
+                                                    print('join');
+                                                    joinActivity();
+
+                                                    countjoin(
+                                                        widget.activityId);
+                                                    print(widget.activityId);
+                                                  }
+                                                  setState(() {
+                                                    widget.pressGeoON =
+                                                        !widget.pressGeoON;
+                                                    isEnabled = false;
+                                                  });
+                                                },
+
+                                          // );
+
+                                          child: Row(
+                                            children: [
+                                              widget.pressGeoON
+                                                  ? Text(
+                                                      "UnJoin",
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontFamily: 'Mitr',
+                                                          fontSize: 14),
+                                                    )
+                                                  : // SizedBox(width: 2),
+
+                                                  Text(
+                                                      "Join",
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontFamily: 'Mitr',
+                                                          fontSize: 14),
+                                                    )
+                                            ],
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ],
                             ),
-                          ],
-                        ),
-                      );
-                  }
-                },
-              );
-            }));
+                          );
+                      }
+                    },
+                  );
+                });
+          }),
+    );
   }
 
   CollectionReference _joinCollection =
