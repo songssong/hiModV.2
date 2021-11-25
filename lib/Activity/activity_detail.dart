@@ -565,7 +565,7 @@ class _ActivitydetailState extends State<Activitydetail> {
 
     print(indexList);
     FirebaseFirestore.instance.collection('Activity').doc().set({
-      'titleName': name,
+      'titleName': name.trim(),
       'searchIndex': indexList,
       'contentText': _activitydes.description,
       'uid': uid.toString(),

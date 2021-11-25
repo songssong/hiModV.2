@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomViewName extends StatelessWidget {
-  final String nameUserJoin;
+  final List<String> nameUserJoin;
   const CustomViewName({Key key, this.nameUserJoin}) : super(key: key);
 
   @override
@@ -33,11 +33,18 @@ class CustomViewName extends StatelessWidget {
                                         fontWeight: FontWeight.bold)),
                               ],
                             ),
-                            Text(
-                              "$nameUserJoin",
-                              style: TextStyle(
-                                fontFamily: 'Mitr',
-                              ),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: nameUserJoin.length,
+                              itemBuilder: (context, index) {
+                                return Text(
+                                  nameUserJoin[index],
+                                  style: TextStyle(
+                                    fontFamily: 'Mitr',
+                                  ),
+                                );
+                              },
                             ),
                           ],
                         ),

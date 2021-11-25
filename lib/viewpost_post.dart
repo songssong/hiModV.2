@@ -168,7 +168,7 @@ class _ViewPostState extends State<ViewPost> {
                     setState(() async {
                       if (value == 1) {
                         await deleteData(widget.postid);
-                        await deleteComment(commentId);
+                        await deleteComment(widget.postid);
                       }
                       if (value == 3) {
                         _askUser();
@@ -293,11 +293,17 @@ class _ViewPostState extends State<ViewPost> {
    // Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
   }
 
-  deleteComment(docID) async {
-    var testCom = "N9aNJBPK3t3wytLY7Dpj";
-
-    FirebaseFirestore.instance.collection('Comment').doc(docID).delete();
+ Future<void>  deleteComment(docID) async {
+     Stream<QuerySnapshot> snapshots = FirebaseFirestore.instance
+    .collection('Comment')
+    .where('postid', isEqualTo: docID)
+    .snapshots();
     Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
+
+   return snapshots.forEach((snapshot) =>
+    snapshot.docs.forEach((document) => document.reference.delete()));
+
+    
   }
 
   CollectionReference postreport =

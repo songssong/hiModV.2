@@ -448,7 +448,7 @@ class _lostnfounddetailState extends State<lostnfounddetail> {
 
     print(indexList);
     FirebaseFirestore.instance.collection('LostandFound').doc().set({
-      'titleName': name,
+      'titleName': name.toLowerCase().trim(),
       'searchIndex': indexList,
       'contentText': _lostdes.description,
       'typeName': _lostdes.type,

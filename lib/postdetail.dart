@@ -384,7 +384,7 @@ class _PostdetailState extends State<Postdetail> {
 
     print(indexList);
     FirebaseFirestore.instance.collection('Post').doc().set({
-      'titleName': name,
+      'titleName': name.toLowerCase().trim(),
       'searchIndex': indexList,
       'contentText': _postdes.description,
       'uid': uid.toString(),

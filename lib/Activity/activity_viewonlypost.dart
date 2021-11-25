@@ -29,17 +29,21 @@ class ViewActivity extends StatefulWidget {
 class _ViewActivityState extends State<ViewActivity> {
   CollectionReference activityref =
       FirebaseFirestore.instance.collection('Activity');
+
+  CollectionReference joinref =
+      FirebaseFirestore.instance.collection('JoinActivity');
   //bool pressGeoON = false;
   bool cmbscritta = false;
 
   String joinActivityid;
+  String studentjoin;
   int count;
   int amount;
   bool isEnabled = true;
+  List deletejoinstd;
 
   void initState() {
     super.initState();
-    calljoinid();
 
     readDataStudent();
   }
@@ -91,6 +95,8 @@ class _ViewActivityState extends State<ViewActivity> {
                     setState(() async {
                       if (value == 1) {
                         await deleteData(widget.activityId);
+                        await deletejoinstudent(widget.activityId);
+
                         //deleteComment(commentId);
                       }
                       if (value == 3) {
@@ -107,8 +113,10 @@ class _ViewActivityState extends State<ViewActivity> {
       body: FutureBuilder<DocumentSnapshot<Object>>(
           //FutureBuilder 1
           future: activityref.doc(widget.activityId).get(),
-          builder: (BuildContext context,
-              AsyncSnapshot<DocumentSnapshot<Object>> snapshot) {
+          builder: (
+            BuildContext context,
+            AsyncSnapshot<DocumentSnapshot<Object>> snapshot,
+          ) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
                 child: CircularProgressIndicator(),
@@ -126,8 +134,10 @@ class _ViewActivityState extends State<ViewActivity> {
                 stream: FirebaseFirestore.instance
                     .collection('JoinActivity')
                     .snapshots(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot<Object>> snapshotjoin) {
+                builder: (
+                  BuildContext context,
+                  AsyncSnapshot<QuerySnapshot<Object>> snapshotjoin,
+                ) {
                   if (snapshotjoin.connectionState == ConnectionState.waiting) {
                     return Center(
                       child: CircularProgressIndicator(),
@@ -144,9 +154,12 @@ class _ViewActivityState extends State<ViewActivity> {
                     //StreamBuilder 3
                     stream: FirebaseFirestore.instance
                         .collection('JoinActivity')
+                        .where("joinid", isEqualTo: widget.activityId)
                         .snapshots(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot<Object>> snapshotjoinname) {
+                    builder: (
+                      BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshotjoinname,
+                    ) {
                       if (snapshotjoinname.connectionState ==
                           ConnectionState.waiting) {
                         return Center(
@@ -201,10 +214,13 @@ class _ViewActivityState extends State<ViewActivity> {
                                   count: snapshot.data['count'],
                                   timeStamp: formatDate,
                                 ),
+
                                 CustomViewName(
-                                  nameUserJoin:
-                                      "Thanapat Roemruai", //Student Join Name
+                                  nameUserJoin: snapshotjoinname.data.docs
+                                      .map((e) => e['student'] as String)
+                                      .toList(),
                                 ),
+
                                 //button Join
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
@@ -219,9 +235,10 @@ class _ViewActivityState extends State<ViewActivity> {
                                               Text(
                                                 "Full!!",
                                                 style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontFamily: 'Mitr',
-                                                    fontSize: 15),
+                                                  color: Colors.black,
+                                                  fontFamily: 'Mitr',
+                                                  fontSize: 15,
+                                                ),
                                               )
                                             ],
                                           ),
@@ -257,8 +274,9 @@ class _ViewActivityState extends State<ViewActivity> {
                                                     print(joinActivityid);
                                                   } else {
                                                     print('join');
-                                                    joinActivity();
 
+                                                    joinActivity();
+                                                    print(widget.studentjoin);
                                                     countjoin(
                                                         widget.activityId);
                                                     print(widget.activityId);
@@ -338,9 +356,6 @@ class _ViewActivityState extends State<ViewActivity> {
     });
   }
 
-  String joinid2;
-  calljoinid() async {}
-
   unjoinActivity(docid) async {
     await FirebaseFirestore.instance
         .collection('JoinActivity')
@@ -372,15 +387,23 @@ class _ViewActivityState extends State<ViewActivity> {
     Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
   }
 
-  deleteComment(docID) async {
-    var testCom = "N9aNJBPK3t3wytLY7Dpj";
 
-    FirebaseFirestore.instance.collection('Comment').doc(docID).delete();
-    Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
-  }
+
+  Future<void> deletejoinstudent(docID) {
+   Stream<QuerySnapshot> snapshots = FirebaseFirestore.instance
+    .collection('JoinActivity')
+    .where('joinid', isEqualTo: docID)
+    .snapshots();
+
+   return snapshots.forEach((snapshot) =>
+    snapshot.docs.forEach((document) => document.reference.delete()));
+}
+
+  
 
   CollectionReference postreport =
       FirebaseFirestore.instance.collection('Report');
+
   reportData(docID) async {
     await postreport.add({
       'activityid': widget.activityId,
