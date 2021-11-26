@@ -8,12 +8,14 @@ class ButtonComment extends StatefulWidget {
   final String postid;
   final String uid;
   final String postdocumentid;
+  final String postTitleName;
 
   ButtonComment({
     Key key,
     this.postid,
     this.uid,
     this.postdocumentid,
+    this.postTitleName,
   }) : super(key: key);
 
   @override
@@ -109,6 +111,8 @@ class _ButtonCommentState extends State<ButtonComment> {
     await notificationref.add({
       'notificationId': uuid.v4(),
       'uid': uid,
+      'posttitlename': widget.postTitleName,
+      'postauthoruid': widget.uid,
       'postid': widget.postid,
       'postdocumentid': widget.postdocumentid,
       'student': student_model['name'],
