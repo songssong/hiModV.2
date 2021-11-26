@@ -4,18 +4,16 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:himod/service/auth_provider_service.dart';
 import 'package:uuid/uuid.dart';
 
-class ButtonComment extends StatefulWidget {
-  final String postid;
-  final String uid;
-
-  ButtonComment({
+class ButtonCommentLostnfound extends StatefulWidget {
+  final String lostandfoundid;
+  ButtonCommentLostnfound({
     Key key,
-    this.postid,
-    this.uid,
+    this.lostandfoundid,
   }) : super(key: key);
 
   @override
-  _ButtonCommentState createState() => _ButtonCommentState();
+  _ButtonCommentLostnfoundState createState() =>
+      _ButtonCommentLostnfoundState();
 }
 
 class Comment {
@@ -24,7 +22,7 @@ class Comment {
   String postId;
 }
 
-class _ButtonCommentState extends State<ButtonComment> {
+class _ButtonCommentLostnfoundState extends State<ButtonCommentLostnfound> {
   CollectionReference commentref =
       FirebaseFirestore.instance.collection('Comment');
   final TextEditingController _textController = new TextEditingController();
@@ -72,7 +70,7 @@ class _ButtonCommentState extends State<ButtonComment> {
                   await commentref.add({
                     'contentText': _commentdes.contentComment,
                     'uid': uid,
-                    'postid': widget.postid,
+                    'postid': widget.lostandfoundid,
                     'commentid': uuid.v4(),
                     'student': student_model['name'],
                     'profileImg': student_model['imageUrl'],
@@ -84,9 +82,7 @@ class _ButtonCommentState extends State<ButtonComment> {
                     if (!currentFocus.hasPrimaryFocus) {
                       currentFocus.unfocus();
                     }
-                    if (AuthProviderService.instance.user.uid != widget.uid) {
-                      await addnotification();
-                    }
+                    await addnotification();
                   });
                 }
               },
@@ -107,7 +103,7 @@ class _ButtonCommentState extends State<ButtonComment> {
     await notificationref.add({
       'notificationId': uuid.v4(),
       'uid': uid,
-      'postId': widget.postid,
+      'postId': widget.lostandfoundid,
       'student': student_model['name'],
       'timestamp': DateTime.now()
     });

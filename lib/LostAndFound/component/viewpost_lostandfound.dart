@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:himod/Comment/component/button_comment_lostnfound.dart';
+import 'package:himod/Widget/_customBodyComment.dart';
 import 'package:himod/Widget/_customViewLostAndFound.dart';
-
 
 import 'package:himod/homepage.dart';
 import 'package:himod/service/auth_provider_service.dart';
@@ -91,7 +92,6 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
                           child: Text("Delete"),
                           value: 1,
                         ),
-                     
                       if (AuthProviderService.instance.user.uid != widget.uid)
                         PopupMenuItem(
                           child: Text("Report"),
@@ -103,7 +103,7 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
                         if (value == 1) {
                           await print(widget.lostandfoundid);
                           deleteData(widget.lostandfoundid);
-                          await deleteComment(widget.lostandfoundid);
+                          await deleteAllComment(widget.lostandfoundid);
                         }
                         if (value == 3) {
                           _askUser();
@@ -119,36 +119,136 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
         body: FutureBuilder<DocumentSnapshot<Object>>(
             future: lostref.doc(widget.lostandfoundid).get(),
             builder: (BuildContext context,
-                AsyncSnapshot<DocumentSnapshot<Object>> snapshot) {
-              if (snapshot.hasError)
-                return new Text('Error: ${snapshot.error}');
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                default:
-                  Timestamp t = snapshot.data['timestamp'];
-                  DateTime d = DateTime.fromMicrosecondsSinceEpoch(
-                      t.microsecondsSinceEpoch);
-                  String formatDate =
-                      DateFormat('yyyy-MM-dd – kk:mm').format(d);
-                  // print(doc.data());
-                  return SingleChildScrollView(
-                    child: CustomViewLostAndFound(
-                      nameUser: snapshot.data['student'],
-                      profileImg: snapshot.data['profileImg'],
-                      contentImg: snapshot.data['urlImage'],
-                      nameTitle: snapshot.data['titleName'],
-                      content: snapshot.data['contentText'],
-                      contact: snapshot.data['contact'],
-                      category: snapshot.data['catagory'],
-                      type: snapshot.data['typeName'],
-                      dateTime: formatDate,
-                    ),
-                  );
+                AsyncSnapshot<DocumentSnapshot<Object>> snapshot_lost) {
+              if (snapshot_lost.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
               }
+              if (snapshot_lost.hasError) {
+                return new Text('Error: ${snapshot_lost.hasError}');
+              }
+              if (!snapshot_lost.hasData || !snapshot_lost.data.exists) {
+                return Text('empty data');
+              }
+              return StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('Comment')
+                      .where('postid', isEqualTo: widget.lostandfoundid)
+                      .orderBy('timestamp', descending: true)
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot<Object>> snapshot_comment) {
+                    if (snapshot_comment.connectionState ==
+                        ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (snapshot_comment.hasError) {
+                      return new Text('Error: ${snapshot_comment.hasError}');
+                    }
+                    Timestamp t = snapshot_lost.data['timestamp'];
+                    DateTime d = DateTime.fromMicrosecondsSinceEpoch(
+                        t.microsecondsSinceEpoch);
+                    String formatDate =
+                        DateFormat('yyyy-MM-dd – kk:mm').format(d);
+                    // print(doc.data());
+                    return SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          CustomViewLostAndFound(
+                            nameUser: snapshot_lost.data['student'],
+                            profileImg: snapshot_lost.data['profileImg'],
+                            contentImg: snapshot_lost.data['urlImage'],
+                            nameTitle: snapshot_lost.data['titleName'],
+                            content: snapshot_lost.data['contentText'],
+                            contact: snapshot_lost.data['contact'],
+                            category: snapshot_lost.data['catagory'],
+                            type: snapshot_lost.data['typeName'],
+                            dateTime: formatDate,
+                          ),
+                          Column(
+                            children: [
+                              Text(
+                                'comment',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 14,
+                                  fontFamily: 'Mitr',
+                                ),
+                              ),
+                              SizedBox(
+                                height: 1,
+                              ),
+                              ListView(
+                                shrinkWrap: true,
+                                children: snapshot_comment.data.docs
+                                    .map((DocumentSnapshot doc) {
+                                  if (doc != null) {
+                                    Timestamp t = doc['timestamp'];
+                                    DateTime d =
+                                        DateTime.fromMicrosecondsSinceEpoch(
+                                            t.microsecondsSinceEpoch);
+                                    String formatDate =
+                                        DateFormat('yyyy-MM-dd – kk:mm')
+                                            .format(d);
+                                    return InkWell(
+                                        child: BodyComment(
+                                          nameUser: doc['student'],
+                                          profileImg: doc['profileImg'],
+                                          content: doc['contentText'],
+                                          dateTime: formatDate,
+                                        ),
+                                        onTap: AuthProviderService
+                                                    .instance.user.uid ==
+                                                doc['uid']
+                                            ? () => showDialog<String>(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          AlertDialog(
+                                                    title: const Text(
+                                                        'Are you sure to delete ?'),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context,
+                                                                'Cancel'),
+                                                        child: const Text(
+                                                            'Cancel'),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () async {
+                                                          await deleteComment(
+                                                              doc.id);
+                                                          Navigator.pop(
+                                                              context, 'OK');
+                                                        },
+                                                        child: const Text('OK'),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                            : null);
+                                  }
+                                  return Container();
+                                }).toList(),
+                              ),
+                              SizedBox(
+                                height: 60,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  });
             }),
+        bottomSheet: ButtonCommentLostnfound(
+          lostandfoundid: widget.lostandfoundid,
+        ),
       ),
     );
   }
@@ -160,17 +260,20 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
         .delete();
     Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
   }
-  Future<void>  deleteComment(docID) async {
-     Stream<QuerySnapshot> snapshots = FirebaseFirestore.instance
-    .collection('Comment')
-    .where('postid', isEqualTo: docID)
-    .snapshots();
+
+  deleteComment(docID) async {
+    await FirebaseFirestore.instance.collection('Comment').doc(docID).delete();
+  }
+
+  Future<void> deleteAllComment(docID) async {
+    Stream<QuerySnapshot> snapshots = FirebaseFirestore.instance
+        .collection('Comment')
+        .where('postid', isEqualTo: docID)
+        .snapshots();
     Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
 
-   return snapshots.forEach((snapshot) =>
-    snapshot.docs.forEach((document) => document.reference.delete()));
-
-    
+    return snapshots.forEach((snapshot) =>
+        snapshot.docs.forEach((document) => document.reference.delete()));
   }
 
   CollectionReference postreport =
