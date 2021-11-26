@@ -255,12 +255,14 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                                 children: [
                                   CustomCard(
                                     onClick: () => {
+                                      // print(document['titleName']),
                                       Navigator.push(context,
                                           MaterialPageRoute(builder: (context) {
                                         return ViewPost(
                                           uid: document['uid'],
                                           postdocumentid: document.id,
                                           postid: document['postid'],
+                                          postTitleName: document['titleName'],
                                         );
                                       })),
                                     },
@@ -304,6 +306,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                                           uid: document['uid'],
                                           postdocumentid: document.id,
                                           postid: document['postid'],
+                                          postTitleName: document['titleName'],
                                         );
                                       }))
                                     },
@@ -346,6 +349,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                                         uid: document['uid'],
                                         postdocumentid: document.id,
                                         postid: document['postid'],
+                                        postTitleName: document['titleName'],
                                       );
                                     }))
                                   },

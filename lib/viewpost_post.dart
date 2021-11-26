@@ -17,8 +17,11 @@ class ViewPost extends StatefulWidget {
   final String uid;
   final String postid;
   final String postdocumentid;
+  final String postTitleName;
 
-  ViewPost({Key key, this.postid, this.uid, this.postdocumentid}) : super(key: key);
+  ViewPost(
+      {Key key, this.postid, this.uid, this.postdocumentid, this.postTitleName})
+      : super(key: key);
 
   @override
   _ViewPostState createState() => _ViewPostState();
@@ -43,7 +46,6 @@ class _ViewPostState extends State<ViewPost> {
     super.initState();
     readDataStudent();
   }
-  
 
   dynamic student_model;
   Future<Null> readDataStudent() async {
@@ -319,6 +321,7 @@ class _ViewPostState extends State<ViewPost> {
         postid: widget.postid,
         uid: widget.uid,
         postdocumentid: widget.postdocumentid,
+        postTitleName: widget.postTitleName,
       ),
     );
   }
@@ -343,16 +346,17 @@ class _ViewPostState extends State<ViewPost> {
     return snapshots.forEach((snapshot) =>
         snapshot.docs.forEach((document) => document.reference.delete()));
   }
-  Future<void> deleteAllNoti(docID) async {
-    Stream<QuerySnapshot> snapshots = FirebaseFirestore.instance
-        .collection('Notification')
-        .where('postid', isEqualTo: docID)
-        .snapshots();
-    Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
 
-    return snapshots.forEach((snapshot) =>
-        snapshot.docs.forEach((document) => document.reference.delete()));
-  }
+  // Future<void> deleteAllNoti(docID) async {
+  //   Stream<QuerySnapshot> snapshots = FirebaseFirestore.instance
+  //       .collection('Notification')
+  //       .where('postid', isEqualTo: docID)
+  //       .snapshots();
+  //   Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
+
+  //   return snapshots.forEach((snapshot) =>
+  //       snapshot.docs.forEach((document) => document.reference.delete()));
+  // }
 
   CollectionReference postreport =
       FirebaseFirestore.instance.collection('Report');
