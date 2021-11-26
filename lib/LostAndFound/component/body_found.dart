@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:himod/LostAndFound/component/viewpost_lostandfound.dart';
@@ -153,7 +152,9 @@ class _BodyFoundState extends State<BodyFound> {
                                       MaterialPageRoute(builder: (context) {
                                     return ViewOnlyPost(
                                         uid: document['uid'],
-                                        lostandfoundid: document.id,
+                                        lostandfoundid:
+                                            document['lostandfoundid'],
+                                        postdocumentid: document.id,
                                         type: "found");
                                   }))
                                 },

@@ -5,6 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:himod/component/body.dart';
 import 'package:himod/service/auth_provider_service.dart';
+import 'package:himod/viewpost_post.dart';
 import 'package:intl/intl.dart';
 
 class Noti extends StatefulWidget {
@@ -16,6 +17,8 @@ class _NotiState extends State<Noti> {
   @override
   void initState() {
     super.initState();
+    // readDataPost();
+    // print(data_post);
 
     ///
     // FirebaseMessaging.instance.getInitialMessage().then((message) {
@@ -48,8 +51,18 @@ class _NotiState extends State<Noti> {
   CollectionReference postref = FirebaseFirestore.instance.collection('Post');
 
   var uid = AuthProviderService.instance.user.uid;
-
   String postid;
+  bool _hasBeenPressed = true;
+
+  // dynamic data_post;
+  // Future<Null> readDataPost() async {
+  //   await notificationref.where('uid', isNotEqualTo: uid).get().then((value) {
+  //     setState(() {
+  //       data_post = value;
+  //     });
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,7 +90,7 @@ class _NotiState extends State<Noti> {
       body: StreamBuilder<QuerySnapshot>(
           stream: postref
               .where('uid', isEqualTo: uid)
-              .orderBy('timestamp', descending: true)
+              // .orderBy('timestamp', descending: true)
               .snapshots(),
           builder: (BuildContext context,
               AsyncSnapshot<QuerySnapshot<Object>> snapshotpost) {
@@ -89,14 +102,15 @@ class _NotiState extends State<Noti> {
             if (snapshotpost.hasError) {
               return new Text('Error: ${snapshotpost.hasError}');
             }
-            children:
-            snapshotpost.data.docs.map((DocumentSnapshot doc) {
-              String postid = doc['postid'];
+            // print(snapshotpost.data['postid']);
+            snapshotpost.data.docs.map((DocumentSnapshot docpost) {
+              postid = docpost['postid'];
+              print(postid);
             });
-            // snapshotpost.data['postid'];
             return StreamBuilder<QuerySnapshot>(
                 stream: notificationref
                     .where('postid', isEqualTo: postid)
+                    .where('uid', isNotEqualTo: uid)
                     // .orderBy('timestamp', descending: true)
                     .snapshots(),
                 builder: (BuildContext context,
@@ -110,22 +124,51 @@ class _NotiState extends State<Noti> {
                     return new Text('Error: ${snapshotnoti.hasError}');
                   }
 
-                  return Column(
-                    children: [
-                      ListView(
-                        shrinkWrap: true,
-                        children:
-                            snapshotnoti.data.docs.map((DocumentSnapshot doc) {
-                          Timestamp t = doc['timestamp'];
-                          DateTime d = DateTime.fromMicrosecondsSinceEpoch(
-                              t.microsecondsSinceEpoch);
-                          String formatDate =
-                              DateFormat('yyyy-MM-dd – kk:mm').format(d);
-                          return Center(child: Text(doc['student']));
-                          // commentId = doc.id;
-                        }).toList(),
-                      ),
-                    ],
+                  return ListView(
+                    shrinkWrap: true,
+                    children:
+                        snapshotnoti.data.docs.map((DocumentSnapshot docnoti) {
+                      Timestamp t = docnoti['timestamp'];
+                      DateTime d = DateTime.fromMicrosecondsSinceEpoch(
+                          t.microsecondsSinceEpoch);
+                      String formatDate =
+                          DateFormat('yyyy-MM-dd – kk:mm').format(d);
+
+                      return InkWell(
+                        child: Card(
+                          color: _hasBeenPressed ? Colors.white : Colors.grey,
+                          elevation: 6,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15)),
+                          child: Column(
+                            children: [
+                              ListTile(
+                                leading: CircleAvatar(
+                                  backgroundImage:
+                                      AssetImage('images/Noti.png'),
+                                ),
+                                title: Text('You have a new notification'),
+                                subtitle: Text(
+                                    "${docnoti['student']} Comment on your post"),
+                              ),
+                            ],
+                          ),
+                        ),
+                        onTap: () {
+                          // print("$snapshotpost['postid']");
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) {
+                              return ViewPost(
+                                postid: docnoti['postid'],
+                                uid: uid,
+                              );
+                            }),
+                          );
+                          _hasBeenPressed = !_hasBeenPressed;
+                        },
+                      );
+                    }).toList(),
                   );
                 });
           }),

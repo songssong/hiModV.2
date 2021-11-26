@@ -54,9 +54,6 @@ class _BodyLostState extends State<BodyLost> {
               return new Text('Error: ${snapshot1.hasError}');
             }
 
-            if (snapshot1.hasError) {
-              return new Text('Error: ${snapshot1.hasError}');
-            }
             print('lost ${widget.name}');
             return StreamBuilder<QuerySnapshot>(
                 stream: widget.name != "" && widget.name != null
@@ -82,9 +79,6 @@ class _BodyLostState extends State<BodyLost> {
                     return new Text('Error: ${snapshot2.hasError}');
                   }
 
-                  if (snapshot2.hasError) {
-                    return new Text('Error: ${snapshot2.hasError}');
-                  }
                   if (widget.type_filter != "") {
                     return ListView(
                       children:
@@ -110,7 +104,8 @@ class _BodyLostState extends State<BodyLost> {
                                       MaterialPageRoute(builder: (context) {
                                     return ViewOnlyPost(
                                         uid: document['uid'],
-                                        lostandfoundid: document.id,
+                                        lostandfoundid: document['lostandfoundid'],
+                                        postdocumentid: document.id,
                                         type: "lost");
                                   }))
                                 },
@@ -153,7 +148,9 @@ class _BodyLostState extends State<BodyLost> {
                                       MaterialPageRoute(builder: (context) {
                                     return ViewOnlyPost(
                                         uid: document['uid'],
-                                        lostandfoundid: document.id,
+                                        postdocumentid: document.id,
+                                        lostandfoundid:
+                                            document['lostandfoundid'],
                                         type: "lost");
                                   }))
                                 },

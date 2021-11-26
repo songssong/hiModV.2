@@ -16,8 +16,9 @@ import 'package:uuid/uuid.dart';
 class ViewPost extends StatefulWidget {
   final String uid;
   final String postid;
+  final String postdocumentid;
 
-  ViewPost({Key key, this.postid, this.uid}) : super(key: key);
+  ViewPost({Key key, this.postid, this.uid, this.postdocumentid}) : super(key: key);
 
   @override
   _ViewPostState createState() => _ViewPostState();
@@ -37,10 +38,12 @@ class _ViewPostState extends State<ViewPost> {
   var uuid;
   var uid;
   String commentId;
+
   void initState() {
     super.initState();
     readDataStudent();
   }
+  
 
   dynamic student_model;
   Future<Null> readDataStudent() async {
@@ -157,7 +160,6 @@ class _ViewPostState extends State<ViewPost> {
                         child: Text("Delete"),
                         value: 1,
                       ),
-                   
                     if (AuthProviderService.instance.user.uid != widget.uid)
                       PopupMenuItem(
                         child: Text("Report"),
@@ -168,7 +170,8 @@ class _ViewPostState extends State<ViewPost> {
                     setState(() async {
                       if (value == 1) {
                         await deleteData(widget.postid);
-                        await deleteComment(widget.postid);
+                        await deleteAllComment(widget.postid);
+                        // await deleteAllNoti(widget.postid);
                       }
                       if (value == 3) {
                         _askUser();
@@ -258,12 +261,44 @@ class _ViewPostState extends State<ViewPost> {
                                   String formatDate =
                                       DateFormat('yyyy-MM-dd – kk:mm')
                                           .format(d);
-                                  return BodyComment(
-                                    nameUser: doc['student'],
-                                    profileImg: doc['profileImg'],
-                                    content: doc['contentText'],
-                                    dateTime: formatDate,
-                                  );
+                                  return InkWell(
+                                      child: BodyComment(
+                                        nameUser: doc['student'],
+                                        profileImg: doc['profileImg'],
+                                        content: doc['contentText'],
+                                        dateTime: formatDate,
+                                      ),
+                                      onTap: AuthProviderService
+                                                  .instance.user.uid ==
+                                              doc['uid']
+                                          ? () => showDialog<String>(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        AlertDialog(
+                                                  title: const Text(
+                                                      'Are you sure to delete ?'),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.pop(context,
+                                                              'Cancel'),
+                                                      child:
+                                                          const Text('Cancel'),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () async {
+                                                        await deleteComment(
+                                                            doc.id);
+                                                        Navigator.pop(
+                                                            context, 'OK');
+                                                      },
+                                                      child: const Text('OK'),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                          : null);
                                 }
                                 return Container();
                               }).toList(),
@@ -282,28 +317,41 @@ class _ViewPostState extends State<ViewPost> {
       ),
       bottomSheet: ButtonComment(
         postid: widget.postid,
+        uid: widget.uid,
+        postdocumentid: widget.postdocumentid,
       ),
     );
   }
 
-
   deleteData(docID) async {
     await FirebaseFirestore.instance.collection('Post').doc(docID).delete();
 
-   // Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
+    // Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
   }
 
- Future<void>  deleteComment(docID) async {
-     Stream<QuerySnapshot> snapshots = FirebaseFirestore.instance
-    .collection('Comment')
-    .where('postid', isEqualTo: docID)
-    .snapshots();
+  deleteComment(docID) async {
+    await FirebaseFirestore.instance.collection('Comment').doc(docID).delete();
+  }
+
+  Future<void> deleteAllComment(docID) async {
+    Stream<QuerySnapshot> snapshots = FirebaseFirestore.instance
+        .collection('Comment')
+        .where('postid', isEqualTo: docID)
+        .snapshots();
     Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
 
-   return snapshots.forEach((snapshot) =>
-    snapshot.docs.forEach((document) => document.reference.delete()));
+    return snapshots.forEach((snapshot) =>
+        snapshot.docs.forEach((document) => document.reference.delete()));
+  }
+  Future<void> deleteAllNoti(docID) async {
+    Stream<QuerySnapshot> snapshots = FirebaseFirestore.instance
+        .collection('Notification')
+        .where('postid', isEqualTo: docID)
+        .snapshots();
+    Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
 
-    
+    return snapshots.forEach((snapshot) =>
+        snapshot.docs.forEach((document) => document.reference.delete()));
   }
 
   CollectionReference postreport =

@@ -10,11 +10,14 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 class ViewOnlyPost extends StatefulWidget {
-  const ViewOnlyPost({Key key, this.uid, this.lostandfoundid, this.type})
+  const ViewOnlyPost(
+      {Key key, this.uid, this.lostandfoundid, this.type, this.postdocumentid})
       : super(key: key);
 
   final String uid;
   final String lostandfoundid;
+  final String postdocumentid;
+
   final String type;
 
   @override
@@ -248,6 +251,7 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
             }),
         bottomSheet: ButtonCommentLostnfound(
           lostandfoundid: widget.lostandfoundid,
+          postdocumentid: widget.postdocumentid,
         ),
       ),
     );
