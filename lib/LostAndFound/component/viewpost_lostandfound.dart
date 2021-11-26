@@ -10,15 +10,20 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 class ViewOnlyPost extends StatefulWidget {
-  const ViewOnlyPost(
-      {Key key, this.uid, this.lostandfoundid, this.type, this.postdocumentid})
-      : super(key: key);
-
   final String uid;
   final String lostandfoundid;
   final String postdocumentid;
-
+  final String postTitleName;
   final String type;
+
+  const ViewOnlyPost(
+      {Key key,
+      this.uid,
+      this.lostandfoundid,
+      this.type,
+      this.postdocumentid,
+      this.postTitleName})
+      : super(key: key);
 
   @override
   _ViewOnlyPostState createState() => _ViewOnlyPostState();
@@ -120,7 +125,7 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
           ),
         ),
         body: FutureBuilder<DocumentSnapshot<Object>>(
-            future: lostref.doc(widget.lostandfoundid).get(),
+            future: lostref.doc(widget.postdocumentid).get(),
             builder: (BuildContext context,
                 AsyncSnapshot<DocumentSnapshot<Object>> snapshot_lost) {
               if (snapshot_lost.connectionState == ConnectionState.waiting) {
@@ -251,7 +256,9 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
             }),
         bottomSheet: ButtonCommentLostnfound(
           lostandfoundid: widget.lostandfoundid,
+          uid: widget.uid,
           postdocumentid: widget.postdocumentid,
+          postTitleName: widget.postTitleName,
         ),
       ),
     );

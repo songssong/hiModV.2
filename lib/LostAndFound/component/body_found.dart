@@ -109,7 +109,10 @@ class _BodyFoundState extends State<BodyFound> {
                                       MaterialPageRoute(builder: (context) {
                                     return ViewOnlyPost(
                                         uid: document['uid'],
-                                        lostandfoundid: document.id,
+                                        lostandfoundid:
+                                            document['lostandfoundid'],
+                                        postdocumentid: document.id,
+                                        postTitleName: document['titleName'],
                                         type: "found");
                                   }))
                                 },
@@ -155,6 +158,7 @@ class _BodyFoundState extends State<BodyFound> {
                                         lostandfoundid:
                                             document['lostandfoundid'],
                                         postdocumentid: document.id,
+                                        postTitleName: document['titleName'],
                                         type: "found");
                                   }))
                                 },
@@ -196,7 +200,10 @@ class _BodyFoundState extends State<BodyFound> {
                                     MaterialPageRoute(builder: (context) {
                                   return ViewOnlyPost(
                                       uid: document['uid'],
-                                      lostandfoundid: document.id,
+                                      lostandfoundid:
+                                          document['lostandfoundid'],
+                                      postdocumentid: document.id,
+                                      postTitleName: document['titleName'],
                                       type: "found");
                                 }))
                               },

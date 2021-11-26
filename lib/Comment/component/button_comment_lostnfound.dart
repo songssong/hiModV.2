@@ -6,12 +6,14 @@ import 'package:uuid/uuid.dart';
 
 class ButtonCommentLostnfound extends StatefulWidget {
   final String lostandfoundid;
+   final String uid;
   final String postdocumentid;
+  final String postTitleName;
 
   ButtonCommentLostnfound({
     Key key,
     this.lostandfoundid,
-    this.postdocumentid,
+    this.postdocumentid, this.uid, this.postTitleName,
   }) : super(key: key);
 
   @override
@@ -106,6 +108,8 @@ class _ButtonCommentLostnfoundState extends State<ButtonCommentLostnfound> {
     await notificationref.add({
       'notificationId': uuid.v4(),
       'uid': uid,
+      'posttitlename': widget.postTitleName,
+      'postauthoruid': widget.uid,
       'postid': widget.lostandfoundid,
       'postdocumentid': widget.postdocumentid,
       'student': student_model['name'],

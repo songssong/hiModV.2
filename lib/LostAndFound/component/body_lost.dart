@@ -104,8 +104,10 @@ class _BodyLostState extends State<BodyLost> {
                                       MaterialPageRoute(builder: (context) {
                                     return ViewOnlyPost(
                                         uid: document['uid'],
-                                        lostandfoundid: document['lostandfoundid'],
+                                        lostandfoundid:
+                                            document['lostandfoundid'],
                                         postdocumentid: document.id,
+                                        postTitleName: document['titleName'],
                                         type: "lost");
                                   }))
                                 },
@@ -148,9 +150,10 @@ class _BodyLostState extends State<BodyLost> {
                                       MaterialPageRoute(builder: (context) {
                                     return ViewOnlyPost(
                                         uid: document['uid'],
-                                        postdocumentid: document.id,
                                         lostandfoundid:
                                             document['lostandfoundid'],
+                                        postdocumentid: document.id,
+                                        postTitleName: document['titleName'],
                                         type: "lost");
                                   }))
                                 },
@@ -192,8 +195,11 @@ class _BodyLostState extends State<BodyLost> {
                                     MaterialPageRoute(builder: (context) {
                                   return ViewOnlyPost(
                                       uid: document['uid'],
-                                      lostandfoundid: document.id,
-                                      type: "lost");
+                                        lostandfoundid:
+                                            document['lostandfoundid'],
+                                        postdocumentid: document.id,
+                                        postTitleName: document['titleName'],
+                                        type: "lost");
                                 }))
                               },
                               nameUser: document['student'],

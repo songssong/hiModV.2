@@ -50,7 +50,7 @@ class _NotiState extends State<Noti> {
       FirebaseFirestore.instance.collection('Notification');
   CollectionReference postref = FirebaseFirestore.instance.collection('Post');
 
-  // var uid = AuthProviderService.instance.user?.uid??"";
+  var uid = AuthProviderService.instance.user.uid;
   String postid;
   bool _hasBeenPressed = true;
 
@@ -90,8 +90,8 @@ class _NotiState extends State<Noti> {
       body: StreamBuilder<QuerySnapshot>(
           stream: notificationref
               .where('postauthoruid',
-                  isEqualTo: AuthProviderService.instance.user.uid)
-              .where('uid', isNotEqualTo: AuthProviderService.instance.user.uid)
+                  isEqualTo: uid)
+              .where('uid', isNotEqualTo: uid)
               // .orderBy('postauthoruid')
               .orderBy('uid')
               .orderBy('timestamp', descending: true)
@@ -107,7 +107,7 @@ class _NotiState extends State<Noti> {
               return new Text('Error: ${snapshotnoti.hasError}');
             }
             // print('uidGu--------------------------------');
-            // print(AuthProviderService.instance.user.uid);
+            // print(uid);
             return ListView(
               shrinkWrap: true,
               children: snapshotnoti.data.docs.map((DocumentSnapshot docnoti) {
@@ -116,22 +116,36 @@ class _NotiState extends State<Noti> {
                     t.microsecondsSinceEpoch);
                 String formatDate = DateFormat('yyyy-MM-dd – kk:mm').format(d);
                 return InkWell(
-                  child: Card(
-                    color: _hasBeenPressed ? Colors.white : Colors.grey,
-                    elevation: 6,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15)),
-                    child: Column(
-                      children: [
-                        ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: AssetImage('images/Noti.png'),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(3, 0, 3, 0),
+                    child: Card(
+                      color: _hasBeenPressed ? Colors.white : Colors.grey,
+                      elevation: 6,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      child: Column(
+                        children: [
+                          ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage: AssetImage('images/Noti.png'),
+                            ),
+                            title: Text(
+                                  docnoti['posttitlename'],
+                                  style: TextStyle(
+                                      fontFamily: 'Mitr',
+                                      fontWeight: FontWeight.bold),
+                                ) ??
+                                "",
+                            subtitle: Text(
+                              "${docnoti['student']} Comment on your post",
+                              style: TextStyle(
+                                fontFamily: 'Mitr',
+                                fontSize: 13,
+                              ),
+                            ),
                           ),
-                          title: Text(docnoti['posttitlename']) ?? "",
-                          subtitle: Text(
-                              "${docnoti['student']} Comment on your post"),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   onTap: () {
@@ -142,7 +156,7 @@ class _NotiState extends State<Noti> {
                         return ViewPost(
                           postid: docnoti['postid'],
                           postdocumentid: docnoti['postdocumentid'],
-                          uid: AuthProviderService.instance.user.uid,
+                          uid: uid,
                         );
                       }),
                     );
