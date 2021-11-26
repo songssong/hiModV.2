@@ -50,7 +50,7 @@ class _NotiState extends State<Noti> {
       FirebaseFirestore.instance.collection('Notification');
   CollectionReference postref = FirebaseFirestore.instance.collection('Post');
 
-  var uid = AuthProviderService.instance.user.uid;
+  // var uid = AuthProviderService.instance.user?.uid??"";
   String postid;
   bool _hasBeenPressed = true;
 
@@ -88,89 +88,69 @@ class _NotiState extends State<Noti> {
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-          stream: postref
-              .where('uid', isEqualTo: uid)
-              // .orderBy('timestamp', descending: true)
+          stream: notificationref
+              .where('postauthoruid',
+                  isEqualTo: AuthProviderService.instance.user.uid)
+              .where('uid', isNotEqualTo: AuthProviderService.instance.user.uid)
+              // .orderBy('postauthoruid')
+              .orderBy('uid')
+              .orderBy('timestamp', descending: true)
               .snapshots(),
           builder: (BuildContext context,
-              AsyncSnapshot<QuerySnapshot<Object>> snapshotpost) {
-            if (snapshotpost.connectionState == ConnectionState.waiting) {
+              AsyncSnapshot<QuerySnapshot<Object>> snapshotnoti) {
+            if (snapshotnoti.connectionState == ConnectionState.waiting) {
               return Center(
                 child: CircularProgressIndicator(),
               );
             }
-            if (snapshotpost.hasError) {
-              return new Text('Error: ${snapshotpost.hasError}');
+            if (snapshotnoti.hasError) {
+              return new Text('Error: ${snapshotnoti.hasError}');
             }
-            // print(snapshotpost.data['postid']);
-            snapshotpost.data.docs.map((DocumentSnapshot docpost) {
-              postid = docpost['postid'];
-              print(postid);
-            });
-            return StreamBuilder<QuerySnapshot>(
-                stream: notificationref
-                    .where('postid', isEqualTo: postid)
-                    .where('uid', isNotEqualTo: uid)
-                    // .orderBy('timestamp', descending: true)
-                    .snapshots(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot<Object>> snapshotnoti) {
-                  if (snapshotnoti.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  if (snapshotnoti.hasError) {
-                    return new Text('Error: ${snapshotnoti.hasError}');
-                  }
-
-                  return ListView(
-                    shrinkWrap: true,
-                    children:
-                        snapshotnoti.data.docs.map((DocumentSnapshot docnoti) {
-                      Timestamp t = docnoti['timestamp'];
-                      DateTime d = DateTime.fromMicrosecondsSinceEpoch(
-                          t.microsecondsSinceEpoch);
-                      String formatDate =
-                          DateFormat('yyyy-MM-dd – kk:mm').format(d);
-
-                      return InkWell(
-                        child: Card(
-                          color: _hasBeenPressed ? Colors.white : Colors.grey,
-                          elevation: 6,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15)),
-                          child: Column(
-                            children: [
-                              ListTile(
-                                leading: CircleAvatar(
-                                  backgroundImage:
-                                      AssetImage('images/Noti.png'),
-                                ),
-                                title: Text('You have a new notification'),
-                                subtitle: Text(
-                                    "${docnoti['student']} Comment on your post"),
-                              ),
-                            ],
+            // print('uidGu--------------------------------');
+            // print(AuthProviderService.instance.user.uid);
+            return ListView(
+              shrinkWrap: true,
+              children: snapshotnoti.data.docs.map((DocumentSnapshot docnoti) {
+                Timestamp t = docnoti['timestamp'];
+                DateTime d = DateTime.fromMicrosecondsSinceEpoch(
+                    t.microsecondsSinceEpoch);
+                String formatDate = DateFormat('yyyy-MM-dd – kk:mm').format(d);
+                return InkWell(
+                  child: Card(
+                    color: _hasBeenPressed ? Colors.white : Colors.grey,
+                    elevation: 6,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage: AssetImage('images/Noti.png'),
                           ),
+                          title: Text(docnoti['posttitlename']) ?? "",
+                          subtitle: Text(
+                              "${docnoti['student']} Comment on your post"),
                         ),
-                        onTap: () {
-                          // print("$snapshotpost['postid']");
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) {
-                              return ViewPost(
-                                postid: docnoti['postid'],
-                                uid: uid,
-                              );
-                            }),
-                          );
-                          _hasBeenPressed = !_hasBeenPressed;
-                        },
-                      );
-                    }).toList(),
-                  );
-                });
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+                    // print(docnoti['postdocumentid']);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return ViewPost(
+                          postid: docnoti['postid'],
+                          postdocumentid: docnoti['postdocumentid'],
+                          uid: AuthProviderService.instance.user.uid,
+                        );
+                      }),
+                    );
+                    _hasBeenPressed = !_hasBeenPressed;
+                  },
+                );
+              }).toList(),
+            );
           }),
     );
   }
