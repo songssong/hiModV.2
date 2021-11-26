@@ -67,17 +67,28 @@ class CustomActivity extends StatelessWidget {
                   ),
                 ],
               ),
-              Text(
-                nameTitle,
-                style: TextStyle(
-                    fontSize: 15,
-                    fontFamily: 'Mitr',
-                    fontWeight: FontWeight.w500),
+              SizedBox(
+                height: 20,
+                child: Container(
+                  child: Text(
+                    nameTitle,
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontFamily: 'Mitr',
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
               ),
-              Text(
-                nameUser,
-                style: TextStyle(
-                  fontSize: 10,
+              SizedBox(
+                height: 14,
+                child: Container(
+                  child: Text(
+                    nameUser,
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontFamily: 'Mitr',
+                    ),
+                  ),
                 ),
               ),
               Padding(
