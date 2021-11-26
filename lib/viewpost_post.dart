@@ -186,7 +186,7 @@ class _ViewPostState extends State<ViewPost> {
       ),
       body: SafeArea(
         child: FutureBuilder<DocumentSnapshot<Object>>(
-            future: postref.doc(widget.postid).get(),
+            future: postref.doc(widget.postdocumentid).get(),
             builder: (BuildContext context,
                 AsyncSnapshot<DocumentSnapshot<Object>> snapshot_post) {
               if (snapshot_post.connectionState == ConnectionState.waiting) {

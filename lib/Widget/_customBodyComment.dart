@@ -6,14 +6,15 @@ class BodyComment extends StatelessWidget {
   final String dateTime;
   final String content;
   final String category;
-  const BodyComment(
-      {Key key,
-      this.nameUser,
-      this.profileImg,
-      this.dateTime,
-      this.content,
-      this.category})
-      : super(key: key);
+
+  const BodyComment({
+    Key key,
+    this.nameUser,
+    this.profileImg,
+    this.dateTime,
+    this.content,
+    this.category,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

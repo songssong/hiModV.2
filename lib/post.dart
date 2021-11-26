@@ -255,7 +255,6 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                                 children: [
                                   CustomCard(
                                     onClick: () => {
-                                      // print(document.id),
                                       Navigator.push(context,
                                           MaterialPageRoute(builder: (context) {
                                         return ViewPost(
@@ -263,7 +262,7 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                                           postdocumentid: document.id,
                                           postid: document['postid'],
                                         );
-                                      }))
+                                      })),
                                     },
                                     nameUser:
                                         document['student'] ?? 'student_name',
@@ -303,7 +302,8 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                                           MaterialPageRoute(builder: (context) {
                                         return ViewPost(
                                           uid: document['uid'],
-                                          postid: document.id,
+                                          postdocumentid: document.id,
+                                          postid: document['postid'],
                                         );
                                       }))
                                     },
@@ -339,12 +339,13 @@ class _PostState extends State<Post> with SingleTickerProviderStateMixin {
                               children: [
                                 CustomCard(
                                   onClick: () => {
-                                    // print(document.id),
+                                    print(document.id),
                                     Navigator.push(context,
                                         MaterialPageRoute(builder: (context) {
                                       return ViewPost(
                                         uid: document['uid'],
-                                        postid: document.id,
+                                        postdocumentid: document.id,
+                                        postid: document['postid'],
                                       );
                                     }))
                                   },
