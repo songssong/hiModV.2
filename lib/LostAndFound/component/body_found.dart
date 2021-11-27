@@ -110,7 +110,7 @@ class _BodyFoundState extends State<BodyFound> {
                                     return ViewOnlyPost(
                                         uid: document['uid'],
                                         lostandfoundid:
-                                            document['lostandfoundid'],
+                                        document['lostandfoundid'],
                                         postdocumentid: document.id,
                                         postTitleName: document['titleName'],
                                         type: "found");

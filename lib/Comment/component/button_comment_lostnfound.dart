@@ -80,6 +80,7 @@ class _ButtonCommentLostnfoundState extends State<ButtonCommentLostnfound> {
                     'student': student_model['name'],
                     'profileImg': student_model['imageUrl'],
                     'timestamp': DateTime.now(),
+                    'type' : "lostandfound",
                   });
                   setState(() async {
                     _textController.clear();
@@ -113,7 +114,8 @@ class _ButtonCommentLostnfoundState extends State<ButtonCommentLostnfound> {
       'postid': widget.lostandfoundid,
       'postdocumentid': widget.postdocumentid,
       'student': student_model['name'],
-      'timestamp': DateTime.now()
+      'timestamp': DateTime.now(),
+       'type' : "lostandfound",
     });
   }
 }

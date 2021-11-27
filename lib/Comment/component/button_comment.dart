@@ -1,3 +1,5 @@
+
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
@@ -9,6 +11,7 @@ class ButtonComment extends StatefulWidget {
   final String uid;
   final String postdocumentid;
   final String postTitleName;
+  
 
   ButtonComment({
     Key key,
@@ -81,6 +84,8 @@ class _ButtonCommentState extends State<ButtonComment> {
                     'student': student_model['name'],
                     'profileImg': student_model['imageUrl'],
                     'timestamp': DateTime.now(),
+                    'type' : "post",
+                    
                   });
                   setState(() async {
                     _textController.clear();
@@ -93,7 +98,9 @@ class _ButtonCommentState extends State<ButtonComment> {
                     }
                   });
                 }
+                
               },
+              
             ),
           ),
           onSaved: (String contentComment) {
@@ -116,7 +123,9 @@ class _ButtonCommentState extends State<ButtonComment> {
       'postid': widget.postid,
       'postdocumentid': widget.postdocumentid,
       'student': student_model['name'],
-      'timestamp': DateTime.now()
+      'timestamp': DateTime.now(),
+       'type' : "post",
+
     });
   }
 }

@@ -18,9 +18,10 @@ class ViewPost extends StatefulWidget {
   final String postid;
   final String postdocumentid;
   final String postTitleName;
+ 
 
   ViewPost(
-      {Key key, this.postid, this.uid, this.postdocumentid, this.postTitleName})
+      {Key key, this.postid, this.uid, this.postdocumentid, this.postTitleName, })
       : super(key: key);
 
   @override
@@ -60,65 +61,8 @@ class _ViewPostState extends State<ViewPost> {
     });
   }
 
-//  showDeleteConfirmation() {
-//       Widget cancelButton = FlatButton(
-//         child: Text('Cancel'),
-//         onPressed: () {
-//           Navigator.of(context).pop();
-//         },
-//       );
-//       Widget deleteButton = FlatButton(
-//         color: Colors.red,
-//         child: Text('Delete'),
-//         onPressed: () async {
-//           await ContactsService.deleteContact(widget.contact.postId);
-//           widget.onContactDelete(widget.contact);
-//           Navigator.of(context).pop();
-//         },
-//       );
-//       AlertDialog alert= AlertDialog(
-//         title: Text('Delete contact?'),
-//         content: Text('Are you sure you want to delete this contact?'),
-//         actions: <Widget>[
-//           cancelButton,
-//           deleteButton
-//         ],
-//       );
 
-//     showDialog(
-//       context: context,
-//       builder: (BuildContext context) {
-//         return alert;
-//       }
-//     );
 
-//   }
-
-  onAction(String action) async {
-    switch (action) {
-      // case 'Edit':
-      //   try {
-      //     Contact updatedContact = await ContactsService.openExistingContact(widget.);
-      //     setState(() {
-      //       widget.contact.info = updatedContact;
-      //     });
-      //     widget.onContactUpdate(widget.contact);
-      //   } on FormOperationException catch (e) {
-      //     switch(e.errorCode) {
-      //       case FormOperationErrorCode.FORM_OPERATION_CANCELED:
-      //       case FormOperationErrorCode.FORM_COULD_NOT_BE_OPEN:
-      //       case FormOperationErrorCode.FORM_OPERATION_UNKNOWN_ERROR:
-      //         print(e.toString());
-      //     }
-      //   }
-      //   break;
-      case 'Delete':
-        await deleteData(widget.postid);
-
-        break;
-    }
-    // print(documentID);
-  }
 
   CollectionReference postref = FirebaseFirestore.instance.collection('Post');
   CollectionReference commentref =
@@ -171,9 +115,11 @@ class _ViewPostState extends State<ViewPost> {
                   onSelected: (value) {
                     setState(() async {
                       if (value == 1) {
-                        await deleteData(widget.postid);
-                        await deleteAllComment(widget.postid);
-                        // await deleteAllNoti(widget.postid);
+                        await deleteData(widget.postdocumentid);
+                         deleteAllComment(widget.postid);
+                         deleteAllNoti(widget.postdocumentid);
+                         print(widget.postdocumentid);
+                        print("-------");
                       }
                       if (value == 3) {
                         _askUser();
@@ -206,7 +152,7 @@ class _ViewPostState extends State<ViewPost> {
 
               return StreamBuilder<QuerySnapshot>(
                 stream: commentref
-                    .where('postid', isEqualTo: widget.postid)
+                    .where('postid', isEqualTo : widget.postid )
                     .orderBy('timestamp', descending: true)
                     .snapshots(),
                 builder: (BuildContext context,
@@ -221,6 +167,7 @@ class _ViewPostState extends State<ViewPost> {
                     return new Text('Error: ${snapshot_comment.hasError}');
                   }
                   Timestamp t = snapshot_post.data['timestamp'];
+                  
                   DateTime d = DateTime.fromMicrosecondsSinceEpoch(
                       t.microsecondsSinceEpoch);
                   String formatDate =
@@ -256,7 +203,8 @@ class _ViewPostState extends State<ViewPost> {
                                   .map((DocumentSnapshot doc) {
                                 if (doc != null) {
                                   Timestamp t = doc['timestamp'];
-                                  commentId = doc.id;
+                                  
+                              //    print(doc.id);
                                   DateTime d =
                                       DateTime.fromMicrosecondsSinceEpoch(
                                           t.microsecondsSinceEpoch);
@@ -269,6 +217,8 @@ class _ViewPostState extends State<ViewPost> {
                                         profileImg: doc['profileImg'],
                                         content: doc['contentText'],
                                         dateTime: formatDate,
+                                        // commentdocid : doc.id,
+                                      
                                       ),
                                       onTap: AuthProviderService
                                                   .instance.user.uid ==
@@ -292,7 +242,9 @@ class _ViewPostState extends State<ViewPost> {
                                                       onPressed: () async {
                                                         await deleteComment(
                                                             doc.id);
-                                                        Navigator.pop(
+                                                         deleteNotification(snapshot_comment.data.docs.map((e) => e.id));
+                                                        print(snapshot_comment.data.docs.map((e) => e.id).toString());
+                                                         Navigator.pop(
                                                             context, 'OK');
                                                       },
                                                       child: const Text('OK'),
@@ -322,7 +274,9 @@ class _ViewPostState extends State<ViewPost> {
         uid: widget.uid,
         postdocumentid: widget.postdocumentid,
         postTitleName: widget.postTitleName,
-      ),
+      //  commentdocid:  commentref.doc().id,
+        
+       ),
     );
   }
 
@@ -341,22 +295,27 @@ class _ViewPostState extends State<ViewPost> {
         .collection('Comment')
         .where('postid', isEqualTo: docID)
         .snapshots();
-    Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
+   // Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
 
     return snapshots.forEach((snapshot) =>
         snapshot.docs.forEach((document) => document.reference.delete()));
   }
 
-  // Future<void> deleteAllNoti(docID) async {
-  //   Stream<QuerySnapshot> snapshots = FirebaseFirestore.instance
-  //       .collection('Notification')
-  //       .where('postid', isEqualTo: docID)
-  //       .snapshots();
-  //   Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
+  deleteNotification(docID) async {
+    await FirebaseFirestore.instance.collection('Notofication').doc(docID).delete();
+  }
 
-  //   return snapshots.forEach((snapshot) =>
-  //       snapshot.docs.forEach((document) => document.reference.delete()));
-  // }
+
+  Future<void> deleteAllNoti(docID) async {
+    Stream<QuerySnapshot> snapshots = FirebaseFirestore.instance
+        .collection('Notification')
+        .where('postdocumentid', isEqualTo: docID)
+        .snapshots();
+    Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
+
+    return snapshots.forEach((snapshot) =>
+        snapshot.docs.forEach((document) => document.reference.delete()));
+  }
 
   CollectionReference postreport =
       FirebaseFirestore.instance.collection('Report');

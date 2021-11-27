@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:himod/LostAndFound/component/viewpost_lostandfound.dart';
 import 'package:himod/component/body.dart';
 import 'package:himod/service/auth_provider_service.dart';
 import 'package:himod/viewpost_post.dart';
@@ -149,13 +150,22 @@ class _NotiState extends State<Noti> {
                     ),
                   ),
                   onTap: () {
-                    // print(docnoti['postdocumentid']);
+                     var type = docnoti['type'];
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) {
+                        if(type == 'post'){
                         return ViewPost(
                           postid: docnoti['postid'],
                           postdocumentid: docnoti['postdocumentid'],
+                          uid: uid,
+                        );
+                      }
+                      return ViewOnlyPost(
+                          lostandfoundid: docnoti['postid'],
+                          postdocumentid: docnoti['postdocumentid'],
+                          type: "lost",
                           uid: uid,
                         );
                       }),

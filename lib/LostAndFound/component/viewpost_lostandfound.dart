@@ -109,9 +109,10 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
                     onSelected: (value) {
                       setState(() async {
                         if (value == 1) {
-                          await print(widget.lostandfoundid);
-                          deleteData(widget.lostandfoundid);
-                          await deleteAllComment(widget.lostandfoundid);
+                           print(widget.lostandfoundid);
+                        await  deleteData(widget.lostandfoundid);
+                           deleteAllComment(widget.lostandfoundid);
+                           deleteAllNoti(widget.postdocumentid);
                         }
                         if (value == 3) {
                           _askUser();
@@ -270,10 +271,22 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
         .doc(docID)
         .delete();
     Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
+    
   }
 
   deleteComment(docID) async {
     await FirebaseFirestore.instance.collection('Comment').doc(docID).delete();
+  }
+
+  Future<void> deleteAllNoti(docID) async {
+    Stream<QuerySnapshot> snapshots = FirebaseFirestore.instance
+        .collection('Notification')
+        .where('postdocumentid', isEqualTo: docID)
+        .snapshots();
+    Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
+
+    return snapshots.forEach((snapshot) =>
+        snapshot.docs.forEach((document) => document.reference.delete()));
   }
 
   Future<void> deleteAllComment(docID) async {
