@@ -97,7 +97,7 @@ class _ActivitydetailState extends State<Activitydetail> {
                   //   Gettimestamptest();
                   // }
 
-                  if (_activitydes.activitydate == null &&
+                  if (_activitydes.activitydate == null ||
                       _activitydes.activitytime == null) {
                     return showDialog<void>(
                         context: context,
@@ -417,12 +417,11 @@ class _ActivitydetailState extends State<Activitydetail> {
                                       ),
                                       onPressed: () {
                                         showDatePicker(
-                                                context: context,
-                                                initialDate: DateTime.now(),
-                                                firstDate: DateTime.now(),
-                                                lastDate:
-                                                    DateTime(2021, 12, 31))
-                                            .then((date) {
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime.now(),
+                                          lastDate: DateTime(2021, 12, 31),
+                                        ).then((date) {
                                           setState(() {
                                             _activitydes.activitydate = date;
                                             Getdatestamp();
@@ -454,10 +453,10 @@ class _ActivitydetailState extends State<Activitydetail> {
                                       //         BorderSide(color: Colors.orange)),
                                       onPressed: () {
                                         showTimePicker(
-                                                context: context,
-                                                initialTime: TimeOfDay(
-                                                    hour: 9, minute: 0))
-                                            .then((time) {
+                                          context: context,
+                                          initialTime:
+                                              TimeOfDay(hour: 9, minute: 0),
+                                        ).then((time) {
                                           setState(() {
                                             _activitydes.activitytime = time;
                                             Gettimestamp();
