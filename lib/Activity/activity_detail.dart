@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:himod/activitytest.dart';
 import 'package:himod/homepage.dart';
 import 'package:himod/service/auth_provider_service.dart';
 import 'package:intl/intl.dart';
@@ -64,7 +65,7 @@ class _ActivitydetailState extends State<Activitydetail> {
 
   String test;
   String test2;
-  
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -97,9 +98,35 @@ class _ActivitydetailState extends State<Activitydetail> {
                   //     _activitydes.activitytime != null) {
                   //   Gettimestamptest();
                   // }
-                  if (_formKey.currentState.validate()) {
+
+                  if (activitydate == null && activitytime == null) {
+                    return showDialog<void>(
+                        context: context,
+                        barrierDismissible: false, // user must tap button!
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Please insert Date and Time'),
+                            content: SingleChildScrollView(
+                              child: ListBody(
+                                children: const <Widget>[
+                                  Text(
+                                      'You should enter the date and time because if you do not, it will cause the appointment error'),
+                                ],
+                              ),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('Ok'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        });
+                  } else if (_formKey.currentState.validate()) {
                     _formKey.currentState.save();
-                  await _addToDatabase(_activitydes.title);
+                    await _addToDatabase(_activitydes.title);
                     Navigator.pop(context,
                         MaterialPageRoute(builder: (context) => HomePage()));
                   }
@@ -578,7 +605,7 @@ class _ActivitydetailState extends State<Activitydetail> {
       'amount': _activitydes.amount,
       'date': _activitydes.date,
       'time': _activitydes.time,
-      'count' : _activitydes.count,
+      'count': _activitydes.count,
     });
   }
 }
