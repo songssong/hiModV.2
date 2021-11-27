@@ -110,9 +110,11 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
                       setState(() async {
                         if (value == 1) {
                            print(widget.lostandfoundid);
-                        await  deleteData(widget.lostandfoundid);
+                           await  deleteData(widget.postdocumentid);
                            deleteAllComment(widget.lostandfoundid);
                            deleteAllNoti(widget.postdocumentid);
+                           print(widget.lostandfoundid);
+                           print(widget.postdocumentid);
                         }
                         if (value == 3) {
                           _askUser();
@@ -270,7 +272,7 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
         .collection('LostandFound')
         .doc(docID)
         .delete();
-    Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
+   // Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
     
   }
 
@@ -294,7 +296,7 @@ class _ViewOnlyPostState extends State<ViewOnlyPost> {
         .collection('Comment')
         .where('postid', isEqualTo: docID)
         .snapshots();
-    Navigator.pop(context, MaterialPageRoute(builder: (context) => HomePage()));
+    
 
     return snapshots.forEach((snapshot) =>
         snapshot.docs.forEach((document) => document.reference.delete()));
