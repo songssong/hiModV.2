@@ -2,10 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:himod/activitytest.dart';
 import 'package:himod/homepage.dart';
 import 'package:himod/service/auth_provider_service.dart';
-import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:uuid/uuid.dart';
 
@@ -99,7 +97,8 @@ class _ActivitydetailState extends State<Activitydetail> {
                   //   Gettimestamptest();
                   // }
 
-                  if (activitydate == null && activitytime == null) {
+                  if (_activitydes.activitydate == null &&
+                      _activitydes.activitytime == null) {
                     return showDialog<void>(
                         context: context,
                         barrierDismissible: false, // user must tap button!
@@ -110,7 +109,7 @@ class _ActivitydetailState extends State<Activitydetail> {
                               child: ListBody(
                                 children: const <Widget>[
                                   Text(
-                                      'You should enter the date and time because if you do not, it will cause the appointment error'),
+                                      'You should enter the date and time because if you do not, it will cause the appointment error.'),
                                 ],
                               ),
                             ),
